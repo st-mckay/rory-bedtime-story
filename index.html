@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tonight's Bedtime Story</title>
   
-  <!-- App Icon & Shortcut Settings -->
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" href="apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
@@ -40,7 +39,7 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: flex-start; /* Ensures full scrollability on mobile */
+      align-items: flex-start;
       box-sizing: border-box;
     }
 
@@ -162,19 +161,13 @@
 </head>
 <body>
   <div class="container">
-    <!-- 1. Top Logo with graceful fallback -->
     <img src="apple-touch-icon.png" alt="Rory and Friends Logo" class="logo" onerror="this.style.display='none'">
-
-    <!-- 2. Day & Date -->
     <div class="date" id="date">Tonight</div>
-
-    <!-- 3. Story Title & Verses -->
     <h1 id="title">Tonight's Story</h1>
     <div id="story-content">
       <p class="verse">A cozy bedtime story is on its way...</p>
     </div>
 
-    <!-- 4. Controls & Navigation -->
     <div class="bottom-section">
       <div class="nav-controls">
         <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
@@ -198,9 +191,9 @@
 
     async function loadStoryData() {
       try {
-        const resStories = await fetch('stories.json?nocache=' + Date.now());
-        if (resStories.ok) {
-          const data = await resStories.json();
+        const res = await fetch('stories.json?nocache=' + Date.now());
+        if (res.ok) {
+          const data = await res.json();
           if (Array.isArray(data) && data.length > 0) {
             stories = data;
             populateDropdown();
@@ -209,7 +202,7 @@
           }
         }
       } catch (e) {
-        console.warn('Could not load stories.json');
+        console.warn('stories.json load failed, checking story.json fallback', e);
       }
 
       try {
@@ -224,7 +217,7 @@
           }
         }
       } catch (e) {
-        console.warn('Could not load story.json');
+        console.error('Failed to load stories', e);
       }
 
       document.getElementById('title').innerText = "Rory's Bedtime Tales";
@@ -294,9 +287,9 @@
       renderStory(parseInt(val, 10));
     }
 
-        function triggerNewStory() {
-      // Paste your copied Cloudflare Worker URL here:
-      const WORKER_URL = "https://rory-trigger.your-subdomain.workers.dev";
+    function triggerNewStory() {
+      // Replace with your real worker URL once ready
+      const WORKER_URL = "https://rory-trigger.workers.dev";
 
       const btn = document.getElementById('refreshBtn');
       btn.innerText = "⏳ Generating Tale...";
@@ -309,46 +302,20 @@
         if (res.ok) {
           alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
         } else {
-          alert("Failed to trigger story generation. Please check worker settings.");
+          alert("Could not trigger workflow. Please verify your Cloudflare Worker URL and settings.");
         }
       })
-      .catch(err => alert("Error: " + err.message))
+      .catch(err => alert("Error triggering tale: " + err.message))
       .finally(() => {
         btn.innerText = "✨ Refresh Story";
         btn.disabled = false;
       });
     }
 
-
-      const btn = document.getElementById('refreshBtn');
-      btn.innerText = "⏳ Generating Tale...";
-      btn.disabled = true;
-
-      fetch(`https://api.github.com/repos/${user}/${repo}/dispatches`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `token ${pat}`
-        },
-        body: JSON.stringify({ event_type: 'generate-story' })
-      })
-      .then(res => {
-        if (res.ok) {
-          alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
-        } else {
-          localStorage.removeItem('gh_pat');
-          alert("Could not trigger workflow. Please verify your token has 'repo' permissions.");
-        }
-      })
-      .catch(err => alert("Error: " + err.message))
-      .finally(() => {
-        btn.innerText = "✨ Refresh Story";
-        btn.disabled = false;
-      });
-    }
-
+    // Execute initial load
     loadStoryData();
 
+    // Auto-refresh when opening from background
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'visible' && !targetStoryId) {
         loadStoryData();
