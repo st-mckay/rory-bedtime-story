@@ -1,10 +1,16 @@
 import json
 import os
+import re
 from datetime import datetime
 from google import genai
+from google.genai import types
 
-# Initialize the Gemini client
-client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+# Initialize Gemini Client
+api_key = os.environ.get("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("GEMINI_API_KEY environment variable is missing!")
+
+client = genai.Client(api_key=api_key)
 
 prompt = """
 Write a calming bedtime story featuring Rory and friends (Tilly, Benny, Ricky, Nia, and Psittaco).
@@ -14,7 +20,9 @@ Strict structural requirements:
 3. Use a steady, rolling anapestic cadence (~10-12 syllables per line).
 4. Provide a creative, unique title and new plot/actions so it doesn't repeat old formulas.
 
-Return ONLY a valid JSON object with the keys "title", "date", and "verses" (where verses is an array of 6 strings, each string containing 4 lines separated by newlines). Do not wrap in markdown backticks.
+Return a JSON object with:
+- "title": string
+- "verses": array of 6 strings (each string containing 4 lines separated by newlines)
 """
 
 response = client.models.generate_content(
@@ -26,10 +34,12 @@ response = client.models.generate_content(
 )
 
 raw_text = response.text.strip()
-if raw_text.startswith("```json"):
-    raw_text = raw_text.split("```json")[1].split("```")[0].strip()
-elif raw_text.startswith("```"):
-    raw_text = raw_text.split("```")[1].split("```")[0].strip()
+
+# Clean any code block wrappers if returned
+if "```" in raw_text:
+    match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+    if match:
+        raw_text = match.group(0)
 
 data = json.loads(raw_text)
 data["date"] = datetime.now().strftime("%A, %B %d, %Y")
