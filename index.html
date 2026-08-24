@@ -4,25 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tonight's Bedtime Story</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <!-- Using complementary cozy fonts: Crete Round for titles, Vollkorn for story -->
-  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
+  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
+  <link href="[https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap](https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap)" rel="stylesheet">
   <style>
     :root {
-      /* Warm Green Dinosaur Theme Palette */
-      --bg: #1a2f1a; /* Dark Jungle Night */
-      --card-bg: rgba(43, 66, 43, 0.85); /* Moss Green Card */
-      --text-main: #f0ede6; /* Soft Cream */
-      --accent-title: #ffe16b; /* Warm Amber Sunlight */
-      --text-muted: #a3b18a; /* Sage Green */
+      --bg: #1a2f1a;
+      --card-bg: rgba(43, 66, 43, 0.85);
+      --text-main: #f0ede6;
+      --accent-title: #ffe16b;
+      --text-muted: #a3b18a;
       --border: rgba(255, 255, 255, 0.1);
+      --btn-bg: #3a5a40;
+      --btn-hover: #588157;
     }
 
     body {
       margin: 0;
-      padding: 40px 16px;
-      /* Radial gradient simulating sunlight filtering through a jungle canopy */
+      padding: 30px 16px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
@@ -34,15 +33,63 @@
     }
 
     .container {
-      max-width: 640px;
+      max-width: 650px;
       width: 100%;
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 36px 28px;
+      padding: 32px 24px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       text-align: center;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    a.archive-btn {
+      color: var(--accent-title);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--btn-bg);
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    a.archive-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    .header-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    select, button {
+      background: var(--btn-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-family: 'Vollkorn', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    select:hover, button:hover {
+      background: var(--btn-hover);
     }
 
     .date {
@@ -50,21 +97,197 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       font-weight: 600;
     }
 
     h1 {
-      /* 'Crete Round' gives a friendly, rounded dino-feel */
       font-family: 'Crete Round', serif;
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       color: var(--accent-title);
       margin-top: 0;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .verse {
+      margin-bottom: 20px;
+      line-height: 1.8;
+      font-size: 1.1rem;
+      white-space: pre-line;
+    }
+
+    .footer-controls {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-gen {
+      background: #c5832b;
+    }
+    .btn-gen:hover {
+      background: #e09f3e;
+    }
+
+    .icon {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-nav">
+      <a href="archive.html" class="archive-btn">📚 Story Directory</a>
+      <span style="font-size: 0.85rem; color: var(--text-muted);">Nightly Tales</span>
+    </div>
+
+    <div class="header-nav">
+      <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
+      <select id="storySelect" onchange="selectStory(this.value)"></select>
+      <button id="nextBtn" onclick="changeStory(-1)">Newer ›</button>
+    </div>
+
+    <div class="icon">🌿 🌱</div>
+    <div class="date" id="date">Loading...</div>
+    <h1 id="title">Tonight's Story</h1>
+    <div id="story-content"></div>
+
+    <div class="footer-controls">
+      <button onclick="setGitHubAuth()">⚙️ Setup Generator</button>
+      <button class="btn-gen" id="genBtn" onclick="triggerNewStory()">✨ Create New Story Now</button>
+    </div>
+  </div>
+
+  <script>
+    let stories = [];
+    let currentIndex = 0;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetStoryId = urlParams.get('story');
+
+    fetch('stories.json?nocache=' + new Date().getTime())
+      .then(res => res.json())
+      .then(data => {
+        stories = data;
+        populateDropdown();
+
+        if (targetStoryId) {
+          const foundIdx = stories.findIndex(s => s.id === targetStoryId || s.date === targetStoryId);
+          renderStory(foundIdx !== -1 ? foundIdx : 0);
+        } else {
+          renderStory(0);
+        }
+      })
+      .catch(() => {
+        fetch('story.json?nocache=' + new Date().getTime())
+          .then(res => res.json())
+          .then(data => {
+            stories = [data];
+            populateDropdown();
+            renderStory(0);
+          });
+      });
+
+    function populateDropdown() {
+      const select = document.getElementById('storySelect');
+      select.innerHTML = '';
+      stories.forEach((s, idx) => {
+        const opt = document.createElement('option');
+        opt.value = idx;
+        opt.textContent = `${s.date}: ${s.title}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderStory(index) {
+      if (!stories[index]) return;
+      currentIndex = index;
+      const s = stories[index];
+
+      document.getElementById('date').innerText = s.date;
+      document.getElementById('title').innerText = s.title;
+      document.getElementById('storySelect').value = index;
+
+      const container = document.getElementById('story-content');
+      container.innerHTML = '';
+      s.verses.forEach(verse => {
+        const p = document.createElement('p');
+        p.className = 'verse';
+        p.textContent = verse;
+        container.appendChild(p);
+      });
+
+      document.getElementById('prevBtn').disabled = (currentIndex >= stories.length - 1);
+      document.getElementById('nextBtn').disabled = (currentIndex <= 0);
+    }
+
+    function changeStory(delta) {
+      const target = currentIndex + delta;
+      if (target >= 0 && target < stories.length) {
+        renderStory(target);
+      }
+    }
+
+    function selectStory(val) {
+      renderStory(parseInt(val, 10));
+    }
+
+    function setGitHubAuth() {
+      const user = prompt("Enter your GitHub username:", localStorage.getItem('gh_user') || '');
+      const repo = prompt("Enter your GitHub repository name:", localStorage.getItem('gh_repo') || 'bedtime-story');
+      const token = prompt("Enter your GitHub Personal Access Token (repo scope):", localStorage.getItem('gh_pat') || '');
+      if (user && repo && token) {
+        localStorage.setItem('gh_user', user);
+        localStorage.setItem('gh_repo', repo);
+        localStorage.setItem('gh_pat', token);
+        alert("Setup saved securely in your browser!");
+      }
+    }
+
+    function triggerNewStory() {
+      const user = localStorage.getItem('gh_user');
+      const repo = localStorage.getItem('gh_repo');
+      const pat = localStorage.getItem('gh_pat');
+
+      if (!user || !repo || !pat) {
+        alert("Please click '⚙️ Setup Generator' first to enter your GitHub details.");
+        return;
+      }
+
+      const btn = document.getElementById('genBtn');
+      btn.innerText = "⏳ Requesting Story...";
+      btn.disabled = true;
+
+      fetch(`[https://api.github.com/repos/$](https://api.github.com/repos/$){user}/${repo}/dispatches`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `token ${pat}`
+        },
+        body: JSON.stringify({ event_type: 'generate-story' })
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("Story generation triggered! GitHub is crafting tonight's tale. Refresh this page in about 45-60 seconds.");
+        } else {
+          alert("Failed to trigger generation. Please check your token permissions.");
+        }
+      })
+      .catch(err => alert("Error: " + err.message))
+      .finally(() => {
+        btn.innerText = "✨ Create New Story Now";
+        btn.disabled = false;
+      });
+    }
+  </script>
+</body>
+</html>
       margin-bottom: 22px;
       line-height: 1.8;
       font-size: 1.1rem;
