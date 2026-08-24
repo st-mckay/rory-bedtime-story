@@ -27,7 +27,7 @@ Formatting & Style Rules (NON-NEGOTIABLE):
 1. Exactly 6 verses (stanzas).
 2. Exactly 4 lines per verse (quatrain).
 3. Meter & Cadence: Strict, rolling anapestic tetrameter (approx 10-12 syllables per line, e.g. "da-da-DUM da-da-DUM da-da-DUM da-da-DUM").
-4. Rhyme Scheme: Consistent AABB or ABCB/ABAB with pure, musical rhymes (never forced or clumsy).
+4. Rhyme Scheme: Consistent ABCB or ABAB with pure, musical rhymes (never forced or clumsy).
 5. Narrative: Keep it varied. Vary the setting (groves, caves, rivers, starry ridges), initial discovery, teamwork actions, and cozy closing scenes so it never reuses repetitive template phrasing across stories.
 6. Tone: Calming, serene, warm, and distinctly bedtime-oriented.
 """
