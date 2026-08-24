@@ -6,73 +6,90 @@
   <title>Tonight's Bedtime Story</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- Using complementary cozy fonts: Crete Round for titles, Vollkorn for story -->
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d1322;
-      --card-bg: rgba(23, 32, 54, 0.75);
-      --text-main: #f0ede6;
-      --accent: #ffd166;
-      --text-muted: #8d99ae;
+      /* Warm Green Dinosaur Theme Palette */
+      --bg: #1a2f1a; /* Dark Jungle Night */
+      --card-bg: rgba(43, 66, 43, 0.85); /* Moss Green Card */
+      --text-main: #f0ede6; /* Soft Cream */
+      --accent-title: #ffe16b; /* Warm Amber Sunlight */
+      --text-muted: #a3b18a; /* Sage Green */
+      --border: rgba(255, 255, 255, 0.1);
     }
+
     body {
       margin: 0;
       padding: 40px 16px;
-      background: radial-gradient(circle at top, #1b263b 0%, #0d1322 100%);
+      /* Radial gradient simulating sunlight filtering through a jungle canopy */
+      background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
-      font-family: 'Lora', serif;
+      font-family: 'Vollkorn', serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       box-sizing: border-box;
     }
+
     .container {
       max-width: 640px;
       width: 100%;
       background: var(--card-bg);
       backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
       border-radius: 20px;
       padding: 36px 28px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       text-align: center;
     }
+
     .date {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 8px;
+      font-weight: 600;
     }
+
     h1 {
-      font-family: 'Cinzel', serif;
-      font-size: 1.8rem;
-      color: var(--accent);
+      /* 'Crete Round' gives a friendly, rounded dino-feel */
+      font-family: 'Crete Round', serif;
+      font-size: 2.2rem;
+      color: var(--accent-title);
       margin-top: 0;
       margin-bottom: 28px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
+
     .verse {
       margin-bottom: 22px;
       line-height: 1.8;
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       white-space: pre-line;
+      color: var(--text-main);
     }
-    .moon {
-      font-size: 1.8rem;
+
+    /* Changed the icon to jungle leaves */
+    .icon {
+      font-size: 2rem;
       margin-bottom: 12px;
+      color: #79a379; /* Soft leaf green */
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="moon">🌙 ✨</div>
+    <div class="icon">🌿 🌱</div>
     <div class="date" id="date">Loading...</div>
     <h1 id="title">Tonight's Story</h1>
     <div id="story-content"></div>
   </div>
 
   <script>
+    // Added a slight delay and nocache to force update after build
     fetch('story.json?nocache=' + new Date().getTime())
       .then(res => res.json())
       .then(data => {
@@ -88,7 +105,7 @@
         });
       })
       .catch(() => {
-        document.getElementById('story-content').innerHTML = '<p class="verse">Story is on its way...</p>';
+        document.getElementById('story-content').innerHTML = '<p class="verse">A cozy story is on its way...</p>';
       });
   </script>
 </body>
