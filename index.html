@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tonight's Bedtime Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d1322;
+      --card-bg: rgba(23, 32, 54, 0.75);
+      --text-main: #f0ede6;
+      --accent: #ffd166;
+      --text-muted: #8d99ae;
+    }
+    body {
+      margin: 0;
+      padding: 40px 16px;
+      background: radial-gradient(circle at top, #1b263b 0%, #0d1322 100%);
+      color: var(--text-main);
+      font-family: 'Lora', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+    }
+    .container {
+      max-width: 640px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 36px 28px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      text-align: center;
+    }
+    .date {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-top: 0;
+      margin-bottom: 28px;
+    }
+    .verse {
+      margin-bottom: 22px;
+      line-height: 1.8;
+      font-size: 1.08rem;
+      white-space: pre-line;
+    }
+    .moon {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="moon">🌙 ✨</div>
+    <div class="date" id="date">Loading...</div>
+    <h1 id="title">Tonight's Story</h1>
+    <div id="story-content"></div>
+  </div>
+
+  <script>
+    fetch('story.json?nocache=' + new Date().getTime())
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('date').innerText = data.date;
+        document.getElementById('title').innerText = data.title;
+        const container = document.getElementById('story-content');
+        container.innerHTML = '';
+        data.verses.forEach(verse => {
+          const p = document.createElement('p');
+          p.className = 'verse';
+          p.textContent = verse;
+          container.appendChild(p);
+        });
+      })
+      .catch(() => {
+        document.getElementById('story-content').innerHTML = '<p class="verse">Story is on its way...</p>';
+      });
+  </script>
+</body>
+</html>
