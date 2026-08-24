@@ -294,21 +294,31 @@
       renderStory(parseInt(val, 10));
     }
 
-    function triggerNewStory() {
-      let pat = localStorage.getItem('gh_pat');
-      const user = localStorage.getItem('gh_user') || 'st-mckay';
-      const repo = localStorage.getItem('gh_repo') || 'rory-bedtime-story';
+        function triggerNewStory() {
+      // Paste your copied Cloudflare Worker URL here:
+      const WORKER_URL = "https://rory-trigger.your-subdomain.workers.dev";
 
-      if (!pat) {
-        pat = prompt("Enter your GitHub Personal Access Token (repo scope):");
-        if (pat) {
-          localStorage.setItem('gh_pat', pat.trim());
-          localStorage.setItem('gh_user', user);
-          localStorage.setItem('gh_repo', repo);
+      const btn = document.getElementById('refreshBtn');
+      btn.innerText = "⏳ Generating Tale...";
+      btn.disabled = true;
+
+      fetch(WORKER_URL, {
+        method: 'POST',
+      })
+      .then(res => {
+        if (res.ok) {
+          alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
         } else {
-          return;
+          alert("Failed to trigger story generation. Please check worker settings.");
         }
-      }
+      })
+      .catch(err => alert("Error: " + err.message))
+      .finally(() => {
+        btn.innerText = "✨ Refresh Story";
+        btn.disabled = false;
+      });
+    }
+
 
       const btn = document.getElementById('refreshBtn');
       btn.innerText = "⏳ Generating Tale...";
