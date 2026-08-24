@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tonight's Bedtime Story</title>
@@ -18,8 +17,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <!-- rest of your styles and body -->
-
   <style>
     :root {
       --bg: #1a2f1a;
@@ -51,66 +48,28 @@
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px 24px;
+      border-radius: 24px;
+      padding: 36px 24px 28px 24px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       text-align: center;
     }
 
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 20px;
+      object-fit: cover;
       margin-bottom: 16px;
-    }
-
-    a.archive-btn {
-      color: var(--accent-title);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      background: var(--btn-bg);
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-
-    a.archive-btn:hover {
-      background: var(--btn-hover);
-    }
-
-    .header-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    select, button {
-      background: var(--btn-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-family: 'Vollkorn', serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    select:hover, button:hover {
-      background: var(--btn-hover);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .date {
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-weight: 600;
     }
 
@@ -119,41 +78,88 @@
       font-size: 2.1rem;
       color: var(--accent-title);
       margin-top: 0;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
     .verse {
-      margin-bottom: 20px;
-      line-height: 1.8;
+      margin-bottom: 22px;
+      line-height: 1.85;
       font-size: 1.1rem;
       white-space: pre-line;
     }
 
-    .icon {
-      font-size: 2rem;
-      margin-bottom: 8px;
+    /* Bottom Controls Section */
+    .bottom-section {
+      margin-top: 36px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .nav-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    select, button, a.btn-link {
+      background: var(--btn-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-family: 'Vollkorn', serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+      display: inline-block;
+    }
+
+    select:hover, button:hover, a.btn-link:hover {
+      background: var(--btn-hover);
+    }
+
+    a.directory-btn {
+      color: var(--accent-title);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 8px 18px;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="top-nav">
-      <a href="archive.html" class="archive-btn">📚 Story Directory</a>
-      <span style="font-size: 0.85rem; color: var(--text-muted);">Nightly Tales</span>
-    </div>
+    <!-- 1. Top Logo -->
+    <img src="apple-touch-icon.png" alt="Rory and Friends Logo" class="logo">
 
-    <div class="header-nav">
-      <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
-      <select id="storySelect" onchange="selectStory(this.value)"></select>
-      <button id="nextBtn" onclick="changeStory(-1)">Newer ›</button>
-    </div>
-
-    <div class="icon">🌿 🌱</div>
+    <!-- 2. Day & Date -->
     <div class="date" id="date">Tonight</div>
+
+    <!-- 3. Story Title & Verses -->
     <h1 id="title">Tonight's Story</h1>
     <div id="story-content">
       <p class="verse">A cozy bedtime story is on its way...</p>
+    </div>
+
+    <!-- 4. Everything Else at the Bottom -->
+    <div class="bottom-section">
+      <div class="nav-controls">
+        <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
+        <select id="storySelect" onchange="selectStory(this.value)"></select>
+        <button id="nextBtn" onclick="changeStory(-1)">Newer ›</button>
+      </div>
+
+      <div>
+        <a href="archive.html" class="btn-link directory-btn">📚 View Story Directory</a>
+      </div>
     </div>
   </div>
 
