@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Story Archive | Rory's Bedtime Tales</title>
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-  <link href="[https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap](https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap)" rel="stylesheet">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- App Icon & Shortcut Settings -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#1a2f1a">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #1a2f1a;
@@ -40,7 +44,7 @@
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 24px;
       padding: 32px 24px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
     }
@@ -58,7 +62,7 @@
       font-size: 0.95rem;
       font-weight: 600;
       background: var(--btn-bg);
-      padding: 6px 14px;
+      padding: 8px 14px;
       border-radius: 8px;
       border: 1px solid var(--border);
       transition: background 0.2s;
@@ -86,15 +90,16 @@
     details {
       background: rgba(26, 47, 26, 0.6);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       margin-bottom: 14px;
       overflow: hidden;
-      transition: all 0.2s ease;
+      transition: all 0.25s ease;
     }
 
     details[open] {
-      background: rgba(26, 47, 26, 0.9);
-      border-color: rgba(255, 225, 107, 0.3);
+      background: rgba(26, 47, 26, 0.92);
+      border-color: rgba(255, 225, 107, 0.35);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
 
     summary {
@@ -107,10 +112,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: background 0.2s;
     }
 
     summary:hover {
-      background: rgba(58, 90, 64, 0.3);
+      background: rgba(58, 90, 64, 0.35);
+    }
+
+    .active-badge {
+      background: #3a5a40;
+      color: #ffe16b;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-family: 'Vollkorn', serif;
+      font-weight: bold;
     }
 
     .story-list {
@@ -120,8 +139,8 @@
     }
 
     .story-item {
-      padding: 10px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 12px 10px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -167,7 +186,7 @@
   </div>
 
   <script>
-    fetch('stories.json?nocache=' + new Date().getTime())
+    fetch('stories.json?nocache=' + Date.now())
       .then(res => res.json())
       .then(stories => {
         const container = document.getElementById('directory-content');
@@ -178,7 +197,7 @@
           return;
         }
 
-        // Group stories by month_group (e.g. Aug-26)
+        // Group stories by month_group (maintaining chronological order as they are prepended)
         const groups = {};
         stories.forEach(story => {
           const group = story.month_group || 'Earlier Tales';
@@ -186,17 +205,27 @@
           groups[group].push(story);
         });
 
-        // Build accordion dropdown for each month
-        let isFirst = true;
+        // The first group encountered is the newest / active month
+        let isFirstMonth = true;
+
         for (const [month, list] of Object.entries(groups)) {
           const details = document.createElement('details');
-          if (isFirst) {
-            details.open = true; // Open the current month by default
-            isFirst = false;
+
+          // Active/latest month stays open; older months are collapsed
+          if (isFirstMonth) {
+            details.open = true;
+          } else {
+            details.open = false;
           }
 
           const summary = document.createElement('summary');
-          summary.innerHTML = `<span>🗓️ ${month}</span> <span style="font-size:0.85rem; color:var(--text-muted);">${list.length} ${list.length === 1 ? 'story' : 'stories'}</span>`;
+          const badge = isFirstMonth ? '<span class="active-badge">Active</span>' : '';
+          summary.innerHTML = `
+            <span>🗓️ ${month} ${badge}</span>
+            <span style="font-size:0.85rem; color:var(--text-muted); font-family:'Vollkorn',serif;">
+              ${list.length} ${list.length === 1 ? 'tale' : 'tales'}
+            </span>
+          `;
           details.appendChild(summary);
 
           const ul = document.createElement('ul');
@@ -208,7 +237,6 @@
 
             const link = document.createElement('a');
             link.className = 'story-link';
-            // Points to index.html with story id/timestamp parameter
             link.href = `index.html?story=${encodeURIComponent(s.id || s.date)}`;
             link.textContent = s.title;
 
@@ -223,6 +251,8 @@
 
           details.appendChild(ul);
           container.appendChild(details);
+
+          isFirstMonth = false;
         }
       })
       .catch(() => {
