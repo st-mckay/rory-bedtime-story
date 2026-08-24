@@ -14,17 +14,17 @@
   <meta name="apple-mobile-web-app-title" content="Bedtime Story">
   <meta name="theme-color" content="#1a2f1a">
 
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-  <link href="[https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap](https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap)" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #1a2f1a;
-      --card-bg: rgba(43, 66, 43, 0.85);
+      --card-bg: rgba(43, 66, 43, 0.88);
       --text-main: #f0ede6;
       --accent-title: #ffe16b;
       --text-muted: #a3b18a;
-      --border: rgba(255, 255, 255, 0.1);
+      --border: rgba(255, 255, 255, 0.12);
       --btn-bg: #3a5a40;
       --btn-hover: #588157;
       --btn-refresh: #c5832b;
@@ -33,14 +33,14 @@
 
     body {
       margin: 0;
-      padding: 30px 16px;
+      padding: 30px 16px 60px 16px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start; /* Ensures full scrollability on mobile */
       box-sizing: border-box;
     }
 
@@ -64,6 +64,7 @@
       margin-bottom: 16px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.3);
       border: 1px solid rgba(255, 255, 255, 0.15);
+      display: inline-block;
     }
 
     .date {
@@ -87,7 +88,7 @@
     .verse {
       margin-bottom: 22px;
       line-height: 1.85;
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       white-space: pre-line;
     }
 
@@ -137,6 +138,10 @@
       background: var(--btn-hover);
     }
 
+    select {
+      max-width: 260px;
+    }
+
     a.directory-btn {
       color: var(--accent-title);
       font-weight: 600;
@@ -157,8 +162,8 @@
 </head>
 <body>
   <div class="container">
-    <!-- 1. Top Logo -->
-    <img src="apple-touch-icon.png" alt="Rory and Friends Logo" class="logo">
+    <!-- 1. Top Logo with graceful fallback -->
+    <img src="apple-touch-icon.png" alt="Rory and Friends Logo" class="logo" onerror="this.style.display='none'">
 
     <!-- 2. Day & Date -->
     <div class="date" id="date">Tonight</div>
@@ -169,7 +174,7 @@
       <p class="verse">A cozy bedtime story is on its way...</p>
     </div>
 
-    <!-- 4. Controls & Actions at Bottom -->
+    <!-- 4. Controls & Navigation -->
     <div class="bottom-section">
       <div class="nav-controls">
         <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
@@ -249,7 +254,7 @@
     }
 
     function renderStory(index) {
-      if (!stories[index]) return;
+      if (!stories || !stories[index]) return;
       currentIndex = index;
       const s = stories[index];
 
@@ -295,7 +300,7 @@
       const repo = localStorage.getItem('gh_repo') || 'rory-bedtime-story';
 
       if (!pat) {
-        pat = prompt("Enter your GitHub Personal Access Token (repo scope) to enable instant story generation:");
+        pat = prompt("Enter your GitHub Personal Access Token (repo scope):");
         if (pat) {
           localStorage.setItem('gh_pat', pat.trim());
           localStorage.setItem('gh_user', user);
@@ -309,7 +314,7 @@
       btn.innerText = "⏳ Generating Tale...";
       btn.disabled = true;
 
-      fetch(`[https://api.github.com/repos/$](https://api.github.com/repos/$){user}/${repo}/dispatches`, {
+      fetch(`https://api.github.com/repos/${user}/${repo}/dispatches`, {
         method: 'POST',
         headers: {
           'Accept': 'application/vnd.github.v3+json',
@@ -339,232 +344,6 @@
         loadStoryData();
       }
     });
-  </script>
-</body>
-</html>
-      font-size: 0.95rem;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    h1 {
-      font-family: 'Crete Round', serif;
-      font-size: 2.1rem;
-      color: var(--accent-title);
-      margin-top: 0;
-      margin-bottom: 26px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-
-    .verse {
-      margin-bottom: 22px;
-      line-height: 1.85;
-      font-size: 1.1rem;
-      white-space: pre-line;
-    }
-
-    /* Bottom Controls Section */
-    .bottom-section {
-      margin-top: 36px;
-      padding-top: 22px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .nav-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      flex-wrap: wrap;
-    }
-
-    select, button, a.btn-link {
-      background: var(--btn-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-family: 'Vollkorn', serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background 0.2s;
-      display: inline-block;
-    }
-
-    select:hover, button:hover, a.btn-link:hover {
-      background: var(--btn-hover);
-    }
-
-    a.directory-btn {
-      color: var(--accent-title);
-      font-weight: 600;
-      font-size: 0.95rem;
-      padding: 8px 18px;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <!-- 1. Top Logo -->
-    <img src="apple-touch-icon.png" alt="Rory and Friends Logo" class="logo">
-
-    <!-- 2. Day & Date -->
-    <div class="date" id="date">Tonight</div>
-
-    <!-- 3. Story Title & Verses -->
-    <h1 id="title">Tonight's Story</h1>
-    <div id="story-content">
-      <p class="verse">A cozy bedtime story is on its way...</p>
-    </div>
-
-    <!-- 4. Everything Else at the Bottom -->
-    <div class="bottom-section">
-      <div class="nav-controls">
-        <button id="prevBtn" onclick="changeStory(1)">‹ Older</button>
-        <select id="storySelect" onchange="selectStory(this.value)"></select>
-        <button id="nextBtn" onclick="changeStory(-1)">Newer ›</button>
-      </div>
-
-      <div>
-        <a href="archive.html" class="btn-link directory-btn">📚 View Story Directory</a>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    let stories = [];
-    let currentIndex = 0;
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const targetStoryId = urlParams.get('story');
-
-    async function loadStoryData() {
-      try {
-        const resStories = await fetch('stories.json?nocache=' + Date.now());
-        if (resStories.ok) {
-          const data = await resStories.json();
-          if (Array.isArray(data) && data.length > 0) {
-            stories = data;
-            populateDropdown();
-            findAndRenderInitialStory();
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('Could not load stories.json, trying story.json');
-      }
-
-      try {
-        const resSingle = await fetch('story.json?nocache=' + Date.now());
-        if (resSingle.ok) {
-          const single = await resSingle.json();
-          if (single && (single.title || single.verses)) {
-            stories = [single];
-            populateDropdown();
-            renderStory(0);
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn('Could not load story.json');
-      }
-
-      document.getElementById('title').innerText = "Rory's Bedtime Tales";
-      document.getElementById('story-content').innerHTML = `
-        <p class="verse">Tonight's tale is resting. Check back soon!</p>
-      `;
-    }
-
-    function findAndRenderInitialStory() {
-      if (targetStoryId) {
-        const foundIdx = stories.findIndex(s => s.id === targetStoryId || s.date === targetStoryId);
-        renderStory(foundIdx !== -1 ? foundIdx : 0);
-      } else {
-        renderStory(0);
-      }
-    }
-
-    function populateDropdown() {
-      const select = document.getElementById('storySelect');
-      select.innerHTML = '';
-      stories.forEach((s, idx) => {
-        const opt = document.createElement('option');
-        opt.value = idx;
-        opt.textContent = `${s.date || 'Story'}: ${s.title || 'Untitled'}`;
-        select.appendChild(opt);
-      });
-    }
-
-    function renderStory(index) {
-      if (!stories[index]) return;
-      currentIndex = index;
-      const s = stories[index];
-
-      document.getElementById('date').innerText = s.date || '';
-      document.getElementById('title').innerText = s.title || "Tonight's Story";
-      document.getElementById('storySelect').value = index;
-
-      const container = document.getElementById('story-content');
-      container.innerHTML = '';
-
-      if (Array.isArray(s.verses)) {
-        s.verses.forEach(verse => {
-          const p = document.createElement('p');
-          p.className = 'verse';
-          p.textContent = verse;
-          container.appendChild(p);
-        });
-      } else if (typeof s.verses === 'string') {
-        const p = document.createElement('p');
-        p.className = 'verse';
-        p.textContent = s.verses;
-        container.appendChild(p);
-      }
-
-      document.getElementById('prevBtn').disabled = (currentIndex >= stories.length - 1);
-      document.getElementById('nextBtn').disabled = (currentIndex <= 0);
-    }
-
-    function changeStory(delta) {
-      const target = currentIndex + delta;
-      if (target >= 0 && target < stories.length) {
-        renderStory(target);
-      }
-    }
-
-    function selectStory(val) {
-      renderStory(parseInt(val, 10));
-    }
-
-    loadStoryData();
-        // Initial load when the app starts
-    loadStoryData();
-
-    // 1. Force refresh whenever the app is opened or brought back to the foreground
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') {
-        // Only refresh to the newest tale if you're not intentionally viewing an older archive link
-        if (!targetStoryId) {
-          loadStoryData();
-        }
-      }
-    });
-
-    // 2. Poll every 5 minutes in case the app is left open around 7:00 PM
-    setInterval(() => {
-      if (document.visibilityState === 'visible' && !targetStoryId) {
-        loadStoryData();
-      }
-    }, 5 * 60 * 1000);
   </script>
 </body>
 </html>
