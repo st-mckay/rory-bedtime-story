@@ -12,7 +12,6 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-# System instruction encoding all historical rules, characters, and meter constraints
 SYSTEM_INSTRUCTION = """
 You are a master children's bedtime story author crafting verses for toddlers.
 Your core cast:
@@ -33,7 +32,7 @@ Formatting & Style Rules (NON-NEGOTIABLE):
 """
 
 FEW_SHOT_EXAMPLE = """
-Target Meter & Structure Reference:
+Target Meter & Structure Reference (ABAB):
 The sun dipped away behind ridges of blue,
 When Nia swooped low with a chirp of delight.
 She led all her friends through the shimmering dew,
@@ -61,10 +60,40 @@ response = client.models.generate_content(
     config=types.GenerateContentConfig(
         system_instruction=SYSTEM_INSTRUCTION,
         response_mime_type="application/json",
-        temperature=0.7, # Adds narrative variety while maintaining strict structure
+        temperature=0.75,
     ),
 )
 
+raw_text = response.text.strip()
+if "```" in raw_text:
+    match = re.search(r"\{.*\}", raw_text, re.DOTALL)
+    if match:
+        raw_text = match.group(0)
+
+now = datetime.now()
+new_story = json.loads(raw_text)
+new_story["id"] = now.strftime("%Y-%m-%d-%H%M%S")
+new_story["date"] = now.strftime("%A, %B %d, %Y")
+new_story["month_group"] = now.strftime("%b-%y")  # e.g., Aug-26
+new_story["timestamp"] = now.isoformat()
+
+archive = []
+if os.path.exists("stories.json"):
+    try:
+        with open("stories.json", "r", encoding="utf-8") as f:
+            archive = json.load(f)
+    except Exception:
+        archive = []
+
+archive.insert(0, new_story)
+
+with open("stories.json", "w", encoding="utf-8") as f:
+    json.dump(archive, f, indent=2, ensure_ascii=False)
+
+with open("story.json", "w", encoding="utf-8") as f:
+    json.dump(new_story, f, indent=2, ensure_ascii=False)
+
+print(f"Archived story: {new_story.get('title')} ({new_story['month_group']})")
 raw_text = response.text.strip()
 
 if "```" in raw_text:
