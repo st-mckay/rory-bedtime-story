@@ -1,0 +1,16 @@
+{
+  "name": "Rory's Bedtime Stories",
+  "short_name": "Bedtime Story",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#1a2f1a",
+  "theme_color": "#1a2f1a",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
