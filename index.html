@@ -269,6 +269,25 @@
     }
 
     loadStoryData();
+        // Initial load when the app starts
+    loadStoryData();
+
+    // 1. Force refresh whenever the app is opened or brought back to the foreground
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        // Only refresh to the newest tale if you're not intentionally viewing an older archive link
+        if (!targetStoryId) {
+          loadStoryData();
+        }
+      }
+    });
+
+    // 2. Poll every 5 minutes in case the app is left open around 7:00 PM
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && !targetStoryId) {
+        loadStoryData();
+      }
+    }, 5 * 60 * 1000);
   </script>
 </body>
 </html>
