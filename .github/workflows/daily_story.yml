@@ -1,0 +1,35 @@
+name: Generate Daily Bedtime Story
+
+on:
+  schedule:
+    # Runs daily at 19:00 (7 PM) UTC
+    - cron: '0 19 * * *'
+  workflow_dispatch: # Allows manual trigger from the GitHub Actions tab anytime
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install google-genai
+
+      - name: Generate story
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python generate_story.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "Bedtime Bot"
+          git config --global user.email "bot@github.com"
+          git add story.json
+          git diff-index --quiet HEAD || git commit -m "🌙 New bedtime story generated"
+          git push
