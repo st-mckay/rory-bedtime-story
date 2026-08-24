@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tonight's Bedtime Story</title>
-  <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-  <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-  <link href="[https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap](https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap)" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #1a2f1a;
@@ -154,9 +154,11 @@
     </div>
 
     <div class="icon">🌿 🌱</div>
-    <div class="date" id="date">Loading...</div>
+    <div class="date" id="date">Tonight</div>
     <h1 id="title">Tonight's Story</h1>
-    <div id="story-content"></div>
+    <div id="story-content">
+      <p class="verse">A cozy bedtime story is being prepared...</p>
+    </div>
 
     <div class="footer-controls">
       <button onclick="setGitHubAuth()">⚙️ Setup Generator</button>
@@ -171,28 +173,57 @@
     const urlParams = new URLSearchParams(window.location.search);
     const targetStoryId = urlParams.get('story');
 
-    fetch('stories.json?nocache=' + new Date().getTime())
-      .then(res => res.json())
-      .then(data => {
-        stories = data;
-        populateDropdown();
-
-        if (targetStoryId) {
-          const foundIdx = stories.findIndex(s => s.id === targetStoryId || s.date === targetStoryId);
-          renderStory(foundIdx !== -1 ? foundIdx : 0);
-        } else {
-          renderStory(0);
+    async function loadStoryData() {
+      try {
+        // Try fetching stories.json first
+        const resStories = await fetch('stories.json?nocache=' + Date.now());
+        if (resStories.ok) {
+          const data = await resStories.json();
+          if (Array.isArray(data) && data.length > 0) {
+            stories = data;
+            populateDropdown();
+            findAndRenderInitialStory();
+            return;
+          }
         }
-      })
-      .catch(() => {
-        fetch('story.json?nocache=' + new Date().getTime())
-          .then(res => res.json())
-          .then(data => {
-            stories = [data];
+      } catch (e) {
+        console.warn('Could not load stories.json, trying story.json');
+      }
+
+      try {
+        // Fallback to single story.json
+        const resSingle = await fetch('story.json?nocache=' + Date.now());
+        if (resSingle.ok) {
+          const single = await resSingle.json();
+          if (single && (single.title || single.verses)) {
+            stories = [single];
             populateDropdown();
             renderStory(0);
-          });
-      });
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Could not load story.json');
+      }
+
+      // If neither exists yet
+      document.getElementById('title').innerText = "Rory's Bedtime Tales";
+      document.getElementById('story-content').innerHTML = `
+        <p class="verse">No story found yet!</p>
+        <p class="verse" style="font-size:0.95rem; color:var(--text-muted);">
+          Click <strong>✨ Create New Story Now</strong> below (or run your GitHub Action once) to generate tonight's first tale.
+        </p>
+      `;
+    }
+
+    function findAndRenderInitialStory() {
+      if (targetStoryId) {
+        const foundIdx = stories.findIndex(s => s.id === targetStoryId || s.date === targetStoryId);
+        renderStory(foundIdx !== -1 ? foundIdx : 0);
+      } else {
+        renderStory(0);
+      }
+    }
 
     function populateDropdown() {
       const select = document.getElementById('storySelect');
@@ -200,7 +231,7 @@
       stories.forEach((s, idx) => {
         const opt = document.createElement('option');
         opt.value = idx;
-        opt.textContent = `${s.date}: ${s.title}`;
+        opt.textContent = `${s.date || 'Story'}: ${s.title || 'Untitled'}`;
         select.appendChild(opt);
       });
     }
@@ -210,18 +241,26 @@
       currentIndex = index;
       const s = stories[index];
 
-      document.getElementById('date').innerText = s.date;
-      document.getElementById('title').innerText = s.title;
+      document.getElementById('date').innerText = s.date || '';
+      document.getElementById('title').innerText = s.title || "Tonight's Story";
       document.getElementById('storySelect').value = index;
 
       const container = document.getElementById('story-content');
       container.innerHTML = '';
-      s.verses.forEach(verse => {
+
+      if (Array.isArray(s.verses)) {
+        s.verses.forEach(verse => {
+          const p = document.createElement('p');
+          p.className = 'verse';
+          p.textContent = verse;
+          container.appendChild(p);
+        });
+      } else if (typeof s.verses === 'string') {
         const p = document.createElement('p');
         p.className = 'verse';
-        p.textContent = verse;
+        p.textContent = s.verses;
         container.appendChild(p);
-      });
+      }
 
       document.getElementById('prevBtn').disabled = (currentIndex >= stories.length - 1);
       document.getElementById('nextBtn').disabled = (currentIndex <= 0);
@@ -239,8 +278,8 @@
     }
 
     function setGitHubAuth() {
-      const user = prompt("Enter your GitHub username:", localStorage.getItem('gh_user') || '');
-      const repo = prompt("Enter your GitHub repository name:", localStorage.getItem('gh_repo') || 'bedtime-story');
+      const user = prompt("Enter your GitHub username:", localStorage.getItem('gh_user') || 'st-mckay');
+      const repo = prompt("Enter your GitHub repository name:", localStorage.getItem('gh_repo') || 'rory-bedtime-story');
       const token = prompt("Enter your GitHub Personal Access Token (repo scope):", localStorage.getItem('gh_pat') || '');
       if (user && repo && token) {
         localStorage.setItem('gh_user', user);
@@ -251,12 +290,12 @@
     }
 
     function triggerNewStory() {
-      const user = localStorage.getItem('gh_user');
-      const repo = localStorage.getItem('gh_repo');
+      const user = localStorage.getItem('gh_user') || 'st-mckay';
+      const repo = localStorage.getItem('gh_repo') || 'rory-bedtime-story';
       const pat = localStorage.getItem('gh_pat');
 
-      if (!user || !repo || !pat) {
-        alert("Please click '⚙️ Setup Generator' first to enter your GitHub details.");
+      if (!pat) {
+        alert("Please click '⚙️ Setup Generator' first to enter your GitHub Personal Access Token.");
         return;
       }
 
@@ -264,7 +303,7 @@
       btn.innerText = "⏳ Requesting Story...";
       btn.disabled = true;
 
-      fetch(`[https://api.github.com/repos/$](https://api.github.com/repos/$){user}/${repo}/dispatches`, {
+      fetch(`https://api.github.com/repos/${user}/${repo}/dispatches`, {
         method: 'POST',
         headers: {
           'Accept': 'application/vnd.github.v3+json',
@@ -276,7 +315,7 @@
         if (res.ok) {
           alert("Story generation triggered! GitHub is crafting tonight's tale. Refresh this page in about 45-60 seconds.");
         } else {
-          alert("Failed to trigger generation. Please check your token permissions.");
+          alert("Failed to trigger generation. Please verify your token has 'repo' permissions.");
         }
       })
       .catch(err => alert("Error: " + err.message))
@@ -285,51 +324,9 @@
         btn.disabled = false;
       });
     }
-  </script>
-</body>
-</html>
-      margin-bottom: 22px;
-      line-height: 1.8;
-      font-size: 1.1rem;
-      white-space: pre-line;
-      color: var(--text-main);
-    }
 
-    /* Changed the icon to jungle leaves */
-    .icon {
-      font-size: 2rem;
-      margin-bottom: 12px;
-      color: #79a379; /* Soft leaf green */
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <div class="icon">🌿 🌱</div>
-    <div class="date" id="date">Loading...</div>
-    <h1 id="title">Tonight's Story</h1>
-    <div id="story-content"></div>
-  </div>
-
-  <script>
-    // Added a slight delay and nocache to force update after build
-    fetch('story.json?nocache=' + new Date().getTime())
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('date').innerText = data.date;
-        document.getElementById('title').innerText = data.title;
-        const container = document.getElementById('story-content');
-        container.innerHTML = '';
-        data.verses.forEach(verse => {
-          const p = document.createElement('p');
-          p.className = 'verse';
-          p.textContent = verse;
-          container.appendChild(p);
-        });
-      })
-      .catch(() => {
-        document.getElementById('story-content').innerHTML = '<p class="verse">A cozy story is on its way...</p>';
-      });
+    // Run loader
+    loadStoryData();
   </script>
 </body>
 </html>
