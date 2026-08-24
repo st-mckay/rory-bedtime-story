@@ -5,7 +5,6 @@ from datetime import datetime
 from google import genai
 from google.genai import types
 
-# Initialize Gemini Client
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
     raise ValueError("GEMINI_API_KEY environment variable is missing!")
@@ -71,12 +70,9 @@ if "```" in raw_text:
         raw_text = match.group(0)
 
 now = datetime.now()
-new_story = json.loads(raw_text)
-new_story["id"] = now.strftime("%Y-%m-%d-%H%M%S")
-new_story["date"] = now.strftime("%A, %B %d, %Y")
-new_story["month_group"] = now.strftime("%b-%y")  # e.g., Aug-26
-new_story["timestamp"] = now.isoformat()
+base_date = now.strftime("%A, %B %d, %Y")
 
+# Load existing archive
 archive = []
 if os.path.exists("stories.json"):
     try:
@@ -85,6 +81,22 @@ if os.path.exists("stories.json"):
     except Exception:
         archive = []
 
+# Count existing stories generated today to calculate incremental number
+today_count = sum(1 for s in archive if s.get("date_raw") == now.strftime("%Y-%m-%d"))
+
+if today_count > 0:
+    formatted_date = f"{base_date} (Story {today_count + 1})"
+else:
+    formatted_date = base_date
+
+new_story = json.loads(raw_text)
+new_story["id"] = now.strftime("%Y-%m-%d-%H%M%S")
+new_story["date_raw"] = now.strftime("%Y-%m-%d")
+new_story["date"] = formatted_date
+new_story["month_group"] = now.strftime("%b-%y")
+new_story["timestamp"] = now.isoformat()
+
+# Prepend newest story to archive
 archive.insert(0, new_story)
 
 with open("stories.json", "w", encoding="utf-8") as f:
@@ -93,18 +105,4 @@ with open("stories.json", "w", encoding="utf-8") as f:
 with open("story.json", "w", encoding="utf-8") as f:
     json.dump(new_story, f, indent=2, ensure_ascii=False)
 
-print(f"Archived story: {new_story.get('title')} ({new_story['month_group']})")
-raw_text = response.text.strip()
-
-if "```" in raw_text:
-    match = re.search(r"\{.*\}", raw_text, re.DOTALL)
-    if match:
-        raw_text = match.group(0)
-
-data = json.loads(raw_text)
-data["date"] = datetime.now().strftime("%A, %B %d, %Y")
-
-with open("story.json", "w", encoding="utf-8") as f:
-    json.dump(data, f, indent=2, ensure_ascii=False)
-
-print(f"Generated story: {data.get('title')}")
+print(f"Generated & Archived: {new_story.get('title')} as '{formatted_date}'")
