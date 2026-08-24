@@ -117,23 +117,6 @@
       white-space: pre-line;
     }
 
-    .footer-controls {
-      margin-top: 30px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .btn-gen {
-      background: #c5832b;
-    }
-    .btn-gen:hover {
-      background: #e09f3e;
-    }
-
     .icon {
       font-size: 2rem;
       margin-bottom: 8px;
@@ -157,12 +140,7 @@
     <div class="date" id="date">Tonight</div>
     <h1 id="title">Tonight's Story</h1>
     <div id="story-content">
-      <p class="verse">A cozy bedtime story is being prepared...</p>
-    </div>
-
-    <div class="footer-controls">
-      <button onclick="setGitHubAuth()">⚙️ Setup Generator</button>
-      <button class="btn-gen" id="genBtn" onclick="triggerNewStory()">✨ Create New Story Now</button>
+      <p class="verse">A cozy bedtime story is on its way...</p>
     </div>
   </div>
 
@@ -175,7 +153,6 @@
 
     async function loadStoryData() {
       try {
-        // Try fetching stories.json first
         const resStories = await fetch('stories.json?nocache=' + Date.now());
         if (resStories.ok) {
           const data = await resStories.json();
@@ -191,7 +168,6 @@
       }
 
       try {
-        // Fallback to single story.json
         const resSingle = await fetch('story.json?nocache=' + Date.now());
         if (resSingle.ok) {
           const single = await resSingle.json();
@@ -206,13 +182,9 @@
         console.warn('Could not load story.json');
       }
 
-      // If neither exists yet
       document.getElementById('title').innerText = "Rory's Bedtime Tales";
       document.getElementById('story-content').innerHTML = `
-        <p class="verse">No story found yet!</p>
-        <p class="verse" style="font-size:0.95rem; color:var(--text-muted);">
-          Click <strong>✨ Create New Story Now</strong> below (or run your GitHub Action once) to generate tonight's first tale.
-        </p>
+        <p class="verse">Tonight's tale is resting. Check back soon!</p>
       `;
     }
 
@@ -277,55 +249,6 @@
       renderStory(parseInt(val, 10));
     }
 
-    function setGitHubAuth() {
-      const user = prompt("Enter your GitHub username:", localStorage.getItem('gh_user') || 'st-mckay');
-      const repo = prompt("Enter your GitHub repository name:", localStorage.getItem('gh_repo') || 'rory-bedtime-story');
-      const token = prompt("Enter your GitHub Personal Access Token (repo scope):", localStorage.getItem('gh_pat') || '');
-      if (user && repo && token) {
-        localStorage.setItem('gh_user', user);
-        localStorage.setItem('gh_repo', repo);
-        localStorage.setItem('gh_pat', token);
-        alert("Setup saved securely in your browser!");
-      }
-    }
-
-    function triggerNewStory() {
-      const user = localStorage.getItem('gh_user') || 'st-mckay';
-      const repo = localStorage.getItem('gh_repo') || 'rory-bedtime-story';
-      const pat = localStorage.getItem('gh_pat');
-
-      if (!pat) {
-        alert("Please click '⚙️ Setup Generator' first to enter your GitHub Personal Access Token.");
-        return;
-      }
-
-      const btn = document.getElementById('genBtn');
-      btn.innerText = "⏳ Requesting Story...";
-      btn.disabled = true;
-
-      fetch(`https://api.github.com/repos/${user}/${repo}/dispatches`, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `token ${pat}`
-        },
-        body: JSON.stringify({ event_type: 'generate-story' })
-      })
-      .then(res => {
-        if (res.ok) {
-          alert("Story generation triggered! GitHub is crafting tonight's tale. Refresh this page in about 45-60 seconds.");
-        } else {
-          alert("Failed to trigger generation. Please verify your token has 'repo' permissions.");
-        }
-      })
-      .catch(err => alert("Error: " + err.message))
-      .finally(() => {
-        btn.innerText = "✨ Create New Story Now";
-        btn.disabled = false;
-      });
-    }
-
-    // Run loader
     loadStoryData();
   </script>
 </body>
