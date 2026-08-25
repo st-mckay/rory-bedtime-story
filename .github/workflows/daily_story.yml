@@ -2,8 +2,8 @@ name: Generate Daily Bedtime Story
 
 on:
   schedule:
-    # Runs automatically every evening at 19:00 UTC (8:00 PM BST / 7:00 PM GMT)
-    - cron: '0 19 * * *'
+    # 17:00 UTC = 18:00 (6:00 PM) BST / 17:00 (5:00 PM) GMT
+    - cron: '0 17 * * *'
   workflow_dispatch:
   repository_dispatch:
     types: [generate-story]
