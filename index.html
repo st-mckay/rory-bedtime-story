@@ -290,29 +290,27 @@
     }
 
     function triggerNewStory() {
-      // Replace with your real worker URL once ready
-      const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
-
-      const btn = document.getElementById('refreshBtn');
-      btn.innerText = "⏳ Generating Tale...";
-      btn.disabled = true;
-
-      fetch(WORKER_URL, {
-        method: 'POST',
-      })
-      .then(res => {
-        if (res.ok) {
-          alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
-        } else {
-          alert("Could not trigger workflow. Please verify your Cloudflare Worker URL and settings.");
-        }
-      })
-      .catch(err => alert("Error triggering tale: " + err.message))
-      .finally(() => {
-        btn.innerText = "✨ Refresh Story";
-        btn.disabled = false;
-      });
-    }
+     const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
+     const btn = document.getElementById('refreshBtn');
+     btn.innerText = "⏳ Generating Tale...";
+     btn.disabled = true;
+     fetch(WORKER_URL, {
+       method: 'POST',
+     })
+     .then(async res => {
+       const text = await res.text();
+       if (res.ok) {
+         alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
+       } else {
+         alert(`Error (HTTP ${res.status}): ${text}`);
+       }
+     })
+     .catch(err => alert("Network Error: " + err.message))
+     .finally(() => {
+       btn.innerText = "✨ Refresh Story";
+       btn.disabled = false;
+     });
+   }
 
     // Execute initial load
     loadStoryData();
