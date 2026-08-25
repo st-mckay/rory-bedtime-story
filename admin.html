@@ -91,16 +91,23 @@
       font-size: 0.9rem;
     }
 
-    .auth-banner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(26, 47, 26, 0.7);
+    /* Lock Screen Gate */
+    #lockScreen {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .lock-input {
+      background: rgba(26, 47, 26, 0.8);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
+      color: var(--text-main);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
       margin-bottom: 16px;
-      font-size: 0.85rem;
+      text-align: center;
+      width: 200px;
+      font-family: 'Vollkorn', serif;
     }
 
     /* Batch Controls Toolbar */
@@ -262,32 +269,38 @@
   <div class="container">
     <div class="top-bar">
       <a href="archive.html" class="nav-link">← Directory</a>
-      <a href="index.html" class="nav-link">Tonight's Story</a>
+      <button class="nav-btn" onclick="logoutAdmin()" id="logoutBtn" style="display:none;">🔒 Lock</button>
     </div>
 
     <h1>Archive Admin</h1>
     <p class="subtitle">Organize, rename, or batch delete tales by monthly collection</p>
 
-    <!-- Passcode Bar -->
-    <div class="auth-banner">
-      <span id="authStatus">🔒 Passcode Configured</span>
-      <button class="btn-edit" onclick="setAdminKey(true)">Change Key</button>
+    <!-- Locked Gate View -->
+    <div id="lockScreen">
+      <p style="color: var(--accent-title); font-size: 1.1rem; margin-bottom: 14px;">Enter Admin Passcode</p>
+      <form onsubmit="handleLogin(event)">
+        <input type="password" id="passcodeInput" class="lock-input" placeholder="Passcode" autocomplete="current-password" required><br>
+        <button type="submit" class="btn-edit" style="font-size: 0.95rem; padding: 8px 18px;">Unlock Session</button>
+      </form>
     </div>
 
-    <!-- Batch Selection Toolbar -->
-    <div class="batch-bar">
-      <div class="batch-selection-info">
-        <input type="checkbox" id="selectAllGlobal" onchange="toggleSelectAll(this.checked)" class="story-checkbox">
-        <span id="selectedCountText">0 selected</span>
+    <!-- Authenticated Content Area -->
+    <div id="adminApp" style="display: none;">
+      <!-- Batch Selection Toolbar -->
+      <div class="batch-bar">
+        <div class="batch-selection-info">
+          <input type="checkbox" id="selectAllGlobal" onchange="toggleSelectAll(this.checked)" class="story-checkbox">
+          <span id="selectedCountText">0 selected</span>
+        </div>
+        <div class="batch-actions">
+          <button class="btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedStories()" disabled>🗑️ Delete Selected</button>
+        </div>
       </div>
-      <div class="batch-actions">
-        <button class="btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedStories()" disabled>🗑️ Delete Selected</button>
-      </div>
-    </div>
 
-    <!-- Monthly Groups Container -->
-    <div id="accordionContainer">
-      <p style="text-align:center; color: var(--text-muted);">Loading archived stories...</p>
+      <!-- Monthly Groups Container -->
+      <div id="accordionContainer">
+        <p style="text-align:center; color: var(--text-muted);">Loading archived stories...</p>
+      </div>
     </div>
   </div>
 
@@ -295,25 +308,52 @@
     const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
     let stories = [];
     const selectedStoryIds = new Set();
+    let currentAdminKey = sessionStorage.getItem('rory_session_key') || '';
 
-    function getAdminKey() {
-      let key = localStorage.getItem('rory_admin_key');
-      if (!key) {
-        key = prompt("Enter your Admin Passcode:");
-        if (key && key.trim() !== "") {
-          localStorage.setItem('rory_admin_key', key.trim());
+    async function handleLogin(e) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('passcodeInput');
+      const pass = input.value.trim();
+      if (!pass) return;
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': pass
+          },
+          body: JSON.stringify({ action: 'verify_auth' })
+        });
+
+        if (res.ok) {
+          currentAdminKey = pass;
+          sessionStorage.setItem('rory_session_key', pass);
+          showAdminView();
+          loadStories();
+        } else {
+          alert("Invalid passcode. Access denied.");
+          input.value = '';
+          input.focus();
         }
+      } catch (err) {
+        alert("Verification error: " + err.message);
       }
-      return key;
     }
 
-    function setAdminKey(forcePrompt = false) {
-      const current = localStorage.getItem('rory_admin_key') || '';
-      const key = prompt("Enter new Admin Passcode:", current);
-      if (key !== null && key.trim() !== "") {
-        localStorage.setItem('rory_admin_key', key.trim());
-        alert("Passcode updated on this device.");
-      }
+    function showAdminView() {
+      document.getElementById('lockScreen').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      document.getElementById('logoutBtn').style.display = 'inline-block';
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem('rory_session_key');
+      currentAdminKey = '';
+      document.getElementById('adminApp').style.display = 'none';
+      document.getElementById('logoutBtn').style.display = 'none';
+      document.getElementById('lockScreen').style.display = 'block';
+      document.getElementById('passcodeInput').value = '';
     }
 
     async function loadStories() {
@@ -337,7 +377,7 @@
       if (story.date) {
         const parts = story.date.split(',');
         if (parts.length >= 2) {
-          const datePart = parts[1].trim(); // e.g. "August 25 2026"
+          const datePart = parts[1].trim();
           const tokens = datePart.split(' ');
           if (tokens.length >= 2) {
             const m = tokens[0].substring(0, 3);
@@ -356,7 +396,6 @@
         return;
       }
 
-      // Group stories chronologically by month
       const groups = {};
       stories.forEach(s => {
         const key = getMonthKey(s);
@@ -477,9 +516,6 @@
     }
 
     async function renameStory(storyId, currentTitle) {
-      const adminKey = getAdminKey();
-      if (!adminKey) return;
-
       const newTitle = prompt("Enter new title for this story:", currentTitle);
       if (!newTitle || newTitle.trim() === "" || newTitle.trim() === currentTitle) return;
 
@@ -492,7 +528,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-key': adminKey
+            'x-admin-key': currentAdminKey
           },
           body: JSON.stringify({
             action: 'rename',
@@ -507,21 +543,13 @@
         }
 
         titleEl.innerText = newTitle.trim();
-        alert("✨ Story renamed successfully! Changes committed to GitHub.");
       } catch (err) {
         titleEl.innerText = oldText;
-        if (err.message.includes("Unauthorized")) {
-          alert("Unauthorized! Incorrect passcode. Tap 'Change Key' to re-enter.");
-        } else {
-          alert("Failed to rename story: " + err.message);
-        }
+        alert("Failed to rename story: " + err.message);
       }
     }
 
     async function deleteSingleStory(storyId, title) {
-      const adminKey = getAdminKey();
-      if (!adminKey) return;
-
       const confirmDelete = confirm(`Are you sure you want to permanently delete:\n"${title}"?`);
       if (!confirmDelete) return;
 
@@ -533,7 +561,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-key': adminKey
+            'x-admin-key': currentAdminKey
           },
           body: JSON.stringify({
             action: 'delete',
@@ -546,22 +574,14 @@
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
 
-        alert("🗑️ Story deleted.");
         loadStories();
       } catch (err) {
         if (itemEl) itemEl.style.opacity = "1";
-        if (err.message.includes("Unauthorized")) {
-          alert("Unauthorized! Incorrect passcode. Tap 'Change Key' to re-enter.");
-        } else {
-          alert("Failed to delete story: " + err.message);
-        }
+        alert("Failed to delete story: " + err.message);
       }
     }
 
     async function deleteSelectedStories() {
-      const adminKey = getAdminKey();
-      if (!adminKey) return;
-
       const count = selectedStoryIds.size;
       if (count === 0) return;
 
@@ -577,7 +597,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'x-admin-key': adminKey
+            'x-admin-key': currentAdminKey
           },
           body: JSON.stringify({
             action: 'delete_batch',
@@ -590,20 +610,29 @@
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
 
-        alert(`🗑️ Successfully deleted ${count} stories from archive.`);
         loadStories();
       } catch (err) {
         deleteBtn.innerText = "🗑️ Delete Selected";
         deleteBtn.disabled = false;
-        if (err.message.includes("Unauthorized")) {
-          alert("Unauthorized! Incorrect passcode. Tap 'Change Key' to re-enter.");
-        } else {
-          alert("Failed to delete selected stories: " + err.message);
-        }
+        alert("Failed to delete selected stories: " + err.message);
       }
     }
 
-    loadStories();
+    // Auto-verify if session key already exists in memory
+    if (currentAdminKey) {
+      fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
+        body: JSON.stringify({ action: 'verify_auth' })
+      }).then(res => {
+        if (res.ok) {
+          showAdminView();
+          loadStories();
+        } else {
+          logoutAdmin();
+        }
+      }).catch(() => logoutAdmin());
+    }
   </script>
 </body>
 </html>
