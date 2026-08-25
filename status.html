@@ -28,7 +28,7 @@
 
     body {
       margin: 0;
-      padding: 30px 16px;
+      padding: 24px 12px 60px 12px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
@@ -46,8 +46,9 @@
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 32px 24px;
+      padding: 28px 18px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      box-sizing: border-box;
     }
 
     .top-bar {
@@ -55,67 +56,71 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
+      gap: 10px;
     }
 
-    a.nav-link {
+    a.nav-link, button.nav-btn {
       color: var(--accent-title);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 600;
       background: var(--btn-bg);
       padding: 8px 14px;
       border-radius: 8px;
       border: 1px solid var(--border);
       transition: background 0.2s;
+      font-family: 'Vollkorn', serif;
+      cursor: pointer;
     }
 
-    a.nav-link:hover {
+    a.nav-link:hover, button.nav-btn:hover {
       background: var(--btn-hover);
     }
 
     h1 {
       font-family: 'Crete Round', serif;
-      font-size: 2.1rem;
+      font-size: clamp(1.6rem, 5vw, 2.1rem);
       color: var(--accent-title);
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
       text-align: center;
     }
 
     p.subtitle {
       text-align: center;
       color: var(--text-muted);
-      margin-bottom: 28px;
-      font-size: 0.95rem;
+      margin-bottom: 24px;
+      font-size: 0.9rem;
     }
 
     .summary-card {
       background: rgba(26, 47, 26, 0.7);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 16px 20px;
-      margin-bottom: 24px;
+      padding: 14px 18px;
+      margin-bottom: 22px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 12px;
     }
 
     .summary-text {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 600;
     }
 
     .test-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 28px;
+      gap: 10px;
+      margin-bottom: 26px;
     }
 
     .test-item {
       background: rgba(26, 47, 26, 0.5);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 14px 18px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -125,22 +130,23 @@
     .test-info {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
       text-align: left;
     }
 
     .test-name {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .test-detail {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
+      line-height: 1.4;
     }
 
     .badge {
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       font-weight: bold;
@@ -165,13 +171,13 @@
       font-family: 'Crete Round', serif;
       color: var(--accent-title);
       margin-top: 0;
-      margin-bottom: 12px;
-      font-size: 1.25rem;
+      margin-bottom: 10px;
+      font-size: 1.15rem;
     }
 
     .action-links {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
       margin-top: 14px;
     }
@@ -179,10 +185,10 @@
     .btn-action {
       background: var(--btn-bg);
       color: var(--text-main);
-      padding: 8px 14px;
+      padding: 8px 12px;
       border-radius: 8px;
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       border: 1px solid var(--border);
       display: inline-block;
       transition: background 0.2s;
@@ -197,185 +203,197 @@
   <div class="container">
     <div class="top-bar">
       <a href="index.html" class="nav-link">← Tonight's Story</a>
-      <button onclick="runDiagnostics()" class="nav-link" style="cursor: pointer; border: 1px solid var(--border);">🔄 Re-run Checks</button>
+      <button onclick="runDiagnostics()" class="nav-btn">🔄 Re-run Suite</button>
     </div>
 
     <h1>System Diagnostics</h1>
-    <p class="subtitle">Real-time health verification of files, workflows, and bedtime schedules</p>
+    <p class="subtitle">Health verification for schedules, multi-story indexes, and webhook triggers</p>
 
-    <!-- Overall Status Header -->
+    <!-- Overall Summary -->
     <div class="summary-card">
       <div>
         <div class="summary-text" id="overall-status">Analyzing system...</div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);" id="overall-desc">Testing endpoints and JSON schemas</div>
+        <div style="font-size: 0.82rem; color: var(--text-muted);" id="overall-desc">Verifying JSON schemas and endpoints</div>
       </div>
       <span class="badge badge-check" id="overall-badge">Pending</span>
     </div>
 
-    <!-- Diagnostic Checks -->
-    <div class="test-list" id="test-results">
-      <!-- Generated via JavaScript -->
-    </div>
+    <!-- Diagnostic List -->
+    <div class="test-list" id="test-results"></div>
 
-    <!-- Recommended Actions & Direct Links -->
+    <!-- Quick Links & Actions -->
     <div class="action-box">
-      <h3>Quick Actions & Maintenance Links</h3>
-      <div style="font-size: 0.95rem; line-height: 1.6; color: var(--text-muted);" id="action-guidance">
-        Run diagnostics to generate tailored recommendations.
+      <h3>Management & Direct Dashboards</h3>
+      <div style="font-size: 0.88rem; line-height: 1.6; color: var(--text-muted);" id="action-guidance">
+        Run diagnostics to view status recommendations.
       </div>
       <div class="action-links">
-        <a href="https://github.com/st-mckay/rory-bedtime-story/actions" target="_blank" class="btn-action">⚡ Open GitHub Actions</a>
-        <a href="https://github.com/st-mckay/rory-bedtime-story/settings/secrets/actions" target="_blank" class="btn-action">🔑 Manage API Keys</a>
-        <a href="archive.html" class="btn-action">📚 Open Story Directory</a>
+        <a href="https://github.com/st-mckay/rory-bedtime-story/actions" target="_blank" class="btn-action">⚡ GitHub Actions</a>
+        <a href="https://dash.cloudflare.com/" target="_blank" class="btn-action">☁️ Cloudflare Workers</a>
+        <a href="https://github.com/st-mckay/rory-bedtime-story/settings/secrets/actions" target="_blank" class="btn-action">🔑 Repo Secrets</a>
+        <a href="archive.html" class="btn-action">📚 Story Directory</a>
       </div>
     </div>
   </div>
 
   <script>
+    // Paste your deployed Cloudflare Worker URL here (same as in index.html):
+    const CLOUDFLARE_WORKER_URL = "https://rory-trigger.your-subdomain.workers.dev";
+
     async function runDiagnostics() {
       const container = document.getElementById('test-results');
       container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Running diagnostic suite...</p>';
 
       const tests = [];
       let storiesData = null;
-      let singleStoryData = null;
 
-      // 1. Check stories.json accessibility and format
+      // 1. Stories Archive & Schema Integrity
       try {
         const res = await fetch('stories.json?nocache=' + Date.now());
         if (res.ok) {
           storiesData = await res.json();
           if (Array.isArray(storiesData) && storiesData.length > 0) {
-            tests.push({
-              name: 'Story Archive (`stories.json`)',
-              detail: `Healthy. ${storiesData.length} stories catalogued.`,
-              status: 'pass'
-            });
+            const hasValidSchema = storiesData.every(s => s.title && Array.isArray(s.verses) && s.verses.length === 6);
+            if (hasValidSchema) {
+              tests.push({
+                name: 'Archive & Verse Integrity (`stories.json`)',
+                detail: `Healthy. ${storiesData.length} stories catalogued with 6-verse schemas.`,
+                status: 'pass'
+              });
+            } else {
+              tests.push({
+                name: 'Archive & Verse Integrity (`stories.json`)',
+                detail: `Accessible (${storiesData.length} tales), but some entries deviate from the 6-verse format.`,
+                status: 'warn'
+              });
+            }
           } else {
             tests.push({
-              name: 'Story Archive (`stories.json`)',
-              detail: 'File is present but empty or unformatted.',
+              name: 'Archive (`stories.json`)',
+              detail: 'File is present but contains no story entries.',
               status: 'warn'
             });
           }
         } else {
           tests.push({
             name: 'Story Archive (`stories.json`)',
-            detail: `HTTP Error ${res.status} - Archive missing.`,
+            detail: `HTTP ${res.status}: Archive file missing or inaccessible.`,
             status: 'fail'
           });
         }
       } catch (err) {
         tests.push({
           name: 'Story Archive (`stories.json`)',
-          detail: 'Failed to parse JSON file.',
+          detail: 'Failed to parse JSON file (syntax error).',
           status: 'fail'
         });
       }
 
-      // 2. Check single story.json fallback
-      try {
-        const res = await fetch('story.json?nocache=' + Date.now());
-        if (res.ok) {
-          singleStoryData = await res.json();
-          if (singleStoryData && singleStoryData.title) {
+      // 2. Multi-Story & Schedule Status for Today
+      const now = new Date();
+      const todayBase = now.toLocaleDateString('en-US', {
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+      }); // e.g. "August 25, 2026"
+
+      if (storiesData && storiesData.length > 0) {
+        const todayStories = storiesData.filter(s => s.date && s.date.includes(todayBase));
+        
+        if (todayStories.length > 1) {
+          tests.push({
+            name: 'Today\'s Story Generation',
+            detail: `Active: ${todayStories.length} stories generated today with incremental numbering.`,
+            status: 'pass'
+          });
+        } else if (todayStories.length === 1) {
+          tests.push({
+            name: 'Today\'s Story Generation',
+            detail: `Active: "${todayStories[0].title}".`,
+            status: 'pass'
+          });
+        } else {
+          tests.push({
+            name: 'Today\'s Story Generation',
+            detail: `Latest is from ${storiesData[0].date || 'earlier'}. Scheduled run is 7:00 PM BST.`,
+            status: 'warn'
+          });
+        }
+      }
+
+      // 3. ID Uniqueness Check (Accounts for Multiple Same-Day Stories)
+      if (storiesData && storiesData.length > 1) {
+        const ids = storiesData.map(s => s.id || s.date);
+        const hasDuplicateIds = new Set(ids).size !== ids.length;
+
+        if (hasDuplicateIds) {
+          tests.push({
+            name: 'Entry Uniqueness',
+            detail: 'Duplicate story IDs detected in archive.',
+            status: 'warn'
+          });
+        } else {
+          tests.push({
+            name: 'Entry Uniqueness',
+            detail: 'All archived stories have unique identification stamps.',
+            status: 'pass'
+          });
+        }
+      }
+
+      // 4. Cloudflare Webhook Proxy Health
+      if (!CLOUDFLARE_WORKER_URL || CLOUDFLARE_WORKER_URL.includes("your-subdomain")) {
+        tests.push({
+          name: 'Cloudflare Trigger Proxy',
+          detail: 'Worker URL placeholder not configured in status.html.',
+          status: 'warn'
+        });
+      } else {
+        try {
+          const proxyRes = await fetch(CLOUDFLARE_WORKER_URL, {
+            method: 'OPTIONS'
+          });
+          if (proxyRes.ok || proxyRes.status === 204 || proxyRes.status === 200) {
             tests.push({
-              name: 'Active Story (`story.json`)',
-              detail: `Ready: "${singleStoryData.title}"`,
+              name: 'Cloudflare Trigger Proxy',
+              detail: 'Serverless trigger endpoint is online with active CORS headers.',
               status: 'pass'
             });
           } else {
             tests.push({
-              name: 'Active Story (`story.json`)',
-              detail: 'File exists but missing title or verse schema.',
+              name: 'Cloudflare Trigger Proxy',
+              detail: `Worker responded with HTTP ${proxyRes.status}.`,
               status: 'warn'
             });
           }
-        } else {
+        } catch (e) {
           tests.push({
-            name: 'Active Story (`story.json`)',
-            detail: `HTTP Error ${res.status}`,
+            name: 'Cloudflare Trigger Proxy',
+            detail: 'Failed to connect to worker URL. Verify Cloudflare deployment.',
             status: 'warn'
-          });
-        }
-      } catch (err) {
-        tests.push({
-          name: 'Active Story (`story.json`)',
-          detail: 'Failed to load fallback story file.',
-          status: 'warn'
-        });
-      }
-
-      // 3. Check Today's Story Delivery Schedule
-      const todayString = new Date().toLocaleDateString('en-US', {
-        month: 'long',
-        day: 'numeric',
-        year: 'numeric'
-      }); // e.g. "August 24, 2026"
-
-      if (storiesData && storiesData.length > 0) {
-        const latestStory = storiesData[0];
-        const isToday = latestStory.date && latestStory.date.includes(todayString);
-        
-        if (isToday) {
-          tests.push({
-            name: 'Daily Schedule Status',
-            detail: `Today's story generated successfully (${latestStory.date}).`,
-            status: 'pass'
-          });
-        } else {
-          tests.push({
-            name: 'Daily Schedule Status',
-            detail: `Latest story is from ${latestStory.date || 'unknown date'}. Scheduled run is 7:00 PM BST.`,
-            status: 'warn'
-          });
-        }
-      } else {
-        tests.push({
-          name: 'Daily Schedule Status',
-          detail: 'No story history available to calculate date.',
-          status: 'warn'
-        });
-      }
-
-      // 4. Check for Duplicate Story Dates in Archive
-      if (storiesData && storiesData.length > 1) {
-        const dates = storiesData.map(s => s.date);
-        const hasDuplicates = new Set(dates).size !== dates.length;
-        if (hasDuplicates) {
-          tests.push({
-            name: 'Archive Date Duplication',
-            detail: 'Duplicate dates detected in `stories.json`.',
-            status: 'warn'
-          });
-        } else {
-          tests.push({
-            name: 'Archive Integrity',
-            detail: 'All archived entries have unique date stamps.',
-            status: 'pass'
           });
         }
       }
 
-      // 5. Check Icon & Manifest Assets
+      // 5. App Shortcut Asset
       try {
         const iconRes = await fetch('apple-touch-icon.png', { method: 'HEAD' });
         if (iconRes.ok) {
           tests.push({
-            name: 'Shortcut Icon (`apple-touch-icon.png`)',
-            detail: 'Home screen asset loaded and ready.',
+            name: 'Home Screen Icon Asset',
+            detail: '`apple-touch-icon.png` is ready for iOS/Android shortcuts.',
             status: 'pass'
           });
         } else {
           tests.push({
-            name: 'Shortcut Icon (`apple-touch-icon.png`)',
+            name: 'Home Screen Icon Asset',
             detail: 'Icon missing or inaccessible.',
             status: 'warn'
           });
         }
       } catch (e) {
         tests.push({
-          name: 'Shortcut Icon',
+          name: 'Home Screen Icon Asset',
           detail: 'Could not fetch icon asset.',
           status: 'warn'
         });
@@ -402,7 +420,7 @@
         container.appendChild(div);
       });
 
-      // Update Overall Status Badge
+      // Update Top Status Card
       const statusText = document.getElementById('overall-status');
       const statusDesc = document.getElementById('overall-desc');
       const statusBadge = document.getElementById('overall-badge');
@@ -410,36 +428,31 @@
 
       if (hasFail) {
         statusText.innerText = 'Attention Required';
-        statusDesc.innerText = 'One or more critical components need maintenance.';
+        statusDesc.innerText = 'One or more critical components are failing.';
         statusBadge.className = 'badge badge-fail';
-        statusBadge.innerText = 'Issues Found';
+        statusBadge.innerText = 'Failing';
         guidance.innerHTML = `
-          • Check your <strong>GitHub Actions</strong> tab for failed runs.<br>
-          • Verify that <code>GEMINI_API_KEY</code> is correctly set in your repository secrets.<br>
-          • Make sure <code>stories.json</code> exists in the root folder.
+          • Check <strong>GitHub Actions</strong> logs for failed generation jobs.<br>
+          • Verify that <code>stories.json</code> exists and has valid JSON formatting.
         `;
       } else if (hasWarn) {
         statusText.innerText = 'System Operational with Notices';
-        statusDesc.innerText = 'Bedtime stories are running with minor items to review.';
+        statusDesc.innerText = 'Core features running; review notices above.';
         statusBadge.className = 'badge badge-warn';
-        statusBadge.innerText = 'Review';
+        statusBadge.innerText = 'Notices';
         guidance.innerHTML = `
-          • If today's story hasn't generated yet, it will trigger automatically at <strong>7:00 PM BST</strong>.<br>
-          • Check for duplicate story entries if manual builds were triggered multiple times today.<br>
-          • Ensure your GitHub Actions schedule remains active (re-enable if paused after 60 days).
+          • If today's tale hasn't generated yet, the cron trigger runs at <strong>7:00 PM BST</strong>.<br>
+          • Ensure <code>CLOUDFLARE_WORKER_URL</code> is updated with your real endpoint.
         `;
       } else {
         statusText.innerText = 'All Systems Optimal';
-        statusDesc.innerText = 'Archive, active story, schedules, and shortcut assets are fully synchronized.';
+        statusDesc.innerText = 'Archive, multi-story schemas, cron schedules, and proxies are healthy.';
         statusBadge.className = 'badge badge-pass';
-        statusBadge.innerText = 'Healthy';
-        guidance.innerHTML = `
-          ✨ Everything is in perfect order! Your nightly bedtime generator is healthy and ready for reading tonight.
-        `;
+        statusBadge.innerText = 'Optimal';
+        guidance.innerHTML = `✨ Everything is in sync! Both scheduled generation and instant refresh triggers are active.`;
       }
     }
 
-    // Run tests automatically on page load
     runDiagnostics();
   </script>
 </body>
