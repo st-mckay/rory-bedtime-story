@@ -2,8 +2,7 @@ name: Generate Daily Bedtime Story
 
 on:
   schedule:
-    # 17:00 UTC = 18:00 (6:00 PM) BST / 17:00 (5:00 PM) GMT
-    - cron: '45 20 * * *'
+    - cron: '25 21 * * *'
   workflow_dispatch:
   repository_dispatch:
     types: [generate-story]
