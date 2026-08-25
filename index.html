@@ -53,6 +53,7 @@
       padding: 32px 14px 28px 14px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       text-align: center;
+      box-sizing: border-box;
     }
 
     .logo {
@@ -84,13 +85,23 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-     .verse {
+    .verse {
       margin-bottom: 24px;
       line-height: 1.75;
-      /* Fluid typography: dynamically scales between ~0.92rem on small phones to 1.15rem on tablets/desktops */
       font-size: clamp(0.92rem, 3.8vw, 1.15rem);
       white-space: pre-line;
       letter-spacing: -0.1px;
+    }
+
+    .waiting-box {
+      padding: 30px 10px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
     }
 
     .bottom-section {
@@ -131,7 +142,7 @@
       font-size: 0.9rem;
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.2s;
+      transition: background 0.2s, opacity 0.2s;
       display: inline-block;
     }
 
@@ -159,6 +170,11 @@
     .btn-refresh:hover {
       background: var(--btn-refresh-hover);
     }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
@@ -185,17 +201,21 @@
   </div>
 
   <script>
+    // Paste your deployed Cloudflare Worker URL here
+    const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
+
     let stories = [];
     let currentIndex = 0;
+    let pollInterval = null;
 
     const urlParams = new URLSearchParams(window.location.search);
     const targetStoryId = urlParams.get('story');
 
     async function loadStoryData() {
       try {
-        const res = await fetch('stories.json?nocache=' + Date.now());
-        if (res.ok) {
-          const data = await res.json();
+        const resStories = await fetch('stories.json?nocache=' + Date.now());
+        if (resStories.ok) {
+          const data = await resStories.json();
           if (Array.isArray(data) && data.length > 0) {
             stories = data;
             populateDropdown();
@@ -204,7 +224,7 @@
           }
         }
       } catch (e) {
-        console.warn('stories.json load failed, checking story.json fallback', e);
+        console.warn('stories.json fetch error:', e);
       }
 
       try {
@@ -219,7 +239,7 @@
           }
         }
       } catch (e) {
-        console.error('Failed to load stories', e);
+        console.error('story.json fetch error:', e);
       }
 
       document.getElementById('title').innerText = "Rory's Bedtime Tales";
@@ -289,35 +309,87 @@
       renderStory(parseInt(val, 10));
     }
 
-    function triggerNewStory() {
-     const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
-     const btn = document.getElementById('refreshBtn');
-     btn.innerText = "⏳ Generating Tale...";
-     btn.disabled = true;
-     fetch(WORKER_URL, {
-       method: 'POST',
-     })
-     .then(async res => {
-       const text = await res.text();
-       if (res.ok) {
-         alert("✨ New story requested! GitHub is writing tonight's tale now. Refresh this page in ~45 seconds.");
-       } else {
-         alert(`Error (HTTP ${res.status}): ${text}`);
-       }
-     })
-     .catch(err => alert("Network Error: " + err.message))
-     .finally(() => {
-       btn.innerText = "✨ Refresh Story";
-       btn.disabled = false;
-     });
-   }
+    async function triggerNewStory() {
+      const btn = document.getElementById('refreshBtn');
+      const initialLatestId = stories.length > 0 ? (stories[0].id || stories[0].title) : null;
 
-    // Execute initial load
+      btn.innerText = "⏳ Generating Tale...";
+      btn.disabled = true;
+
+      try {
+        const res = await fetch(WORKER_URL, { method: 'POST' });
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(`Proxy error (${res.status}): ${errText}`);
+        }
+
+        // Show an in-page calming wait message
+        document.getElementById('title').innerText = "Weaving Tonight's Tale...";
+        document.getElementById('date').innerText = "Please wait a moment";
+        document.getElementById('story-content').innerHTML = `
+          <div class="waiting-box">
+            <p class="verse">✨ Rory and his friends are finding a new bedtime adventure...</p>
+            <p class="verse" style="color: var(--text-muted); font-size: 0.95rem;">This takes about 35–45 seconds. The new tale will appear automatically.</p>
+          </div>
+        `;
+
+        // Start background polling
+        startStoryPolling(initialLatestId);
+
+      } catch (err) {
+        alert("Error requesting new tale: " + err.message);
+        btn.innerText = "✨ Refresh Story";
+        btn.disabled = false;
+        renderStory(currentIndex);
+      }
+    }
+
+    function startStoryPolling(oldTopId) {
+      const btn = document.getElementById('refreshBtn');
+      const startTime = Date.now();
+      const MAX_WAIT_MS = 90000; // 90-second safety timeout
+
+      if (pollInterval) clearInterval(pollInterval);
+
+      pollInterval = setInterval(async () => {
+        // If elapsed time exceeds timeout, stop and re-enable
+        if (Date.now() - startTime > MAX_WAIT_MS) {
+          clearInterval(pollInterval);
+          btn.innerText = "✨ Refresh Story";
+          btn.disabled = false;
+          alert("Story generation is taking longer than usual. Please refresh in a moment.");
+          loadStoryData();
+          return;
+        }
+
+        try {
+          const res = await fetch('stories.json?nocache=' + Date.now());
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              const newTopId = data[0].id || data[0].title;
+              
+              // New story detected!
+              if (newTopId !== oldTopId) {
+                clearInterval(pollInterval);
+                stories = data;
+                populateDropdown();
+                renderStory(0); // Display the fresh tale immediately
+                btn.innerText = "✨ Refresh Story";
+                btn.disabled = false;
+              }
+            }
+          }
+        } catch (e) {
+          // Keep polling silently until timeout or success
+        }
+      }, 4000); // Check every 4 seconds
+    }
+
     loadStoryData();
 
-    // Auto-refresh when opening from background
     document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && !targetStoryId) {
+      if (document.visibilityState === 'visible' && !targetStoryId && !pollInterval) {
         loadStoryData();
       }
     });
