@@ -23,6 +23,7 @@
       --btn-hover: #588157;
       --btn-danger: #a83232;
       --btn-danger-hover: #c93b3b;
+      --toast-bg: #2d6a4f;
     }
 
     body {
@@ -48,6 +49,7 @@
       padding: 28px 16px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       box-sizing: border-box;
+      position: relative;
     }
 
     .top-bar {
@@ -108,6 +110,34 @@
       text-align: center;
       width: 200px;
       font-family: 'Vollkorn', serif;
+    }
+
+    /* Toast Notification */
+    #toast {
+      visibility: hidden;
+      min-width: 240px;
+      background-color: var(--toast-bg);
+      color: #fff;
+      text-align: center;
+      border-radius: 10px;
+      padding: 12px 20px;
+      position: fixed;
+      z-index: 1000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      font-size: 0.95rem;
+      opacity: 0;
+      transition: opacity 0.3s, bottom 0.3s;
+    }
+
+    #toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 40px;
     }
 
     /* Batch Controls Toolbar */
@@ -186,6 +216,7 @@
       justify-content: space-between;
       align-items: center;
       gap: 10px;
+      transition: background 0.2s;
     }
 
     .story-item.selected {
@@ -304,11 +335,23 @@
     </div>
   </div>
 
+  <!-- Confirmation Toast -->
+  <div id="toast">Changes saved to GitHub!</div>
+
   <script>
     const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
     let stories = [];
     const selectedStoryIds = new Set();
     let currentAdminKey = sessionStorage.getItem('rory_session_key') || '';
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.innerText = message;
+      toast.className = "show";
+      setTimeout(() => {
+        toast.className = toast.className.replace("show", "");
+      }, 3000);
+    }
 
     async function handleLogin(e) {
       if (e) e.preventDefault();
@@ -424,10 +467,11 @@
           <div class="story-list" id="content-${key}" style="display: ${isFirst ? 'flex' : 'none'};">
             ${monthStories.map(s => {
               const sId = s.id || s.date;
+              const isChecked = selectedStoryIds.has(sId);
               return `
-                <div class="story-item" id="item-${sId}">
+                <div class="story-item ${isChecked ? 'selected' : ''}" id="item-${sId}">
                   <div class="story-left">
-                    <input type="checkbox" class="story-checkbox story-check-item" value="${sId}" onchange="toggleStorySelect('${sId}', this.checked)">
+                    <input type="checkbox" class="story-checkbox story-check-item" value="${sId}" ${isChecked ? 'checked' : ''} onchange="toggleStorySelect('${sId}', this.checked)">
                     <div class="story-info">
                       <div class="story-title" id="title-${sId}">${s.title || 'Untitled'}</div>
                       <div class="story-date">${s.date || ''}</div>
@@ -542,7 +586,11 @@
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
 
+        // Update in-memory state & notify immediately
+        const s = stories.find(item => (item.id || item.date) === storyId);
+        if (s) s.title = newTitle.trim();
         titleEl.innerText = newTitle.trim();
+        showToast("✨ Story renamed successfully!");
       } catch (err) {
         titleEl.innerText = oldText;
         alert("Failed to rename story: " + err.message);
@@ -574,7 +622,12 @@
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
 
-        loadStories();
+        // Instant local update
+        stories = stories.filter(s => (s.id || s.date) !== storyId);
+        selectedStoryIds.delete(storyId);
+        updateBatchBar();
+        renderMonthlyGroups();
+        showToast("🗑️ Story deleted from archive!");
       } catch (err) {
         if (itemEl) itemEl.style.opacity = "1";
         alert("Failed to delete story: " + err.message);
@@ -610,7 +663,13 @@
           throw new Error(errData.error || `HTTP ${res.status}`);
         }
 
-        loadStories();
+        // Instant local update
+        stories = stories.filter(s => !selectedStoryIds.has(s.id) && !selectedStoryIds.has(s.date));
+        selectedStoryIds.clear();
+        updateBatchBar();
+        renderMonthlyGroups();
+        deleteBtn.innerText = "🗑️ Delete Selected";
+        showToast(`🗑️ ${count} stories deleted successfully!`);
       } catch (err) {
         deleteBtn.innerText = "🗑️ Delete Selected";
         deleteBtn.disabled = false;
@@ -618,7 +677,7 @@
       }
     }
 
-    // Auto-verify if session key already exists in memory
+    // Auto-verify if session key exists
     if (currentAdminKey) {
       fetch(WORKER_URL, {
         method: 'POST',
