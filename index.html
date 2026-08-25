@@ -32,7 +32,7 @@
 
     body {
       margin: 0;
-      padding: 30px 16px 60px 16px;
+      padding: 24px 8px 60px 8px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
@@ -50,7 +50,7 @@
       backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 36px 24px 28px 24px;
+      padding: 32px 14px 28px 14px;
       box-shadow: 0 10px 40px rgba(0,0,0,0.4);
       text-align: center;
     }
@@ -84,11 +84,13 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
 
-    .verse {
-      margin-bottom: 22px;
-      line-height: 1.85;
-      font-size: 1.15rem;
+     .verse {
+      margin-bottom: 24px;
+      line-height: 1.75;
+      /* Fluid typography: dynamically scales between ~0.92rem on small phones to 1.15rem on tablets/desktops */
+      font-size: clamp(0.92rem, 3.8vw, 1.15rem);
       white-space: pre-line;
+      letter-spacing: -0.1px;
     }
 
     .bottom-section {
