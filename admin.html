@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Archive Manager | Rory's Bedtime Tales</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #1a2f1a;
+      --card-bg: rgba(43, 66, 43, 0.88);
+      --text-main: #f0ede6;
+      --accent-title: #ffe16b;
+      --text-muted: #a3b18a;
+      --border: rgba(255, 255, 255, 0.12);
+      --btn-bg: #3a5a40;
+      --btn-hover: #588157;
+      --btn-danger: #a83232;
+      --btn-danger-hover: #c93b3b;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px 10px 60px 10px;
+      background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
+      color: var(--text-main);
+      font-family: 'Vollkorn', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      box-sizing: border-box;
+    }
+
+    .container {
+      max-width: 680px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 16px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      box-sizing: border-box;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    a.nav-link, button.nav-btn {
+      color: var(--accent-title);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--btn-bg);
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-family: 'Vollkorn', serif;
+      transition: background 0.2s;
+    }
+
+    a.nav-link:hover, button.nav-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    h1 {
+      font-family: 'Crete Round', serif;
+      font-size: clamp(1.6rem, 5vw, 2.1rem);
+      color: var(--accent-title);
+      margin: 0 0 6px 0;
+      text-align: center;
+    }
+
+    p.subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.9rem;
+    }
+
+    .auth-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 47, 26, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+      font-size: 0.85rem;
+    }
+
+    .story-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .story-item {
+      background: rgba(26, 47, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .story-info {
+      flex: 1;
+      text-align: left;
+    }
+
+    .story-title {
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: var(--accent-title);
+      margin-bottom: 2px;
+    }
+
+    .story-date {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .story-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-edit {
+      background: var(--btn-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: 'Vollkorn', serif;
+    }
+
+    .btn-edit:hover {
+      background: var(--btn-hover);
+    }
+
+    .btn-delete {
+      background: var(--btn-danger);
+      color: #fff;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-family: 'Vollkorn', serif;
+    }
+
+    .btn-delete:hover {
+      background: var(--btn-danger-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <a href="archive.html" class="nav-link">← Directory</a>
+      <a href="index.html" class="nav-link">Tonight's Story</a>
+    </div>
+
+    <h1>Archive Admin</h1>
+    <p class="subtitle">Securely rename titles or delete stories from GitHub</p>
+
+    <div class="auth-banner">
+      <span id="authStatus">🔒 Passcode Configured</span>
+      <button class="btn-edit" onclick="setAdminKey(true)">Change Key</button>
+    </div>
+
+    <div class="story-list" id="storyList">
+      <p style="text-align:center; color: var(--text-muted);">Loading stories from archive...</p>
+    </div>
+  </div>
+
+  <script>
+    const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
+    let stories = [];
+
+    function getAdminKey() {
+      let key = localStorage.getItem('rory_admin_key');
+      if (!key) {
+        key = prompt("Enter your Admin Passcode:");
+        if (key && key.trim() !== "") {
+          localStorage.setItem('rory_admin_key', key.trim());
+        }
+      }
+      return key;
+    }
+
+    function setAdminKey(forcePrompt = false) {
+      const current = localStorage.getItem('rory_admin_key') || '';
+      const key = prompt("Enter new Admin Passcode:", current);
+      if (key !== null && key.trim() !== "") {
+        localStorage.setItem('rory_admin_key', key.trim());
+        alert("Passcode updated on this device.");
+      }
+    }
+
+    async function loadStories() {
+      const container = document.getElementById('storyList');
+      container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Loading stories from archive...</p>';
+
+      try {
+        const res = await fetch('stories.json?nocache=' + Date.now());
+        if (!res.ok) throw new Error("Could not fetch stories");
+        stories = await res.json();
+        renderList();
+      } catch (err) {
+        container.innerHTML = `<p style="text-align:center; color:#f44336;">Failed to load archive: ${err.message}</p>`;
+      }
+    }
+
+    function renderList() {
+      const container = document.getElementById('storyList');
+      if (!stories || stories.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">No stories catalogued.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      stories.forEach((s) => {
+        const item = document.createElement('div');
+        item.className = 'story-item';
+        item.id = `item-${s.id || s.date}`;
+        item.innerHTML = `
+          <div class="story-info">
+            <div class="story-title" id="title-${s.id || s.date}">${s.title || 'Untitled'}</div>
+            <div class="story-date">${s.date || ''}</div>
+          </div>
+          <div class="story-actions">
+            <button class="btn-edit" onclick="renameStory('${s.id || s.date}', '${(s.title || '').replace(/'/g, "\\'")}')">✏️ Rename</button>
+            <button class="btn-delete" onclick="deleteStory('${s.id || s.date}', '${(s.title || '').replace(/'/g, "\\'")}')">🗑️ Delete</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    async function renameStory(storyId, currentTitle) {
+      const adminKey = getAdminKey();
+      if (!adminKey) return;
+
+      const newTitle = prompt("Enter new title for this story:", currentTitle);
+      if (!newTitle || newTitle.trim() === "" || newTitle.trim() === currentTitle) return;
+
+      const titleEl = document.getElementById(`title-${storyId}`);
+      const oldText = titleEl.innerText;
+      titleEl.innerText = "⏳ Saving new title...";
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': adminKey
+          },
+          body: JSON.stringify({
+            action: 'rename',
+            id: storyId,
+            new_title: newTitle.trim()
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP ${res.status}`);
+        }
+
+        titleEl.innerText = newTitle.trim();
+        alert("✨ Story renamed successfully! Changes committed to GitHub.");
+      } catch (err) {
+        titleEl.innerText = oldText;
+        if (err.message.includes("Unauthorized")) {
+          alert("Unauthorized! Incorrect passcode. Tap 'Change Key' to re-enter.");
+        } else {
+          alert("Failed to rename story: " + err.message);
+        }
+      }
+    }
+
+    async function deleteStory(storyId, title) {
+      const adminKey = getAdminKey();
+      if (!adminKey) return;
+
+      const confirmDelete = confirm(`Are you sure you want to permanently delete:\n"${title}"?`);
+      if (!confirmDelete) return;
+
+      const itemEl = document.getElementById(`item-${storyId}`);
+      itemEl.style.opacity = "0.4";
+
+      try {
+        const res = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': adminKey
+          },
+          body: JSON.stringify({
+            action: 'delete',
+            id: storyId
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP ${res.status}`);
+        }
+
+        itemEl.remove();
+        alert("🗑️ Story removed from archive and changes committed to GitHub.");
+      } catch (err) {
+        itemEl.style.opacity = "1";
+        if (err.message.includes("Unauthorized")) {
+          alert("Unauthorized! Incorrect passcode. Tap 'Change Key' to re-enter.");
+        } else {
+          alert("Failed to delete story: " + err.message);
+        }
+      }
+    }
+
+    loadStories();
+  </script>
+</body>
+</html>
