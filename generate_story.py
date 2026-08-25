@@ -26,8 +26,9 @@ Formatting & Style Rules (NON-NEGOTIABLE):
 2. Exactly 4 lines per verse (quatrain).
 3. Meter & Cadence: Strict, rolling anapestic tetrameter (approx 10-12 syllables per line, e.g. "da-da-DUM da-da-DUM da-da-DUM da-da-DUM").
 4. Rhyme Scheme: Strict ABAB in every single verse (Line 1 rhymes with Line 3, and Line 2 rhymes with Line 4). Never use AABB or unrhymed lines.
-5. Narrative: Keep it varied. Vary the setting (groves, caves, rivers, starry ridges), initial discovery, teamwork actions, and cozy closing scenes so it never reuses repetitive template phrasing across stories.
-6. Tone: Calming, serene, warm, and distinctly bedtime-oriented.
+5. NO CHARACTER ADJECTIVE PREFIXES: Use the character names directly ("Rory", "Tilly", "Benny", "Ricky", "Nia", "Psittaco"). NEVER prefix their names with descriptive filler adjectives (e.g., DO NOT write "Sweet Nia", "Brave Tilly", "Soft Rory", "Young Psittaco", "Small Psittaco", "Little Benny", "Gentle Ricky"). Let actions and natural dialogue convey their personality instead.
+6. Narrative: Keep it varied. Vary the setting (groves, caves, rivers, starry ridges), initial discovery, teamwork actions, and cozy closing scenes so it never reuses repetitive template phrasing across stories.
+7. Tone: Calming, serene, warm, and distinctly bedtime-oriented.
 """
 
 FEW_SHOT_EXAMPLE = """
