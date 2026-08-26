@@ -2,7 +2,7 @@ name: Generate Daily Bedtime Story
 
 on:
   schedule:
-    - cron: '20 16 * * *'
+    - cron: '20 08 * * *'
   workflow_dispatch:
   repository_dispatch:
     types: [generate-story]
