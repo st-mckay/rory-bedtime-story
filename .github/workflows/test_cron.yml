@@ -1,0 +1,16 @@
+name: Diagnostic Cron Test
+
+on:
+  schedule:
+    # 09:05 UTC = 10:05 BST (Set this ~10-15 mins ahead of current UTC time)
+    - cron: '5 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Timestamp
+        run: |
+          echo "GitHub Actions Cron triggered successfully!"
+          echo "Run timestamp: $(date -u)"
