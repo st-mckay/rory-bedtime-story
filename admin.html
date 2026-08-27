@@ -3,695 +3,666 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Archive Manager | Rory's Bedtime Tales</title>
-
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="apple-touch-icon.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
+  <title>Rory Bedtime Story - Admin Console</title>
   <style>
     :root {
-      --bg: #1a2f1a;
-      --card-bg: rgba(43, 66, 43, 0.88);
-      --text-main: #f0ede6;
-      --accent-title: #ffe16b;
-      --text-muted: #a3b18a;
-      --border: rgba(255, 255, 255, 0.12);
-      --btn-bg: #3a5a40;
-      --btn-hover: #588157;
-      --btn-danger: #a83232;
-      --btn-danger-hover: #c93b3b;
-      --toast-bg: #2d6a4f;
+      --bg-color: #0b1120;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --accent-blue-hover: #0ea5e9;
+      --success-bg: rgba(34, 197, 94, 0.15);
+      --success-text: #4ade80;
+      --warning-bg: rgba(234, 179, 8, 0.15);
+      --warning-text: #facc15;
+      --danger-bg: rgba(239, 68, 68, 0.15);
+      --danger-text: #f87171;
+      --info-bg: rgba(56, 189, 248, 0.15);
+      --info-text: #38bdf8;
+      --purple-bg: rgba(168, 85, 247, 0.15);
+      --purple-text: #c084fc;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 24px 8px 60px 8px;
-      background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
       color: var(--text-main);
-      font-family: 'Vollkorn', serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      box-sizing: border-box;
+      padding: 32px 16px;
+      line-height: 1.5;
     }
 
     .container {
-      max-width: 680px;
-      width: 100%;
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 28px 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-      box-sizing: border-box;
-      position: relative;
+      max-width: 1020px;
+      margin: 0 auto;
     }
 
     .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .header-title h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
       gap: 10px;
     }
 
-    a.nav-link, button.nav-btn {
-      color: var(--accent-title);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 600;
-      background: var(--btn-bg);
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      font-family: 'Vollkorn', serif;
-      transition: background 0.2s;
-    }
-
-    a.nav-link:hover, button.nav-btn:hover {
-      background: var(--btn-hover);
-    }
-
-    h1 {
-      font-family: 'Crete Round', serif;
-      font-size: clamp(1.6rem, 5vw, 2.1rem);
-      color: var(--accent-title);
-      margin: 0 0 6px 0;
-      text-align: center;
-    }
-
-    p.subtitle {
-      text-align: center;
+    .header-title p {
       color: var(--text-muted);
-      margin-bottom: 20px;
       font-size: 0.9rem;
+      margin-top: 4px;
     }
 
-    /* Lock Screen Gate */
-    #lockScreen {
-      padding: 40px 20px;
-      text-align: center;
+    .action-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
     }
 
-    .lock-input {
-      background: rgba(26, 47, 26, 0.8);
-      border: 1px solid var(--border);
-      color: var(--text-main);
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 1rem;
-      margin-bottom: 16px;
-      text-align: center;
-      width: 200px;
-      font-family: 'Vollkorn', serif;
-    }
-
-    /* Toast Notification */
-    #toast {
-      visibility: hidden;
-      min-width: 240px;
-      background-color: var(--toast-bg);
-      color: #fff;
-      text-align: center;
-      border-radius: 10px;
-      padding: 12px 20px;
-      position: fixed;
-      z-index: 1000;
-      left: 50%;
-      bottom: 30px;
-      transform: translateX(-50%);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
       font-weight: 600;
-      font-size: 0.95rem;
-      opacity: 0;
-      transition: opacity 0.3s, bottom 0.3s;
+      border-radius: 8px;
+      text-decoration: none;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
     }
 
-    #toast.show {
-      visibility: visible;
-      opacity: 1;
-      bottom: 40px;
+    .btn-primary {
+      background: var(--accent-blue);
+      color: #0b1120;
     }
 
-    /* Batch Controls Toolbar */
+    .btn-primary:hover {
+      background: var(--accent-blue-hover);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text-main);
+      border-color: var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: #283548;
+      border-color: #475569;
+    }
+
+    .btn-danger {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-disabled {
+      opacity: 0.4;
+      cursor: not-allowed !important;
+      pointer-events: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-header-flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .card-header-text h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .card-header-text p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* Passcode Input Area */
+    .auth-box {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      max-width: 460px;
+      margin-top: 12px;
+    }
+
+    .input-text {
+      flex: 1;
+      background: #141c2e;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 9px 14px;
+      color: var(--text-main);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .input-text:focus {
+      border-color: var(--accent-blue);
+    }
+
+    /* Batch Toolbar */
     .batch-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(26, 47, 26, 0.9);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 10px 14px;
-      margin-bottom: 20px;
-      gap: 10px;
+      background: #172033;
+      border: 1px solid var(--card-border);
+      padding: 10px 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
-    }
-
-    .batch-selection-info {
-      font-size: 0.88rem;
-      color: var(--accent-title);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .batch-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    /* Month Accordion */
-    .month-group {
-      margin-bottom: 14px;
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      overflow: hidden;
-      background: rgba(26, 47, 26, 0.4);
-    }
-
-    .month-header {
-      padding: 12px 16px;
-      background: rgba(43, 66, 43, 0.9);
-      font-weight: 600;
-      font-size: 1.05rem;
-      color: var(--accent-title);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .month-header:hover {
-      background: rgba(58, 90, 64, 0.8);
-    }
-
-    .month-title {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .story-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      padding: 10px;
-    }
-
-    .story-item {
-      background: rgba(26, 47, 26, 0.7);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 10px 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       gap: 10px;
-      transition: background 0.2s;
     }
 
-    .story-item.selected {
-      border-color: var(--accent-title);
-      background: rgba(58, 90, 64, 0.4);
+    .table-responsive {
+      overflow-x: auto;
     }
 
-    .story-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex: 1;
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
       text-align: left;
+      font-size: 0.875rem;
     }
 
-    .story-checkbox {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-      accent-color: var(--btn-hover);
-    }
-
-    .story-info {
-      flex: 1;
-    }
-
-    .story-title {
-      font-weight: 600;
-      font-size: 0.98rem;
-      color: var(--text-main);
-      margin-bottom: 2px;
-    }
-
-    .story-date {
-      font-size: 0.8rem;
+    .admin-table th {
+      background: #141c2e;
       color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--card-border);
     }
 
-    .story-actions {
-      display: flex;
-      gap: 6px;
-    }
-
-    .btn-edit {
-      background: var(--btn-bg);
+    .admin-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--card-border);
       color: var(--text-main);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 5px 8px;
-      font-size: 0.8rem;
+      vertical-align: middle;
+    }
+
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .admin-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .checkbox-col {
+      width: 40px;
+      text-align: center;
+    }
+
+    .checkbox-custom {
+      accent-color: var(--accent-blue);
       cursor: pointer;
-      font-family: 'Vollkorn', serif;
+      width: 16px;
+      height: 16px;
     }
 
-    .btn-edit:hover {
-      background: var(--btn-hover);
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      white-space: nowrap;
     }
 
-    .btn-danger {
-      background: var(--btn-danger);
-      color: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 5px 8px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      font-family: 'Vollkorn', serif;
+    .badge-success { background: var(--success-bg); color: var(--success-text); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+    .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
+    .badge-info    { background: var(--info-bg);    color: var(--info-text); }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
     }
 
-    .btn-danger:hover {
-      background: var(--btn-danger-hover);
+    /* Modal / Alert Toasts */
+    #status-toast {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
 
-    button:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
+    .toast-success { background: var(--success-bg); color: var(--success-text); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .toast-danger  { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .toast-info    { background: var(--info-bg); color: var(--info-text); border: 1px solid rgba(56, 189, 248, 0.3); }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="top-bar">
-      <a href="archive.html" class="nav-link">← Directory</a>
-      <button class="nav-btn" onclick="logoutAdmin()" id="logoutBtn" style="display:none;">🔒 Lock</button>
+
+<div class="container">
+  <!-- Top Navigation Bar -->
+  <div class="top-bar">
+    <div class="header-title">
+      <h1>🦖 Admin Console</h1>
+      <p>Story management, story generation triggers, and archive controls.</p>
     </div>
-
-    <h1>Archive Admin</h1>
-    <p class="subtitle">Organize, rename, or batch delete tales by monthly collection</p>
-
-    <!-- Locked Gate View -->
-    <div id="lockScreen">
-      <p style="color: var(--accent-title); font-size: 1.1rem; margin-bottom: 14px;">Enter Admin Passcode</p>
-      <form onsubmit="handleLogin(event)">
-        <input type="password" id="passcodeInput" class="lock-input" placeholder="Passcode" autocomplete="current-password" required><br>
-        <button type="submit" class="btn-edit" style="font-size: 0.95rem; padding: 8px 18px;">Unlock Session</button>
-      </form>
+    <div class="action-group">
+      <a href="index.html" class="btn btn-secondary">📖 Story</a>
+      <a href="directory.html" class="btn btn-secondary">📚 Archive</a>
+      <a href="health.html" class="btn btn-secondary">💚 Health</a>
+      <button class="btn btn-primary" id="btn-trigger-story" onclick="triggerStoryGeneration()">✨ Generate Story Now</button>
     </div>
+  </div>
 
-    <!-- Authenticated Content Area -->
-    <div id="adminApp" style="display: none;">
-      <!-- Batch Selection Toolbar -->
-      <div class="batch-bar">
-        <div class="batch-selection-info">
-          <input type="checkbox" id="selectAllGlobal" onchange="toggleSelectAll(this.checked)" class="story-checkbox">
-          <span id="selectedCountText">0 selected</span>
-        </div>
-        <div class="batch-actions">
-          <button class="btn-danger" id="deleteSelectedBtn" onclick="deleteSelectedStories()" disabled>🗑️ Delete Selected</button>
-        </div>
-      </div>
+  <div id="status-toast"></div>
 
-      <!-- Monthly Groups Container -->
-      <div id="accordionContainer">
-        <p style="text-align:center; color: var(--text-muted);">Loading archived stories...</p>
+  <!-- Key Metrics Summary -->
+  <div class="grid">
+    <div class="stat-card">
+      <div class="stat-label">Total Stories in Archive</div>
+      <div class="stat-value" id="stat-total-stories">--</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Latest Published Story</div>
+      <div class="stat-value" id="stat-latest-title">--</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Admin Session Status</div>
+      <div class="stat-value" id="stat-auth-status">
+        <span class="badge badge-warning"><span class="status-dot"></span>Locked</span>
       </div>
     </div>
   </div>
 
-  <!-- Confirmation Toast -->
-  <div id="toast">Changes saved to GitHub!</div>
+  <!-- Admin Passcode Card -->
+  <div class="admin-card" id="auth-card">
+    <div class="card-header-flex">
+      <div class="card-header-text">
+        <h2>Passcode Authentication</h2>
+        <p>Enter your secret key to authorize story modifications and deletions.</p>
+      </div>
+    </div>
+    <div class="auth-box">
+      <input type="password" id="admin-passcode" class="input-text" placeholder="Enter Admin Passcode...">
+      <button class="btn btn-primary" onclick="saveAndVerifyAuth()">Authorize</button>
+    </div>
+  </div>
 
-  <script>
-    const WORKER_URL = "https://rory-trigger.stuartmckay.workers.dev";
-    let stories = [];
-    const selectedStoryIds = new Set();
-    let currentAdminKey = sessionStorage.getItem('rory_session_key') || '';
+  <!-- Archive Management Card -->
+  <div class="admin-card">
+    <div class="card-header-flex">
+      <div class="card-header-text">
+        <h2>Story Archive Management</h2>
+        <p>Edit titles, review verses, or delete stories from <code>stories.json</code>.</p>
+      </div>
+      <div>
+        <button class="btn btn-secondary" onclick="loadStories()">↻ Refresh Archive</button>
+      </div>
+    </div>
 
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.innerText = message;
-      toast.className = "show";
-      setTimeout(() => {
-        toast.className = toast.className.replace("show", "");
-      }, 3000);
-    }
+    <!-- Batch Controls -->
+    <div class="batch-bar" id="batch-bar">
+      <div style="font-size: 0.85rem; color: var(--text-muted);">
+        <span id="selected-count">0</span> stories selected
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-danger btn-disabled" id="btn-batch-delete" onclick="batchDeleteSelected()">🗑️ Delete Selected</button>
+      </div>
+    </div>
 
-    async function handleLogin(e) {
-      if (e) e.preventDefault();
-      const input = document.getElementById('passcodeInput');
-      const pass = input.value.trim();
-      if (!pass) return;
+    <div class="table-responsive">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th class="checkbox-col"><input type="checkbox" id="select-all" class="checkbox-custom" onchange="toggleSelectAll(this)"></th>
+            <th style="width: 140px;">Date</th>
+            <th>Story Title</th>
+            <th style="width: 100px;">Verses</th>
+            <th style="width: 160px; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="stories-tbody">
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
+              Loading stories from archive...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-key': pass
-          },
-          body: JSON.stringify({ action: 'verify_auth' })
-        });
+<script>
+  const WORKER_ENDPOINT = "https://rory-bedtime-story.st-mckay.workers.dev";
+  let stories = [];
+  let selectedIds = new Set();
 
-        if (res.ok) {
-          currentAdminKey = pass;
-          sessionStorage.setItem('rory_session_key', pass);
-          showAdminView();
-          loadStories();
-        } else {
-          alert("Invalid passcode. Access denied.");
-          input.value = '';
-          input.focus();
-        }
-      } catch (err) {
-        alert("Verification error: " + err.message);
-      }
-    }
+  function showToast(message, type = "info") {
+    const toast = document.getElementById("status-toast");
+    toast.className = `toast-${type}`;
+    toast.textContent = message;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 5000);
+  }
 
-    function showAdminView() {
-      document.getElementById('lockScreen').style.display = 'none';
-      document.getElementById('adminApp').style.display = 'block';
-      document.getElementById('logoutBtn').style.display = 'inline-block';
-    }
+  function getPasscode() {
+    return localStorage.getItem("rory_admin_key") || "";
+  }
 
-    function logoutAdmin() {
-      sessionStorage.removeItem('rory_session_key');
-      currentAdminKey = '';
-      document.getElementById('adminApp').style.display = 'none';
-      document.getElementById('logoutBtn').style.display = 'none';
-      document.getElementById('lockScreen').style.display = 'block';
-      document.getElementById('passcodeInput').value = '';
-    }
+  async function saveAndVerifyAuth() {
+    const key = document.getElementById("admin-passcode").value.trim();
+    if (!key) return;
 
-    async function loadStories() {
-      const container = document.getElementById('accordionContainer');
-      container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">Loading archived stories...</p>';
-
-      try {
-        const res = await fetch('stories.json?nocache=' + Date.now());
-        if (!res.ok) throw new Error("Could not fetch archive file");
-        stories = await res.json();
-        selectedStoryIds.clear();
-        updateBatchBar();
-        renderMonthlyGroups();
-      } catch (err) {
-        container.innerHTML = `<p style="text-align:center; color:#f44336;">Failed to load archive: ${err.message}</p>`;
-      }
-    }
-
-    function getMonthKey(story) {
-      if (story.month_group) return story.month_group;
-      if (story.date) {
-        const parts = story.date.split(',');
-        if (parts.length >= 2) {
-          const datePart = parts[1].trim();
-          const tokens = datePart.split(' ');
-          if (tokens.length >= 2) {
-            const m = tokens[0].substring(0, 3);
-            const y = (tokens[tokens.length - 1] || '').slice(-2);
-            return `${m}-${y}`;
-          }
-        }
-      }
-      return 'Other';
-    }
-
-    function renderMonthlyGroups() {
-      const container = document.getElementById('accordionContainer');
-      if (!stories || stories.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color: var(--text-muted);">No stories catalogued.</p>';
-        return;
-      }
-
-      const groups = {};
-      stories.forEach(s => {
-        const key = getMonthKey(s);
-        if (!groups[key]) groups[key] = [];
-        groups[key].push(s);
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-key": key },
+        body: JSON.stringify({ action: "verify_auth" })
       });
 
-      container.innerHTML = '';
-      const groupKeys = Object.keys(groups);
-
-      groupKeys.forEach((key, index) => {
-        const monthDiv = document.createElement('div');
-        monthDiv.className = 'month-group';
-
-        const monthStories = groups[key];
-        const isFirst = index === 0;
-
-        monthDiv.innerHTML = `
-          <div class="month-header" onclick="toggleAccordion('content-${key}', 'icon-${key}')">
-            <div class="month-title">
-              <span id="icon-${key}">${isFirst ? '▼' : '▶'}</span>
-              <span>${key} (${monthStories.length})</span>
-            </div>
-            <button class="btn-edit" onclick="event.stopPropagation(); selectMonthStories('${key}')" style="font-size: 0.75rem;">Select All</button>
-          </div>
-          <div class="story-list" id="content-${key}" style="display: ${isFirst ? 'flex' : 'none'};">
-            ${monthStories.map(s => {
-              const sId = s.id || s.date;
-              const isChecked = selectedStoryIds.has(sId);
-              return `
-                <div class="story-item ${isChecked ? 'selected' : ''}" id="item-${sId}">
-                  <div class="story-left">
-                    <input type="checkbox" class="story-checkbox story-check-item" value="${sId}" ${isChecked ? 'checked' : ''} onchange="toggleStorySelect('${sId}', this.checked)">
-                    <div class="story-info">
-                      <div class="story-title" id="title-${sId}">${s.title || 'Untitled'}</div>
-                      <div class="story-date">${s.date || ''}</div>
-                    </div>
-                  </div>
-                  <div class="story-actions">
-                    <button class="btn-edit" onclick="renameStory('${sId}', '${(s.title || '').replace(/'/g, "\\'")}')">✏️</button>
-                    <button class="btn-danger" onclick="deleteSingleStory('${sId}', '${(s.title || '').replace(/'/g, "\\'")}')">🗑️</button>
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        `;
-        container.appendChild(monthDiv);
-      });
-    }
-
-    function toggleAccordion(contentId, iconId) {
-      const content = document.getElementById(contentId);
-      const icon = document.getElementById(iconId);
-      if (content.style.display === 'none') {
-        content.style.display = 'flex';
-        icon.innerText = '▼';
+      if (res.ok) {
+        localStorage.setItem("rory_admin_key", key);
+        document.getElementById("stat-auth-status").innerHTML = `<span class="badge badge-success"><span class="status-dot"></span>Authorized</span>`;
+        showToast("Admin passcode verified successfully.", "success");
       } else {
-        content.style.display = 'none';
-        icon.innerText = '▶';
+        showToast("Invalid admin passcode.", "danger");
       }
+    } catch (e) {
+      showToast("Verification failed: " + e.message, "danger");
     }
+  }
 
-    function toggleStorySelect(storyId, isChecked) {
-      const itemEl = document.getElementById(`item-${storyId}`);
-      if (isChecked) {
-        selectedStoryIds.add(storyId);
-        if (itemEl) itemEl.classList.add('selected');
+  async function triggerStoryGeneration() {
+    const btn = document.getElementById("btn-trigger-story");
+    btn.classList.add("btn-disabled");
+    showToast("Triggering story generation workflow...", "info");
+
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "generate" })
+      });
+
+      if (res.ok) {
+        showToast("Story generation dispatched successfully via Cloudflare!", "success");
       } else {
-        selectedStoryIds.delete(storyId);
-        if (itemEl) itemEl.classList.remove('selected');
+        const err = await res.json();
+        showToast("Failed to trigger: " + (err.error || "Unknown error"), "danger");
       }
-      updateBatchBar();
+    } catch (e) {
+      showToast("Error connecting to worker: " + e.message, "danger");
+    } finally {
+      btn.classList.remove("btn-disabled");
+    }
+  }
+
+  async function loadStories() {
+    const tbody = document.getElementById("stories-tbody");
+    try {
+      const res = await fetch(`stories.json?t=${Date.now()}`);
+      if (!res.ok) throw new Error("Could not load stories.json");
+      stories = await res.json();
+
+      document.getElementById("stat-total-stories").textContent = stories.length;
+      if (stories.length > 0) {
+        document.getElementById("stat-latest-title").textContent = stories[0].date || stories[0].title;
+      }
+
+      renderStoriesTable();
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to load stories: ${e.message}</td></tr>`;
+    }
+  }
+
+  function renderStoriesTable() {
+    const tbody = document.getElementById("stories-tbody");
+    tbody.innerHTML = "";
+    selectedIds.clear();
+    updateBatchUI();
+
+    if (stories.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No stories found in archive.</td></tr>`;
+      return;
     }
 
-    function toggleSelectAll(isChecked) {
-      const checkboxes = document.querySelectorAll('.story-check-item');
-      checkboxes.forEach(cb => {
-        cb.checked = isChecked;
-        const storyId = cb.value;
-        const itemEl = document.getElementById(`item-${storyId}`);
-        if (isChecked) {
-          selectedStoryIds.add(storyId);
-          if (itemEl) itemEl.classList.add('selected');
-        } else {
-          selectedStoryIds.delete(storyId);
-          if (itemEl) itemEl.classList.remove('selected');
-        }
+    stories.forEach((story, idx) => {
+      const storyId = story.id || story.date || `story-${idx}`;
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td class="checkbox-col">
+          <input type="checkbox" class="checkbox-custom story-checkbox" data-id="${storyId}" onchange="toggleSelectStory('${storyId}', this.checked)">
+        </td>
+        <td style="color: var(--text-muted); font-weight: 500;">${story.date || "--"}</td>
+        <td>
+          <span id="title-display-${idx}" style="font-weight: 600;">${escapeHtml(story.title || "Untitled")}</span>
+        </td>
+        <td><span class="badge badge-info">${story.verses ? story.verses.length : 0} Verses</span></td>
+        <td style="text-align: right;">
+          <div style="display: inline-flex; gap: 6px;">
+            <button class="btn btn-secondary" onclick="promptRenameStory('${storyId}', '${escapeHtml(story.title || '')}')">✏️ Rename</button>
+            <button class="btn btn-danger" onclick="deleteStory('${storyId}', '${escapeHtml(story.title || '')}')">🗑️</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function toggleSelectStory(id, checked) {
+    if (checked) {
+      selectedIds.add(id);
+    } else {
+      selectedIds.delete(id);
+    }
+    updateBatchUI();
+  }
+
+  function toggleSelectAll(masterCheckbox) {
+    const checkboxes = document.querySelectorAll(".story-checkbox");
+    checkboxes.forEach(cb => {
+      cb.checked = masterCheckbox.checked;
+      const id = cb.getAttribute("data-id");
+      if (masterCheckbox.checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+    });
+    updateBatchUI();
+  }
+
+  function updateBatchUI() {
+    const count = selectedIds.size;
+    document.getElementById("selected-count").textContent = count;
+    const btn = document.getElementById("btn-batch-delete");
+    if (count > 0) {
+      btn.classList.remove("btn-disabled");
+    } else {
+      btn.classList.add("btn-disabled");
+    }
+  }
+
+  async function promptRenameStory(id, currentTitle) {
+    const newTitle = prompt("Enter new title for this story:", currentTitle);
+    if (!newTitle || newTitle.trim() === currentTitle) return;
+
+    const key = getPasscode();
+    if (!key) {
+      showToast("Please authorize with your admin passcode first.", "warning");
+      return;
+    }
+
+    try {
+      showToast("Renaming story...", "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-key": key },
+        body: JSON.stringify({ action: "rename", id: id, new_title: newTitle.trim() })
       });
-      updateBatchBar();
+
+      if (res.ok) {
+        showToast("Story renamed successfully.", "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json();
+        showToast("Error renaming story: " + (err.error || "Unauthorized"), "danger");
+      }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
+    }
+  }
+
+  async function deleteStory(id, title) {
+    if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) return;
+
+    const key = getPasscode();
+    if (!key) {
+      showToast("Please authorize with your admin passcode first.", "warning");
+      return;
     }
 
-    function selectMonthStories(monthKey) {
-      const container = document.getElementById(`content-${monthKey}`);
-      if (!container) return;
-      const checkboxes = container.querySelectorAll('.story-check-item');
-      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-
-      checkboxes.forEach(cb => {
-        cb.checked = !allChecked;
-        const storyId = cb.value;
-        const itemEl = document.getElementById(`item-${storyId}`);
-        if (!allChecked) {
-          selectedStoryIds.add(storyId);
-          if (itemEl) itemEl.classList.add('selected');
-        } else {
-          selectedStoryIds.delete(storyId);
-          if (itemEl) itemEl.classList.remove('selected');
-        }
+    try {
+      showToast("Deleting story...", "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-key": key },
+        body: JSON.stringify({ action: "delete", id: id })
       });
-      updateBatchBar();
-    }
 
-    function updateBatchBar() {
-      const count = selectedStoryIds.size;
-      document.getElementById('selectedCountText').innerText = `${count} selected`;
-      document.getElementById('deleteSelectedBtn').disabled = (count === 0);
-      document.getElementById('selectAllGlobal').checked = (count > 0 && count === stories.length);
-    }
-
-    async function renameStory(storyId, currentTitle) {
-      const newTitle = prompt("Enter new title for this story:", currentTitle);
-      if (!newTitle || newTitle.trim() === "" || newTitle.trim() === currentTitle) return;
-
-      const titleEl = document.getElementById(`title-${storyId}`);
-      const oldText = titleEl.innerText;
-      titleEl.innerText = "⏳ Saving...";
-
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-key': currentAdminKey
-          },
-          body: JSON.stringify({
-            action: 'rename',
-            id: storyId,
-            new_title: newTitle.trim()
-          })
-        });
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.error || `HTTP ${res.status}`);
-        }
-
-        // Update in-memory state & notify immediately
-        const s = stories.find(item => (item.id || item.date) === storyId);
-        if (s) s.title = newTitle.trim();
-        titleEl.innerText = newTitle.trim();
-        showToast("✨ Story renamed successfully!");
-      } catch (err) {
-        titleEl.innerText = oldText;
-        alert("Failed to rename story: " + err.message);
+      if (res.ok) {
+        showToast("Story deleted from archive.", "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json();
+        showToast("Error deleting story: " + (err.error || "Unauthorized"), "danger");
       }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
+    }
+  }
+
+  async function batchDeleteSelected() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (!confirm(`Are you sure you want to permanently delete ${ids.length} selected stories?`)) return;
+
+    const key = getPasscode();
+    if (!key) {
+      showToast("Please authorize with your admin passcode first.", "warning");
+      return;
     }
 
-    async function deleteSingleStory(storyId, title) {
-      const confirmDelete = confirm(`Are you sure you want to permanently delete:\n"${title}"?`);
-      if (!confirmDelete) return;
+    try {
+      showToast(`Deleting ${ids.length} stories...`, "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-admin-key": key },
+        body: JSON.stringify({ action: "delete_batch", ids: ids })
+      });
 
-      const itemEl = document.getElementById(`item-${storyId}`);
-      if (itemEl) itemEl.style.opacity = "0.4";
-
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-key': currentAdminKey
-          },
-          body: JSON.stringify({
-            action: 'delete',
-            id: storyId
-          })
-        });
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.error || `HTTP ${res.status}`);
-        }
-
-        // Instant local update
-        stories = stories.filter(s => (s.id || s.date) !== storyId);
-        selectedStoryIds.delete(storyId);
-        updateBatchBar();
-        renderMonthlyGroups();
-        showToast("🗑️ Story deleted from archive!");
-      } catch (err) {
-        if (itemEl) itemEl.style.opacity = "1";
-        alert("Failed to delete story: " + err.message);
+      if (res.ok) {
+        showToast(`Successfully deleted ${ids.length} stories.`, "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json();
+        showToast("Batch deletion failed: " + (err.error || "Unauthorized"), "danger");
       }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
     }
+  }
 
-    async function deleteSelectedStories() {
-      const count = selectedStoryIds.size;
-      if (count === 0) return;
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
 
-      const confirmBatch = confirm(`Are you sure you want to permanently delete all ${count} selected stories?`);
-      if (!confirmBatch) return;
-
-      const deleteBtn = document.getElementById('deleteSelectedBtn');
-      deleteBtn.innerText = "⏳ Deleting...";
-      deleteBtn.disabled = true;
-
-      try {
-        const res = await fetch(WORKER_URL, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'x-admin-key': currentAdminKey
-          },
-          body: JSON.stringify({
-            action: 'delete_batch',
-            ids: Array.from(selectedStoryIds)
-          })
-        });
-
-        if (!res.ok) {
-          const errData = await res.json().catch(() => ({}));
-          throw new Error(errData.error || `HTTP ${res.status}`);
-        }
-
-        // Instant local update
-        stories = stories.filter(s => !selectedStoryIds.has(s.id) && !selectedStoryIds.has(s.date));
-        selectedStoryIds.clear();
-        updateBatchBar();
-        renderMonthlyGroups();
-        deleteBtn.innerText = "🗑️ Delete Selected";
-        showToast(`🗑️ ${count} stories deleted successfully!`);
-      } catch (err) {
-        deleteBtn.innerText = "🗑️ Delete Selected";
-        deleteBtn.disabled = false;
-        alert("Failed to delete selected stories: " + err.message);
-      }
+  document.addEventListener("DOMContentLoaded", () => {
+    const savedKey = getPasscode();
+    if (savedKey) {
+      document.getElementById("admin-passcode").value = savedKey;
+      saveAndVerifyAuth();
     }
+    loadStories();
+  });
+</script>
 
-    // Auto-verify if session key exists
-    if (currentAdminKey) {
-      fetch(WORKER_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': currentAdminKey },
-        body: JSON.stringify({ action: 'verify_auth' })
-      }).then(res => {
-        if (res.ok) {
-          showAdminView();
-          loadStories();
-        } else {
-          logoutAdmin();
-        }
-      }).catch(() => logoutAdmin());
-    }
-  </script>
 </body>
 </html>
