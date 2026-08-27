@@ -108,6 +108,12 @@
       border-color: #475569;
     }
 
+    .btn-disabled {
+      opacity: 0.4;
+      cursor: not-allowed !important;
+      pointer-events: none;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -237,6 +243,28 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
+    /* Pagination Footer */
+    .pagination-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pagination-info {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pagination-controls {
+      display: flex;
+      gap: 8px;
+    }
+
     .badge {
       display: inline-flex;
       align-items: center;
@@ -353,7 +381,7 @@
       <table class="health-table">
         <thead>
           <tr>
-            <th style="width: 130px;">Category</th>
+            <th style="width: 140px;">Category</th>
             <th>Action / Commit Message</th>
             <th style="width: 140px;">Author</th>
             <th style="width: 160px;">Timestamp (UTC)</th>
@@ -368,15 +396,26 @@
         </tbody>
       </table>
     </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-bar" id="pagination-bar" style="display: none;">
+      <div class="pagination-info" id="pagination-info">Showing 1–10 of 10 entries</div>
+      <div class="pagination-controls">
+        <button class="btn btn-secondary" id="prev-btn" onclick="changePage(-1)">← Previous</button>
+        <button class="btn btn-secondary" id="next-btn" onclick="changePage(1)">Next →</button>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
   const REPO_OWNER = "st-mckay";
   const REPO_NAME = "rory-bedtime-story";
+  const ITEMS_PER_PAGE = 10;
 
   let loadedCommits = [];
   let currentFilter = "all";
+  let currentPage = 1;
 
   const expectedWorkflows = [
     {
@@ -475,24 +514,30 @@
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     try {
-      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?since=${sevenDaysAgo.toISOString()}&per_page=40`);
+      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?since=${sevenDaysAgo.toISOString()}&per_page=100`);
       if (!res.ok) throw new Error("Could not retrieve commits");
       loadedCommits = await res.json();
 
+      currentPage = 1;
       renderChangeLog();
     } catch (err) {
       tbody.innerHTML = `<tr><td colspan="4" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to load activity logs: ${err.message}</td></tr>`;
+      document.getElementById("pagination-bar").style.display = "none";
     }
   }
 
   function renderChangeLog() {
     const tbody = document.getElementById("changelog-tbody");
+    const paginationBar = document.getElementById("pagination-bar");
+    const paginationInfo = document.getElementById("pagination-info");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+
     if (!loadedCommits || loadedCommits.length === 0) {
       tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">No commits or system changes recorded in the last 7 days.</td></tr>`;
+      paginationBar.style.display = "none";
       return;
     }
-
-    tbody.innerHTML = "";
 
     const filtered = loadedCommits.filter(item => {
       const msg = item.commit.message;
@@ -500,12 +545,26 @@
       return currentFilter === "all" || cat === currentFilter;
     });
 
-    if (filtered.length === 0) {
+    const totalItems = filtered.length;
+
+    if (totalItems === 0) {
       tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">No entries match this filter category.</td></tr>`;
+      paginationBar.style.display = "none";
       return;
     }
 
-    filtered.forEach(item => {
+    // Pagination bounds calculation
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+    const paginatedItems = filtered.slice(startIndex, endIndex);
+
+    tbody.innerHTML = "";
+
+    paginatedItems.forEach(item => {
       const rawMessage = item.commit.message.split("\n")[0];
       const author = item.commit.author.name;
       const dateObj = new Date(item.commit.author.date);
@@ -541,6 +600,27 @@
       `;
       tbody.appendChild(tr);
     });
+
+    // Update Pagination Controls UI
+    paginationBar.style.display = "flex";
+    paginationInfo.textContent = `Showing ${startIndex + 1}–${endIndex} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
+
+    if (currentPage <= 1) {
+      prevBtn.classList.add("btn-disabled");
+    } else {
+      prevBtn.classList.remove("btn-disabled");
+    }
+
+    if (currentPage >= totalPages) {
+      nextBtn.classList.add("btn-disabled");
+    } else {
+      nextBtn.classList.remove("btn-disabled");
+    }
+  }
+
+  function changePage(direction) {
+    currentPage += direction;
+    renderChangeLog();
   }
 
   function getCategory(message) {
@@ -552,6 +632,7 @@
 
   function filterLogs(category, btnElement) {
     currentFilter = category;
+    currentPage = 1;
     document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
     if (btnElement) btnElement.classList.add("active");
     renderChangeLog();
@@ -565,769 +646,6 @@
     checkStoriesData();
     loadWorkflowScheduleHealth();
     load7DayChangeLog();
-  }
-
-  document.addEventListener("DOMContentLoaded", refreshAllHealthMetrics);
-</script>
-
-</body>
-</html>      margin-top: 4px;
-    }
-
-    .action-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 8px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
-    }
-
-    .btn-primary {
-      background: var(--accent-blue);
-      color: #0f172a;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-blue-hover);
-    }
-
-    .btn-secondary {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border-color: var(--card-border);
-    }
-
-    .btn-secondary:hover {
-      background: #283548;
-      border-color: #475569;
-    }
-
-    .health-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-header {
-      margin-bottom: 18px;
-    }
-
-    .card-header h2 {
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .card-header p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    .health-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    .health-table th {
-      background: #172033;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .health-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--card-border);
-      color: var(--text-main);
-    }
-
-    .health-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    /* Change Log List Styles */
-    .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .log-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 12px 14px;
-      background: #172033;
-      border-radius: 8px;
-      border: 1px solid var(--card-border);
-    }
-
-    .log-details {
-      flex: 1;
-    }
-
-    .log-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 2px;
-    }
-
-    .log-meta {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.025em;
-      white-space: nowrap;
-    }
-
-    .badge-success { background: var(--success-bg); color: var(--success-text); }
-    .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
-    .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
-    .badge-info    { background: var(--info-bg);    color: var(--info-text); }
-    .badge-purple  { background: var(--purple-bg);  color: var(--purple-text); }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: currentColor;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <!-- Top Navigation Bar -->
-  <div class="top-bar">
-    <div class="header-title">
-      <h1>🦖 System Health & Pipeline</h1>
-      <p>Real-time execution status of automation routines and change activity.</p>
-    </div>
-    <div class="action-group">
-      <a href="admin.html" class="btn btn-secondary">← Back to Admin</a>
-      <button class="btn btn-primary" onclick="refreshAllHealthMetrics()">↻ Refresh</button>
-    </div>
-  </div>
-
-  <!-- Key Metrics Summary -->
-  <div class="grid">
-    <div class="stat-card">
-      <div class="stat-label">Latest Published Story</div>
-      <div class="stat-value" id="latest-story-date">Checking...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Stories in Archive</div>
-      <div class="stat-value" id="total-stories-count">Checking...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Automation Pipeline</div>
-      <div class="stat-value" id="api-gateway-status">
-        <span class="badge badge-info"><span class="status-dot"></span>Checking...</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Schedule vs Execution Matrix -->
-  <div class="health-card">
-    <div class="card-header">
-      <h2>Workflow Schedule vs. Execution</h2>
-      <p>Compares configured Cloudflare/GitHub automation schedules with live execution runs.</p>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="health-table" id="schedule-table">
-        <thead>
-          <tr>
-            <th>Workflow</th>
-            <th>Expected Schedule</th>
-            <th>Trigger Channel</th>
-            <th>Last Executed (UTC)</th>
-            <th>Execution Status</th>
-          </tr>
-        </thead>
-        <tbody id="schedule-tbody">
-          <tr>
-            <td colspan="5" style="text-align: center; color: var(--text-muted);">
-              Connecting to GitHub API logs...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- 7-Day Change Log -->
-  <div class="health-card">
-    <div class="card-header">
-      <h2>7-Day System Change Log & Activity</h2>
-      <p>Recent configuration updates, story publications, and architectural adjustments.</p>
-    </div>
-    <div class="log-list" id="change-log-container">
-      <div style="text-align: center; color: var(--text-muted); padding: 12px;">Loading recent change activity...</div>
-    </div>
-  </div>
-</div>
-
-<script>
-  const REPO_OWNER = "st-mckay";
-  const REPO_NAME = "rory-bedtime-story";
-
-  const expectedWorkflows = [
-    {
-      file: "bedtime_story.yml",
-      name: "Generate Daily Bedtime Story",
-      targetDisplay: "Daily @ 17:15 UTC via Cloudflare Cron"
-    },
-    {
-      file: "pages-build-deployment",
-      name: "GitHub Pages Deployment",
-      targetDisplay: "Automatic on commit to main"
-    }
-  ];
-
-  async function checkStoriesData() {
-    try {
-      const res = await fetch(`stories.json?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Could not load stories.json");
-      const stories = await res.json();
-
-      document.getElementById("total-stories-count").textContent = stories.length;
-      if (stories.length > 0) {
-        document.getElementById("latest-story-date").textContent = stories[0].date || stories[0].title || "Available";
-      } else {
-        document.getElementById("latest-story-date").textContent = "Empty";
-      }
-    } catch (e) {
-      document.getElementById("total-stories-count").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
-      document.getElementById("latest-story-date").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
-    }
-  }
-
-  async function loadWorkflowScheduleHealth() {
-    const tbody = document.getElementById("schedule-tbody");
-
-    try {
-      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/runs?per_page=20`);
-      if (!res.ok) throw new Error("GitHub API unavailable or rate-limited");
-      
-      const data = await res.json();
-      const runs = data.workflow_runs || [];
-
-      document.getElementById("api-gateway-status").innerHTML = `<span class="badge badge-success"><span class="status-dot"></span>Online</span>`;
-      tbody.innerHTML = "";
-
-      expectedWorkflows.forEach(config => {
-        const latestRun = runs.find(r => (r.path && r.path.includes(config.file)) || (r.name && r.name === config.name));
-        const tr = document.createElement("tr");
-
-        if (!latestRun) {
-          tr.innerHTML = `
-            <td><strong>${config.name}</strong></td>
-            <td style="color: var(--text-muted);">${config.targetDisplay}</td>
-            <td><span class="badge badge-warning"><span class="status-dot"></span>No records</span></td>
-            <td style="color: var(--text-muted);">--</td>
-            <td><span class="badge badge-warning"><span class="status-dot"></span>Awaiting First Run</span></td>
-          `;
-        } else {
-          const runDate = new Date(latestRun.created_at);
-          const actualTimeUTC = runDate.toISOString().replace("T", " ").substring(0, 16) + " UTC";
-
-          let triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>${latestRun.event}</span>`;
-          if (latestRun.event === "repository_dispatch") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>Cloudflare Trigger</span>`;
-          } else if (latestRun.event === "schedule") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>GitHub Cron</span>`;
-          } else if (latestRun.event === "workflow_dispatch") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>Manual Dispatch</span>`;
-          }
-
-          let statusBadge = `<span class="badge badge-success"><span class="status-dot"></span>Success</span>`;
-          if (latestRun.conclusion === "failure") {
-            statusBadge = `<span class="badge badge-danger"><span class="status-dot"></span>Failed</span>`;
-          } else if (latestRun.status === "in_progress" || latestRun.status === "queued") {
-            statusBadge = `<span class="badge badge-warning"><span class="status-dot"></span>Running</span>`;
-          }
-
-          tr.innerHTML = `
-            <td><strong>${config.name}</strong></td>
-            <td style="color: var(--text-muted);">${config.targetDisplay}</td>
-            <td>${triggerBadge}</td>
-            <td>${actualTimeUTC}</td>
-            <td>${statusBadge}</td>
-          `;
-        }
-
-        tbody.appendChild(tr);
-      });
-    } catch (err) {
-      document.getElementById("api-gateway-status").innerHTML = `<span class="badge badge-warning"><span class="status-dot"></span>Degraded</span>`;
-      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to fetch execution records: ${err.message}</td></tr>`;
-    }
-  }
-
-  async function load7DayChangeLog() {
-    const logContainer = document.getElementById("change-log-container");
-    const sevenDaysAgo = new Date();
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-
-    try {
-      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/commits?since=${sevenDaysAgo.toISOString()}&per_page=30`);
-      if (!res.ok) throw new Error("Could not retrieve commits");
-      const commits = await res.json();
-
-      if (!commits || commits.length === 0) {
-        logContainer.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding: 12px;">No commits or system changes recorded in the last 7 days.</div>`;
-        return;
-      }
-
-      logContainer.innerHTML = "";
-
-      commits.forEach(item => {
-        const message = item.commit.message.split("\n")[0];
-        const author = item.commit.author.name;
-        const dateObj = new Date(item.commit.author.date);
-        const dateStr = dateObj.toISOString().replace("T", " ").substring(0, 16) + " UTC";
-
-        let badgeHtml = `<span class="badge badge-info">Config</span>`;
-        let description = "Repository code or workflow update";
-
-        if (message.startsWith("Add bedtime story")) {
-          badgeHtml = `<span class="badge badge-success">Story Published</span>`;
-          description = "Automated daily bedtime story generation";
-        } else if (message.startsWith("Admin: Delete") || message.startsWith("Admin: Batch delete")) {
-          badgeHtml = `<span class="badge badge-danger">Admin Action</span>`;
-          description = "Story removed from archive via admin portal";
-        } else if (message.startsWith("Admin: Rename")) {
-          badgeHtml = `<span class="badge badge-warning">Admin Action</span>`;
-          description = "Story metadata updated via admin portal";
-        } else if (message.toLowerCase().includes("workflow") || message.toLowerCase().includes("cron") || message.toLowerCase().includes("clean")) {
-          badgeHtml = `<span class="badge badge-purple">Pipeline</span>`;
-          description = "GitHub Actions or Cloudflare automation adjustment";
-        }
-
-        const row = document.createElement("div");
-        row.className = "log-item";
-        row.innerHTML = `
-          <div>${badgeHtml}</div>
-          <div class="log-details">
-            <div class="log-title">${escapeHtml(message)}</div>
-            <div class="log-meta">${description} • <em>${escapeHtml(author)}</em> at ${dateStr}</div>
-          </div>
-        `;
-        logContainer.appendChild(row);
-      });
-    } catch (err) {
-      logContainer.innerHTML = `<div style="color: var(--danger-text); text-align: center; padding: 12px;">Failed to load activity logs: ${err.message}</div>`;
-    }
-  }
-
-  function escapeHtml(str) {
-    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
-
-  function refreshAllHealthMetrics() {
-    checkStoriesData();
-    loadWorkflowScheduleHealth();
-    load7DayChangeLog();
-  }
-
-  document.addEventListener("DOMContentLoaded", refreshAllHealthMetrics);
-</script>
-
-</body>
-</html>    }
-
-    .action-group {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    /* Standard Admin Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 16px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 8px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
-    }
-
-    .btn-primary {
-      background: var(--accent-blue);
-      color: #0f172a;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-blue-hover);
-    }
-
-    .btn-secondary {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border-color: var(--card-border);
-    }
-
-    .btn-secondary:hover {
-      background: #283548;
-      border-color: #475569;
-    }
-
-    /* Card Panels */
-    .health-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
-    }
-
-    .card-header {
-      margin-bottom: 18px;
-    }
-
-    .card-header h2 {
-      font-size: 1.15rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .card-header p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    /* Stats Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .stat-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 18px 20px;
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .stat-value {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* Table Styles */
-    .table-responsive {
-      overflow-x: auto;
-    }
-
-    .health-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.875rem;
-    }
-
-    .health-table th {
-      background: #172033;
-      color: var(--text-muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    .health-table td {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--card-border);
-      color: var(--text-main);
-    }
-
-    .health-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    /* Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.025em;
-    }
-
-    .badge-success { background: var(--success-bg); color: var(--success-text); }
-    .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
-    .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
-    .badge-info    { background: var(--info-bg);    color: var(--info-text); }
-
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background-color: currentColor;
-    }
-  </style>
-</head>
-<body>
-
-<div class="container">
-  <!-- Top Navigation Bar -->
-  <div class="top-bar">
-    <div class="header-title">
-      <h1>🦖 System Health & Pipeline</h1>
-      <p>Real-time execution status of automation routines and content storage.</p>
-    </div>
-    <div class="action-group">
-      <a href="admin.html" class="btn btn-secondary">← Back to Admin</a>
-      <button class="btn btn-primary" onclick="refreshAllHealthMetrics()">↻ Refresh</button>
-    </div>
-  </div>
-
-  <!-- Key Metrics Summary -->
-  <div class="grid">
-    <div class="stat-card">
-      <div class="stat-label">Latest Published Story</div>
-      <div class="stat-value" id="latest-story-date">Checking...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Total Stories in Archive</div>
-      <div class="stat-value" id="total-stories-count">Checking...</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Automation Pipeline</div>
-      <div class="stat-value" id="api-gateway-status">
-        <span class="badge badge-info"><span class="status-dot"></span>Checking...</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Schedule vs Execution Matrix -->
-  <div class="health-card">
-    <div class="card-header">
-      <h2>Workflow Schedule vs. Execution</h2>
-      <p>Compares configured target timings with live GitHub Actions execution logs.</p>
-    </div>
-    
-    <div class="table-responsive">
-      <table class="health-table" id="schedule-table">
-        <thead>
-          <tr>
-            <th>Workflow</th>
-            <th>Expected Schedule</th>
-            <th>Trigger Channel</th>
-            <th>Last Executed (UTC)</th>
-            <th>Execution Status</th>
-          </tr>
-        </thead>
-        <tbody id="schedule-tbody">
-          <tr>
-            <td colspan="5" style="text-align: center; color: var(--text-muted);">
-              Connecting to GitHub API logs...
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<script>
-  const REPO_OWNER = "st-mckay";
-  const REPO_NAME = "rory-bedtime-story";
-
-  const expectedWorkflows = [
-    {
-      file: "bedtime_story.yml",
-      name: "Generate Daily Bedtime Story",
-      targetDisplay: "Daily @ 17:15 UTC (18:15 BST)"
-    },
-    {
-      file: "pages-build-deployment",
-      name: "GitHub Pages Deployment",
-      targetDisplay: "Automatic on commit to main"
-    }
-  ];
-
-  async function checkStoriesData() {
-    try {
-      const res = await fetch(`stories.json?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Could not load stories.json");
-      const stories = await res.json();
-
-      document.getElementById("total-stories-count").textContent = stories.length;
-      if (stories.length > 0) {
-        document.getElementById("latest-story-date").textContent = stories[0].date || stories[0].title || "Available";
-      } else {
-        document.getElementById("latest-story-date").textContent = "Empty";
-      }
-    } catch (e) {
-      document.getElementById("total-stories-count").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
-      document.getElementById("latest-story-date").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
-    }
-  }
-
-  async function loadWorkflowScheduleHealth() {
-    const tbody = document.getElementById("schedule-tbody");
-
-    try {
-      const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/runs?per_page=20`);
-      if (!res.ok) throw new Error("GitHub API unavailable or rate-limited");
-      
-      const data = await res.json();
-      const runs = data.workflow_runs || [];
-
-      document.getElementById("api-gateway-status").innerHTML = `<span class="badge badge-success"><span class="status-dot"></span>Online</span>`;
-      tbody.innerHTML = "";
-
-      expectedWorkflows.forEach(config => {
-        const latestRun = runs.find(r => (r.path && r.path.includes(config.file)) || (r.name && r.name === config.name));
-        const tr = document.createElement("tr");
-
-        if (!latestRun) {
-          tr.innerHTML = `
-            <td><strong>${config.name}</strong></td>
-            <td style="color: var(--text-muted);">${config.targetDisplay}</td>
-            <td><span class="badge badge-warning"><span class="status-dot"></span>No records</span></td>
-            <td style="color: var(--text-muted);">--</td>
-            <td><span class="badge badge-warning"><span class="status-dot"></span>Awaiting First Run</span></td>
-          `;
-        } else {
-          const runDate = new Date(latestRun.created_at);
-          const actualTimeUTC = runDate.toISOString().replace("T", " ").substring(0, 16) + " UTC";
-
-          let triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>${latestRun.event}</span>`;
-          if (latestRun.event === "repository_dispatch") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>Cloudflare Trigger</span>`;
-          } else if (latestRun.event === "schedule") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>GitHub Cron</span>`;
-          } else if (latestRun.event === "workflow_dispatch") {
-            triggerBadge = `<span class="badge badge-info"><span class="status-dot"></span>Manual Dispatch</span>`;
-          }
-
-          let statusBadge = `<span class="badge badge-success"><span class="status-dot"></span>Success</span>`;
-          if (latestRun.conclusion === "failure") {
-            statusBadge = `<span class="badge badge-danger"><span class="status-dot"></span>Failed</span>`;
-          } else if (latestRun.status === "in_progress" || latestRun.status === "queued") {
-            statusBadge = `<span class="badge badge-warning"><span class="status-dot"></span>Running</span>`;
-          }
-
-          tr.innerHTML = `
-            <td><strong>${config.name}</strong></td>
-            <td style="color: var(--text-muted);">${config.targetDisplay}</td>
-            <td>${triggerBadge}</td>
-            <td>${actualTimeUTC}</td>
-            <td>${statusBadge}</td>
-          `;
-        }
-
-        tbody.appendChild(tr);
-      });
-    } catch (err) {
-      document.getElementById("api-gateway-status").innerHTML = `<span class="badge badge-warning"><span class="status-dot"></span>Degraded</span>`;
-      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to fetch execution records: ${err.message}</td></tr>`;
-    }
-  }
-
-  function refreshAllHealthMetrics() {
-    checkStoriesData();
-    loadWorkflowScheduleHealth();
   }
 
   document.addEventListener("DOMContentLoaded", refreshAllHealthMetrics);
