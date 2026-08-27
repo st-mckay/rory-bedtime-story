@@ -515,22 +515,23 @@
     try {
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
         body: JSON.stringify({ 
           action: "verify_auth", 
           admin_key: key 
         })
       });
 
+      const data = await res.json().catch(() => ({}));
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
         showToast(data.error || "Invalid passcode", "danger");
         return false;
       }
 
       return true;
     } catch (e) {
-      showToast("Network / Worker unreachable: " + e.message, "danger");
+      showToast("Connection failed. Check Worker URL or internet connection: " + e.message, "danger");
       return false;
     }
   }
