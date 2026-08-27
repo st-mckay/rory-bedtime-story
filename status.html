@@ -31,12 +31,51 @@
       padding: 0;
     }
 
+    /* Prevent full-page rubber-banding interfering with pull logic */
+    html, body {
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-main);
       padding: 32px 16px;
       line-height: 1.5;
+    }
+
+    /* Pull-to-Refresh Visual Spinner */
+    .ptr-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-100%);
+      transition: transform 0.2s ease-out;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .ptr-spinner {
+      width: 26px;
+      height: 26px;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+
+    .ptr-loading .ptr-spinner {
+      animation: ptr-spin 0.7s linear infinite;
+    }
+
+    @keyframes ptr-spin {
+      to { transform: rotate(360deg); }
     }
 
     .container {
@@ -300,6 +339,11 @@
   </style>
 </head>
 <body>
+
+<!-- Pull to Refresh UI -->
+<div id="ptr-indicator" class="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+</div>
 
 <div class="container">
   <!-- Top Navigation Bar -->
@@ -644,11 +688,73 @@
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  function refreshAllHealthMetrics() {
-    checkStoriesData();
-    loadWorkflowScheduleHealth();
-    load7DayChangeLog();
+  async function refreshAllHealthMetrics() {
+    await Promise.all([
+      checkStoriesData(),
+      loadWorkflowScheduleHealth(),
+      load7DayChangeLog()
+    ]);
   }
+
+  /* PULL TO REFRESH IMPLEMENTATION */
+  (function initPullToRefresh() {
+    const indicator = document.getElementById('ptr-indicator');
+    const spinner = document.getElementById('ptr-spinner');
+    
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    const PULL_THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+        isPulling = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulling) return;
+
+      currentY = e.touches[0].pageY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
+        indicator.style.transform = `translateY(${pullDistance}px)`;
+        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', async () => {
+      if (!isPulling) return;
+      isPulling = false;
+
+      const distance = currentY - startY;
+      const pullDistance = distance * 0.4;
+
+      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
+        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
+        indicator.classList.add('ptr-loading');
+
+        try {
+          await refreshAllHealthMetrics();
+        } finally {
+          setTimeout(() => {
+            indicator.classList.remove('ptr-loading');
+            indicator.style.transform = 'translateY(-100%)';
+          }, 350);
+        }
+      } else {
+        indicator.style.transform = 'translateY(-100%)';
+      }
+
+      startY = 0;
+      currentY = 0;
+    });
+  })();
 
   document.addEventListener("DOMContentLoaded", refreshAllHealthMetrics);
 </script>
