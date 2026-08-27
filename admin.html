@@ -31,6 +31,11 @@
       padding: 0;
     }
 
+    html, body {
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-color);
@@ -39,11 +44,45 @@
       line-height: 1.5;
     }
 
+    /* Pull-to-Refresh Indicator */
+    .ptr-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-100%);
+      transition: transform 0.2s ease-out;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .ptr-spinner {
+      width: 26px;
+      height: 26px;
+      border: 3px solid rgba(255, 255, 255, 0.15);
+      border-top-color: var(--accent-blue);
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+
+    .ptr-loading .ptr-spinner {
+      animation: ptr-spin 0.7s linear infinite;
+    }
+
+    @keyframes ptr-spin {
+      to { transform: rotate(360deg); }
+    }
+
     .container {
       max-width: 1020px;
       margin: 0 auto;
     }
 
+    /* Top Navigation Bar */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -125,6 +164,49 @@
       pointer-events: none;
     }
 
+    /* Auth Modal / Gate Screen */
+    #auth-screen {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+    }
+
+    .auth-gate-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+      text-align: center;
+    }
+
+    .auth-gate-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+
+    .auth-gate-card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Main Console Screen */
+    #admin-main {
+      display: none;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -187,21 +269,12 @@
       margin-top: 2px;
     }
 
-    /* Passcode Input Area */
-    .auth-box {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      max-width: 460px;
-      margin-top: 12px;
-    }
-
     .input-text {
-      flex: 1;
+      width: 100%;
       background: #141c2e;
       border: 1px solid var(--card-border);
       border-radius: 8px;
-      padding: 9px 14px;
+      padding: 10px 14px;
       color: var(--text-main);
       font-size: 0.9rem;
       outline: none;
@@ -212,7 +285,6 @@
       border-color: var(--accent-blue);
     }
 
-    /* Batch Toolbar */
     .batch-bar {
       display: flex;
       justify-content: space-between;
@@ -300,7 +372,6 @@
       background-color: currentColor;
     }
 
-    /* Modal / Alert Toasts */
     #status-toast {
       display: none;
       padding: 12px 16px;
@@ -317,96 +388,108 @@
 </head>
 <body>
 
-<div class="container">
-  <!-- Top Navigation Bar -->
-  <div class="top-bar">
-    <div class="header-title">
-      <h1>🦖 Admin Console</h1>
-      <p>Story management, story generation triggers, and archive controls.</p>
-    </div>
-    <div class="action-group">
-      <a href="index.html" class="btn btn-secondary">📖 Story</a>
-      <a href="directory.html" class="btn btn-secondary">📚 Archive</a>
-      <a href="health.html" class="btn btn-secondary">💚 Health</a>
-      <button class="btn btn-primary" id="btn-trigger-story" onclick="triggerStoryGeneration()">✨ Generate Story Now</button>
-    </div>
-  </div>
+<!-- Pull to Refresh UI -->
+<div id="ptr-indicator" class="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+</div>
 
+<div class="container">
   <div id="status-toast"></div>
 
-  <!-- Key Metrics Summary -->
-  <div class="grid">
-    <div class="stat-card">
-      <div class="stat-label">Total Stories in Archive</div>
-      <div class="stat-value" id="stat-total-stories">--</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Latest Published Story</div>
-      <div class="stat-value" id="stat-latest-title">--</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-label">Admin Session Status</div>
-      <div class="stat-value" id="stat-auth-status">
-        <span class="badge badge-warning"><span class="status-dot"></span>Locked</span>
+  <!-- AUTHENTICATION GATE SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-gate-card">
+      <div style="font-size: 2.2rem; margin-bottom: 12px;">🔒</div>
+      <h2>Admin Authentication</h2>
+      <p>Please enter your passcode to access console controls and story records.</p>
+      
+      <form class="auth-form" onsubmit="event.preventDefault(); submitAuthGate();">
+        <input type="password" id="gate-passcode" class="input-text" placeholder="Admin Passcode..." autocomplete="current-password" autofocus>
+        <button type="submit" class="btn btn-primary" id="btn-gate-auth" style="justify-content: center; padding: 10px;">Unlock Console</button>
+      </form>
+      <div style="margin-top: 18px;">
+        <a href="index.html" class="btn btn-secondary" style="font-size: 0.8rem;">← Back to Story</a>
       </div>
     </div>
   </div>
 
-  <!-- Admin Passcode Card -->
-  <div class="admin-card" id="auth-card">
-    <div class="card-header-flex">
-      <div class="card-header-text">
-        <h2>Passcode Authentication</h2>
-        <p>Enter your secret key to authorize story modifications and deletions.</p>
+  <!-- MAIN ADMIN CONSOLE (Protected) -->
+  <div id="admin-main">
+    <!-- Top Navigation Bar -->
+    <div class="top-bar">
+      <div class="header-title">
+        <h1>🦖 Admin Console</h1>
+        <p>Story management, story generation triggers, and archive controls.</p>
       </div>
-    </div>
-    <div class="auth-box">
-      <input type="password" id="admin-passcode" class="input-text" placeholder="Enter Admin Passcode...">
-      <button class="btn btn-primary" onclick="saveAndVerifyAuth()">Authorize</button>
-    </div>
-  </div>
-
-  <!-- Archive Management Card -->
-  <div class="admin-card">
-    <div class="card-header-flex">
-      <div class="card-header-text">
-        <h2>Story Archive Management</h2>
-        <p>Edit titles, review verses, or delete stories from <code>stories.json</code>.</p>
-      </div>
-      <div>
-        <button class="btn btn-secondary" onclick="loadStories()">↻ Refresh Archive</button>
+      <div class="action-group">
+        <a href="index.html" class="btn btn-secondary">📖 Story</a>
+        <a href="directory.html" class="btn btn-secondary">📚 Archive</a>
+        <a href="health.html" class="btn btn-secondary">💚 Health</a>
+        <button class="btn btn-secondary" onclick="logoutAdmin()">🔒 Lock</button>
+        <button class="btn btn-primary" id="btn-trigger-story" onclick="triggerStoryGeneration()">✨ Generate Story Now</button>
       </div>
     </div>
 
-    <!-- Batch Controls -->
-    <div class="batch-bar" id="batch-bar">
-      <div style="font-size: 0.85rem; color: var(--text-muted);">
-        <span id="selected-count">0</span> stories selected
+    <!-- Key Metrics Summary -->
+    <div class="grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Stories in Archive</div>
+        <div class="stat-value" id="stat-total-stories">--</div>
       </div>
-      <div style="display: flex; gap: 8px;">
-        <button class="btn btn-danger btn-disabled" id="btn-batch-delete" onclick="batchDeleteSelected()">🗑️ Delete Selected</button>
+      <div class="stat-card">
+        <div class="stat-label">Latest Published Story</div>
+        <div class="stat-value" id="stat-latest-title">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Session Status</div>
+        <div class="stat-value" id="stat-auth-status">
+          <span class="badge badge-success"><span class="status-dot"></span>Authorized</span>
+        </div>
       </div>
     </div>
 
-    <div class="table-responsive">
-      <table class="admin-table">
-        <thead>
-          <tr>
-            <th class="checkbox-col"><input type="checkbox" id="select-all" class="checkbox-custom" onchange="toggleSelectAll(this)"></th>
-            <th style="width: 140px;">Date</th>
-            <th>Story Title</th>
-            <th style="width: 100px;">Verses</th>
-            <th style="width: 160px; text-align: right;">Actions</th>
-          </tr>
-        </thead>
-        <tbody id="stories-tbody">
-          <tr>
-            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
-              Loading stories from archive...
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <!-- Archive Management Card -->
+    <div class="admin-card">
+      <div class="card-header-flex">
+        <div class="card-header-text">
+          <h2>Story Archive Management</h2>
+          <p>Edit titles, review verses, or delete stories from <code>stories.json</code>.</p>
+        </div>
+        <div>
+          <button class="btn btn-secondary" onclick="loadStories()">↻ Refresh Archive</button>
+        </div>
+      </div>
+
+      <!-- Batch Controls -->
+      <div class="batch-bar" id="batch-bar">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          <span id="selected-count">0</span> stories selected
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-danger btn-disabled" id="btn-batch-delete" onclick="batchDeleteSelected()">🗑️ Delete Selected</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col"><input type="checkbox" id="select-all" class="checkbox-custom" onchange="toggleSelectAll(this)"></th>
+              <th style="width: 140px;">Date</th>
+              <th>Story Title</th>
+              <th style="width: 100px;">Verses</th>
+              <th style="width: 160px; text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="stories-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Loading stories from archive...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
@@ -428,27 +511,51 @@
     return localStorage.getItem("rory_admin_key") || "";
   }
 
-  async function saveAndVerifyAuth() {
-    const key = document.getElementById("admin-passcode").value.trim();
+  async function verifyPasscode(key) {
+    const res = await fetch(WORKER_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-admin-key": key },
+      body: JSON.stringify({ action: "verify_auth" })
+    });
+    return res.ok;
+  }
+
+  async function submitAuthGate() {
+    const btn = document.getElementById("btn-gate-auth");
+    const key = document.getElementById("gate-passcode").value.trim();
     if (!key) return;
 
-    try {
-      const res = await fetch(WORKER_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": key },
-        body: JSON.stringify({ action: "verify_auth" })
-      });
+    btn.classList.add("btn-disabled");
+    btn.textContent = "Verifying...";
 
-      if (res.ok) {
+    try {
+      const isValid = await verifyPasscode(key);
+      if (isValid) {
         localStorage.setItem("rory_admin_key", key);
-        document.getElementById("stat-auth-status").innerHTML = `<span class="badge badge-success"><span class="status-dot"></span>Authorized</span>`;
-        showToast("Admin passcode verified successfully.", "success");
+        unlockConsoleUI();
+        loadStories();
       } else {
         showToast("Invalid admin passcode.", "danger");
       }
     } catch (e) {
       showToast("Verification failed: " + e.message, "danger");
+    } finally {
+      btn.classList.remove("btn-disabled");
+      btn.textContent = "Unlock Console";
     }
+  }
+
+  function unlockConsoleUI() {
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("admin-main").style.display = "block";
+  }
+
+  function logoutAdmin() {
+    localStorage.removeItem("rory_admin_key");
+    document.getElementById("admin-main").style.display = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+    document.getElementById("gate-passcode").value = "";
+    showToast("Session locked.", "info");
   }
 
   async function triggerStoryGeneration() {
@@ -530,11 +637,8 @@
   }
 
   function toggleSelectStory(id, checked) {
-    if (checked) {
-      selectedIds.add(id);
-    } else {
-      selectedIds.delete(id);
-    }
+    if (checked) selectedIds.add(id);
+    else selectedIds.delete(id);
     updateBatchUI();
   }
 
@@ -553,11 +657,8 @@
     const count = selectedIds.size;
     document.getElementById("selected-count").textContent = count;
     const btn = document.getElementById("btn-batch-delete");
-    if (count > 0) {
-      btn.classList.remove("btn-disabled");
-    } else {
-      btn.classList.add("btn-disabled");
-    }
+    if (count > 0) btn.classList.remove("btn-disabled");
+    else btn.classList.add("btn-disabled");
   }
 
   async function promptRenameStory(id, currentTitle) {
@@ -565,11 +666,6 @@
     if (!newTitle || newTitle.trim() === currentTitle) return;
 
     const key = getPasscode();
-    if (!key) {
-      showToast("Please authorize with your admin passcode first.", "warning");
-      return;
-    }
-
     try {
       showToast("Renaming story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
@@ -594,11 +690,6 @@
     if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) return;
 
     const key = getPasscode();
-    if (!key) {
-      showToast("Please authorize with your admin passcode first.", "warning");
-      return;
-    }
-
     try {
       showToast("Deleting story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
@@ -625,11 +716,6 @@
     if (!confirm(`Are you sure you want to permanently delete ${ids.length} selected stories?`)) return;
 
     const key = getPasscode();
-    if (!key) {
-      showToast("Please authorize with your admin passcode first.", "warning");
-      return;
-    }
-
     try {
       showToast(`Deleting ${ids.length} stories...`, "info");
       const res = await fetch(WORKER_ENDPOINT, {
@@ -654,13 +740,80 @@
     return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  /* PULL TO REFRESH */
+  (function initPullToRefresh() {
+    const indicator = document.getElementById('ptr-indicator');
+    const spinner = document.getElementById('ptr-spinner');
+    
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    const PULL_THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0 && document.getElementById('admin-main').style.display === 'block') {
+        startY = e.touches[0].pageY;
+        isPulling = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulling) return;
+
+      currentY = e.touches[0].pageY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
+        indicator.style.transform = `translateY(${pullDistance}px)`;
+        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', async () => {
+      if (!isPulling) return;
+      isPulling = false;
+
+      const distance = currentY - startY;
+      const pullDistance = distance * 0.4;
+
+      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
+        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
+        indicator.classList.add('ptr-loading');
+
+        try {
+          await loadStories();
+          showToast("Archive refreshed.", "success");
+        } catch (err) {
+          showToast("Failed to refresh archive.", "danger");
+        } finally {
+          setTimeout(() => {
+            indicator.classList.remove('ptr-loading');
+            indicator.style.transform = 'translateY(-100%)';
+          }, 350);
+        }
+      } else {
+        indicator.style.transform = 'translateY(-100%)';
+      }
+
+      startY = 0;
+      currentY = 0;
+    });
+  })();
+
+  document.addEventListener("DOMContentLoaded", async () => {
     const savedKey = getPasscode();
     if (savedKey) {
-      document.getElementById("admin-passcode").value = savedKey;
-      saveAndVerifyAuth();
+      const isValid = await verifyPasscode(savedKey);
+      if (isValid) {
+        unlockConsoleUI();
+        loadStories();
+      } else {
+        localStorage.removeItem("rory_admin_key");
+      }
     }
-    loadStories();
   });
 </script>
 
