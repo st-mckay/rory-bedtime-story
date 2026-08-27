@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1120">
+  <meta name="theme-color" content="#166534">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Rory's Bedtime Story</title>
   <style>
     :root {
-      --bg-color: #0b1120;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent-blue: #38bdf8;
-      --accent-blue-hover: #0ea5e9;
-      --success-bg: rgba(34, 197, 94, 0.15);
-      --success-text: #4ade80;
-      --story-text: #e2e8f0;
+      --bg-color: #f0fdf4;
+      --card-bg: #ffffff;
+      --card-border: #bbf7d0;
+      --text-main: #14532d;
+      --text-muted: #166534;
+      --accent-green: #15803d;
+      --accent-green-hover: #166534;
+      --badge-bg: #dcfce7;
+      --badge-text: #15803d;
+      --verse-bg: #f8fafc;
+      --verse-border: #86efac;
+      --story-text: #1e293b;
     }
 
     * {
@@ -26,7 +28,7 @@
       padding: 0;
     }
 
-    /* Prevent white rubber-band bounce on iOS/Safari */
+    /* Keep the background green when rubber-banding on mobile */
     html {
       background-color: var(--bg-color);
       overscroll-behavior-y: contain;
@@ -57,14 +59,13 @@
       transition: transform 0.2s ease-out;
       z-index: 9999;
       pointer-events: none;
-      background-color: transparent;
     }
 
     .ptr-spinner {
       width: 26px;
       height: 26px;
-      border: 3px solid rgba(255, 255, 255, 0.15);
-      border-top-color: var(--accent-blue);
+      border: 3px solid rgba(22, 101, 52, 0.2);
+      border-top-color: var(--accent-green);
       border-radius: 50%;
       transition: transform 0.1s linear;
     }
@@ -87,15 +88,15 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 28px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
       gap: 16px;
     }
 
     .header-title h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: var(--text-main);
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--accent-green);
       display: flex;
       align-items: center;
       gap: 10px;
@@ -103,7 +104,7 @@
 
     .header-title p {
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-top: 4px;
     }
 
@@ -121,7 +122,7 @@
       padding: 8px 14px;
       font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 8px;
+      border-radius: 9999px;
       text-decoration: none;
       border: 1px solid transparent;
       cursor: pointer;
@@ -129,32 +130,34 @@
     }
 
     .btn-secondary {
-      background: var(--card-bg);
+      background: #ffffff;
       color: var(--text-main);
       border-color: var(--card-border);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     .btn-secondary:hover {
-      background: #283548;
-      border-color: #475569;
+      background: #f0fdf4;
+      border-color: #86efac;
     }
 
     .btn-primary {
-      background: var(--accent-blue);
-      color: #0b1120;
+      background: var(--accent-green);
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(21, 128, 61, 0.2);
     }
 
     .btn-primary:hover {
-      background: var(--accent-blue-hover);
+      background: var(--accent-green-hover);
     }
 
     /* Story Card */
     .story-card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 32px 24px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px 26px;
+      box-shadow: 0 10px 25px -5px rgba(22, 101, 52, 0.08);
       margin-bottom: 24px;
     }
 
@@ -170,28 +173,27 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 4px 10px;
+      padding: 4px 12px;
       border-radius: 9999px;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-    }
-
-    .badge-success {
-      background: var(--success-bg);
-      color: var(--success-text);
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--card-border);
     }
 
     .story-date {
       font-size: 0.85rem;
       color: var(--text-muted);
+      font-weight: 600;
     }
 
     .story-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--accent-blue);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent-green);
       margin-bottom: 24px;
       line-height: 1.3;
     }
@@ -199,14 +201,14 @@
     .verse-container {
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
 
     .verse-block {
-      background: rgba(15, 23, 42, 0.4);
-      border-left: 3px solid var(--accent-blue);
-      border-radius: 0 8px 8px 0;
-      padding: 14px 18px;
+      background: var(--verse-bg);
+      border-left: 4px solid var(--verse-border);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
       font-size: 1.05rem;
       color: var(--story-text);
       white-space: pre-line;
@@ -219,6 +221,7 @@
       padding: 40px 20px;
       color: var(--text-muted);
       font-size: 1rem;
+      font-weight: 500;
     }
 
     /* Toast */
@@ -228,14 +231,13 @@
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: #1e293b;
-      color: var(--text-main);
-      border: 1px solid var(--card-border);
+      background: var(--text-main);
+      color: #ffffff;
       padding: 10px 18px;
-      border-radius: 8px;
+      border-radius: 9999px;
       font-size: 0.85rem;
-      font-weight: 500;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+      font-weight: 600;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       z-index: 10000;
     }
   </style>
@@ -306,96 +308,8 @@
 
       content.innerHTML = `
         <div class="story-meta">
-          <span class="badge badge-success">Latest Adventure</span>
+          <span class="badge">🦖 Latest Adventure</span>
           <span class="story-date">📅 ${dateDisplay}</span>
         </div>
         <h2 class="story-title">${titleDisplay}</h2>
         <div class="verse-container">
-          ${versesHtml}
-        </div>
-      `;
-
-      if (showFeedback) {
-        showToast("Story updated to latest.");
-      }
-    } catch (err) {
-      content.innerHTML = `
-        <div class="state-message" style="color: #f87171;">
-          Failed to load tonight's story.<br>
-          <span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span>
-        </div>
-      `;
-    }
-  }
-
-  function escapeHtml(str) {
-    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
-
-  /* PULL TO REFRESH IMPLEMENTATION */
-  (function initPullToRefresh() {
-    const indicator = document.getElementById('ptr-indicator');
-    const spinner = document.getElementById('ptr-spinner');
-    
-    let startY = 0;
-    let currentY = 0;
-    let isPulling = false;
-    const PULL_THRESHOLD = 70;
-    const MAX_PULL = 100;
-
-    window.addEventListener('touchstart', (e) => {
-      if (window.scrollY === 0) {
-        startY = e.touches[0].pageY;
-        isPulling = true;
-      }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (!isPulling) return;
-
-      currentY = e.touches[0].pageY;
-      const distance = currentY - startY;
-
-      if (distance > 0 && window.scrollY === 0) {
-        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
-        indicator.style.transform = `translateY(${pullDistance}px)`;
-        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
-        if (e.cancelable) e.preventDefault();
-      }
-    }, { passive: false });
-
-    window.addEventListener('touchend', async () => {
-      if (!isPulling) return;
-      isPulling = false;
-
-      const distance = currentY - startY;
-      const pullDistance = distance * 0.4;
-
-      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
-        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
-        indicator.classList.add('ptr-loading');
-
-        try {
-          await loadLatestStory(true);
-        } finally {
-          setTimeout(() => {
-            indicator.classList.remove('ptr-loading');
-            indicator.style.transform = 'translateY(-100%)';
-          }, 350);
-        }
-      } else {
-        indicator.style.transform = 'translateY(-100%)';
-      }
-
-      startY = 0;
-      currentY = 0;
-    });
-  })();
-
-  document.addEventListener("DOMContentLoaded", () => {
-    loadLatestStory(false);
-  });
-</script>
-
-</body>
-</html>
