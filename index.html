@@ -3,23 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#166534">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#2d6a4f">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Rory's Bedtime Story</title>
   <style>
     :root {
-      --bg-color: #f0fdf4;
+      --bg-color: #e8f5e9;
       --card-bg: #ffffff;
-      --card-border: #bbf7d0;
-      --text-main: #14532d;
-      --text-muted: #166534;
-      --accent-green: #15803d;
-      --accent-green-hover: #166534;
-      --badge-bg: #dcfce7;
-      --badge-text: #15803d;
-      --verse-bg: #f8fafc;
-      --verse-border: #86efac;
-      --story-text: #1e293b;
+      --primary: #2d6a4f;
+      --primary-hover: #1b4332;
+      --accent: #52b788;
+      --text: #1f2937;
+      --text-muted: #52796f;
+      --border: #d8f3dc;
     }
 
     * {
@@ -36,14 +32,15 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg-color);
-      color: var(--text-main);
-      padding: 32px 16px;
+      color: var(--text);
+      padding: 24px 16px;
       line-height: 1.6;
       min-height: 100vh;
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
 
+    /* Pull-to-Refresh Indicator */
     .ptr-indicator {
       position: fixed;
       top: 0;
@@ -62,8 +59,8 @@
     .ptr-spinner {
       width: 26px;
       height: 26px;
-      border: 3px solid rgba(22, 101, 52, 0.2);
-      border-top-color: var(--accent-green);
+      border: 3px solid rgba(45, 106, 79, 0.2);
+      border-top-color: var(--primary);
       border-radius: 50%;
       transition: transform 0.1s linear;
     }
@@ -77,35 +74,35 @@
     }
 
     .container {
-      max-width: 760px;
+      max-width: 680px;
       margin: 0 auto;
     }
 
-    .top-bar {
+    header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
       flex-wrap: wrap;
-      gap: 16px;
+      gap: 12px;
     }
 
-    .header-title h1 {
-      font-size: 1.65rem;
+    .brand h1 {
+      font-size: 1.6rem;
       font-weight: 800;
-      color: var(--accent-green);
+      color: var(--primary);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .header-title p {
+    .brand p {
+      font-size: 0.9rem;
       color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-top: 4px;
+      font-weight: 500;
     }
 
-    .action-group {
+    .nav-links {
       display: flex;
       gap: 8px;
       align-items: center;
@@ -119,7 +116,7 @@
       padding: 8px 14px;
       font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 9999px;
+      border-radius: 20px;
       text-decoration: none;
       border: 1px solid transparent;
       cursor: pointer;
@@ -128,110 +125,105 @@
 
     .btn-secondary {
       background: #ffffff;
-      color: var(--text-main);
-      border-color: var(--card-border);
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      color: var(--primary);
+      border-color: var(--border);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .btn-secondary:hover {
-      background: #f0fdf4;
-      border-color: #86efac;
+      background: #f1f8f4;
+      border-color: var(--accent);
     }
 
     .btn-primary {
-      background: var(--accent-green);
+      background: var(--primary);
       color: #ffffff;
-      box-shadow: 0 2px 4px rgba(21, 128, 61, 0.2);
+      box-shadow: 0 2px 4px rgba(45, 106, 79, 0.25);
     }
 
     .btn-primary:hover {
-      background: var(--accent-green-hover);
+      background: var(--primary-hover);
     }
 
-    .story-card {
+    .card {
       background: var(--card-bg);
-      border: 2px solid var(--card-border);
-      border-radius: 20px;
-      padding: 32px 26px;
-      box-shadow: 0 10px 25px -5px rgba(22, 101, 52, 0.08);
-      margin-bottom: 24px;
+      border-radius: 16px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
     }
 
     .story-meta {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
+      justify-content: space-between;
+      margin-bottom: 12px;
       flex-wrap: wrap;
+      gap: 8px;
     }
 
     .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 4px 12px;
-      border-radius: 9999px;
+      background: #d8f3dc;
+      color: #1b4332;
       font-size: 0.75rem;
       font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 12px;
       text-transform: uppercase;
       letter-spacing: 0.03em;
-      background: var(--badge-bg);
-      color: var(--badge-text);
-      border: 1px solid var(--card-border);
     }
 
-    .story-date {
+    .date-label {
       font-size: 0.85rem;
-      color: var(--text-muted);
       font-weight: 600;
+      color: var(--text-muted);
     }
 
     .story-title {
-      font-size: 1.6rem;
+      font-size: 1.45rem;
       font-weight: 800;
-      color: var(--accent-green);
-      margin-bottom: 24px;
+      color: var(--primary);
+      margin-bottom: 20px;
       line-height: 1.3;
     }
 
-    .verse-container {
+    .verses-list {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .verse-block {
-      background: var(--verse-bg);
-      border-left: 4px solid var(--verse-border);
-      border-radius: 0 12px 12px 0;
-      padding: 16px 20px;
+    .verse {
+      background: #fbfdfb;
+      border-left: 3px solid var(--accent);
+      padding: 14px 18px;
+      border-radius: 0 10px 10px 0;
       font-size: 1.05rem;
-      color: var(--story-text);
-      white-space: pre-line;
       line-height: 1.7;
+      white-space: pre-line;
+      color: #2b2d42;
     }
 
-    .state-message {
+    .status-text {
       text-align: center;
       padding: 40px 20px;
       color: var(--text-muted);
-      font-size: 1rem;
       font-weight: 500;
     }
 
     #status-toast {
       display: none;
       position: fixed;
-      bottom: 20px;
+      bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--text-main);
+      background: var(--primary);
       color: #ffffff;
-      padding: 10px 18px;
-      border-radius: 9999px;
+      padding: 8px 16px;
+      border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       z-index: 10000;
     }
   </style>
@@ -243,82 +235,75 @@
 </div>
 
 <div class="container">
-  <div class="top-bar">
-    <div class="header-title">
+  <header>
+    <div class="brand">
       <h1>🦖 Rory's Bedtime Story</h1>
-      <p>Tonight's rhyming dinosaur adventure.</p>
+      <p>Tonight's rhyming dinosaur adventure</p>
     </div>
-    <div class="action-group">
+    <div class="nav-links">
       <a href="archive.html" class="btn btn-secondary">📚 Archive</a>
       <a href="status.html" class="btn btn-secondary">💚 Status</a>
       <a href="admin.html" class="btn btn-secondary">⚙️ Admin</a>
-      <button class="btn btn-primary" onclick="loadLatestStory(true)">↻ Refresh</button>
+      <button class="btn btn-primary" onclick="loadStory(true)">↻ Refresh</button>
     </div>
-  </div>
+  </header>
 
   <div id="status-toast"></div>
 
-  <div class="story-card" id="story-card">
+  <main class="card" id="story-card">
     <div id="story-content">
-      <div class="state-message">Loading tonight's adventure...</div>
+      <div class="status-text">Loading tonight's adventure...</div>
     </div>
-  </div>
+  </main>
 </div>
 
 <script>
-  function showToast(message) {
+  function showToast(msg) {
     const toast = document.getElementById("status-toast");
-    toast.textContent = message;
+    toast.textContent = msg;
     toast.style.display = "block";
     setTimeout(() => { toast.style.display = "none"; }, 3000);
   }
 
-  async function loadLatestStory(showFeedback = false) {
-    const content = document.getElementById("story-content");
+  async function loadStory(isManual = false) {
+    const container = document.getElementById("story-content");
     try {
       const res = await fetch(`stories.json?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Could not load stories archive");
-      
+      if (!res.ok) throw new Error("Could not load story file");
       const stories = await res.json();
+
       if (!stories || stories.length === 0) {
-        content.innerHTML = `<div class="state-message">No bedtime stories available yet. Check back soon!</div>`;
+        container.innerHTML = `<div class="status-text">No bedtime stories available yet. Check back soon!</div>`;
         return;
       }
 
       const latest = stories[0];
-      const dateDisplay = latest.date ? escapeHtml(latest.date) : "Latest Story";
-      const titleDisplay = latest.title ? escapeHtml(latest.title) : "Rory's Bedtime Adventure";
-      
+      const dateStr = escapeHtml(latest.date || "Tonight");
+      const titleStr = escapeHtml(latest.title || "Rory's Bedtime Tale");
+
       let versesHtml = "";
       if (Array.isArray(latest.verses) && latest.verses.length > 0) {
-        versesHtml = latest.verses.map(verse => `
-          <div class="verse-block">${escapeHtml(verse)}</div>
-        `).join("");
+        versesHtml = latest.verses.map(v => `<div class="verse">${escapeHtml(v)}</div>`).join("");
       } else if (latest.content) {
-        versesHtml = `<div class="verse-block">${escapeHtml(latest.content)}</div>`;
+        versesHtml = `<div class="verse">${escapeHtml(latest.content)}</div>`;
       } else {
-        versesHtml = `<div class="verse-block" style="color: var(--text-muted);">Story text is being prepared...</div>`;
+        versesHtml = `<div class="verse" style="color: var(--text-muted);">Story text is being written...</div>`;
       }
 
-      content.innerHTML = `
+      container.innerHTML = `
         <div class="story-meta">
-          <span class="badge">🦖 Latest Adventure</span>
-          <span class="story-date">📅 ${dateDisplay}</span>
+          <span class="badge">🦖 Latest Story</span>
+          <span class="date-label">📅 ${dateStr}</span>
         </div>
-        <h2 class="story-title">${titleDisplay}</h2>
-        <div class="verse-container">
+        <h2 class="story-title">${titleStr}</h2>
+        <div class="verses-list">
           ${versesHtml}
         </div>
       `;
 
-      if (showFeedback) showToast("Story updated to latest.");
+      if (isManual) showToast("Story updated!");
     } catch (err) {
-      content.innerHTML = `
-        <div class="state-message" style="color: #dc2626;">
-          Failed to load tonight's story.<br>
-          <span style="font-size: 0.85rem; color: #4b5563;">${escapeHtml(err.message)}</span>
-        </div>
-      `;
+      container.innerHTML = `<div class="status-text" style="color: #b91c1c;">Failed to load bedtime story.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></div>`;
     }
   }
 
@@ -326,10 +311,10 @@
     return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  (function initPullToRefresh() {
+  /* Pull to Refresh */
+  (function initPtr() {
     const indicator = document.getElementById('ptr-indicator');
     const spinner = document.getElementById('ptr-spinner');
-    
     let startY = 0;
     let currentY = 0;
     let isPulling = false;
@@ -345,7 +330,6 @@
 
     window.addEventListener('touchmove', (e) => {
       if (!isPulling) return;
-
       currentY = e.touches[0].pageY;
       const distance = currentY - startY;
 
@@ -361,15 +345,12 @@
       if (!isPulling) return;
       isPulling = false;
 
-      const distance = currentY - startY;
-      const pullDistance = distance * 0.4;
-
+      const pullDistance = (currentY - startY) * 0.4;
       if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
         indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
         indicator.classList.add('ptr-loading');
-
         try {
-          await loadLatestStory(true);
+          await loadStory(true);
         } finally {
           setTimeout(() => {
             indicator.classList.remove('ptr-loading');
@@ -379,14 +360,13 @@
       } else {
         indicator.style.transform = 'translateY(-100%)';
       }
-
       startY = 0;
       currentY = 0;
     });
   })();
 
   document.addEventListener("DOMContentLoaded", () => {
-    loadLatestStory(false);
+    loadStory(false);
   });
 </script>
 
