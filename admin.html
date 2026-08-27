@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Rory Bedtime Story - Admin Console</title>
   <style>
     :root {
@@ -32,13 +32,13 @@
     }
 
     html, body {
+      background-color: var(--bg-color);
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
       color: var(--text-main);
       padding: 32px 16px;
       line-height: 1.5;
@@ -327,4 +327,519 @@
       vertical-align: middle;
     }
 
-    .admin-table tr:last-child td
+    .admin-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .admin-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .checkbox-col {
+      width: 40px;
+      text-align: center;
+    }
+
+    .checkbox-custom {
+      accent-color: var(--accent-blue);
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      white-space: nowrap;
+    }
+
+    .badge-success { background: var(--success-bg); color: var(--success-text); }
+    .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
+    .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
+    .badge-info    { background: var(--info-bg);    color: var(--info-text); }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: currentColor;
+    }
+
+    #status-toast {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .toast-success { background: var(--success-bg); color: var(--success-text); border: 1px solid rgba(34, 197, 94, 0.3); }
+    .toast-danger  { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .toast-info    { background: var(--info-bg); color: var(--info-text); border: 1px solid rgba(56, 189, 248, 0.3); }
+  </style>
+</head>
+<body>
+
+<!-- Pull to Refresh Indicator -->
+<div id="ptr-indicator" class="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+</div>
+
+<div class="container">
+  <div id="status-toast"></div>
+
+  <!-- AUTHENTICATION GATE SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-gate-card">
+      <div style="font-size: 2.2rem; margin-bottom: 12px;">🔒</div>
+      <h2>Admin Authentication</h2>
+      <p>Please enter your passcode to access console controls and story records.</p>
+      
+      <form class="auth-form" onsubmit="event.preventDefault(); submitAuthGate();">
+        <input type="password" id="gate-passcode" class="input-text" placeholder="Admin Passcode..." autocomplete="current-password" autofocus>
+        <button type="submit" class="btn btn-primary" id="btn-gate-auth" style="justify-content: center; padding: 10px;">Unlock Console</button>
+      </form>
+      <div style="margin-top: 18px;">
+        <a href="status.html" class="btn btn-secondary" style="font-size: 0.8rem;">← Back to Status</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN ADMIN CONSOLE (Protected) -->
+  <div id="admin-main">
+    <div class="top-bar">
+      <div class="header-title">
+        <h1>🦖 Admin Console</h1>
+        <p>Story management, generation triggers, and archive controls.</p>
+      </div>
+      <div class="action-group">
+        <a href="index.html" class="btn btn-secondary">📖 Story</a>
+        <a href="archive.html" class="btn btn-secondary">📚 Archive</a>
+        <a href="status.html" class="btn btn-secondary">💚 Status</a>
+        <button class="btn btn-secondary" onclick="logoutAdmin()">🔒 Lock</button>
+        <button class="btn btn-primary" id="btn-trigger-story" onclick="triggerStoryGeneration()">✨ Generate Story Now</button>
+      </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Stories in Archive</div>
+        <div class="stat-value" id="stat-total-stories">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Latest Published Story</div>
+        <div class="stat-value" id="stat-latest-title">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Session Status</div>
+        <div class="stat-value" id="stat-auth-status">
+          <span class="badge badge-success"><span class="status-dot"></span>Authorized</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Archive Management Table -->
+    <div class="admin-card">
+      <div class="card-header-flex">
+        <div class="card-header-text">
+          <h2>Story Archive Management</h2>
+          <p>Edit titles, review verses, or delete stories from <code>stories.json</code>.</p>
+        </div>
+        <div>
+          <button class="btn btn-secondary" onclick="loadStories()">↻ Refresh Archive</button>
+        </div>
+      </div>
+
+      <div class="batch-bar" id="batch-bar">
+        <div style="font-size: 0.85rem; color: var(--text-muted);">
+          <span id="selected-count">0</span> stories selected
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn btn-danger btn-disabled" id="btn-batch-delete" onclick="batchDeleteSelected()">🗑️ Delete Selected</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th class="checkbox-col"><input type="checkbox" id="select-all" class="checkbox-custom" onchange="toggleSelectAll(this)"></th>
+              <th style="width: 140px;">Date</th>
+              <th>Story Title</th>
+              <th style="width: 100px;">Verses</th>
+              <th style="width: 160px; text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="stories-tbody">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Loading stories from archive...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
+  let stories = [];
+  let selectedIds = new Set();
+
+  function showToast(message, type = "info") {
+    const toast = document.getElementById("status-toast");
+    toast.className = `toast-${type}`;
+    toast.textContent = message;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 5000);
+  }
+
+  function getPasscode() {
+    return localStorage.getItem("rory_admin_key") || "";
+  }
+
+  async function verifyPasscode(key) {
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          action: "verify_auth", 
+          admin_key: key 
+        })
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Invalid passcode", "danger");
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      showToast("Network / Worker unreachable: " + e.message, "danger");
+      return false;
+    }
+  }
+
+  async function submitAuthGate() {
+    const btn = document.getElementById("btn-gate-auth");
+    const key = document.getElementById("gate-passcode").value.trim();
+    if (!key) return;
+
+    btn.classList.add("btn-disabled");
+    btn.textContent = "Verifying...";
+
+    const isValid = await verifyPasscode(key);
+    if (isValid) {
+      localStorage.setItem("rory_admin_key", key);
+      unlockConsoleUI();
+      loadStories();
+    }
+
+    btn.classList.remove("btn-disabled");
+    btn.textContent = "Unlock Console";
+  }
+
+  function unlockConsoleUI() {
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("admin-main").style.display = "block";
+  }
+
+  function logoutAdmin() {
+    localStorage.removeItem("rory_admin_key");
+    document.getElementById("admin-main").style.display = "none";
+    document.getElementById("auth-screen").style.display = "flex";
+    document.getElementById("gate-passcode").value = "";
+    showToast("Session locked.", "info");
+  }
+
+  async function triggerStoryGeneration() {
+    const btn = document.getElementById("btn-trigger-story");
+    const key = getPasscode();
+    btn.classList.add("btn-disabled");
+    showToast("Triggering story generation workflow...", "info");
+
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          action: "generate",
+          admin_key: key
+        })
+      });
+
+      if (res.ok) {
+        showToast("Story generation dispatched successfully via Cloudflare!", "success");
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast("Failed to trigger: " + (err.error || "Unknown error"), "danger");
+      }
+    } catch (e) {
+      showToast("Error connecting to worker: " + e.message, "danger");
+    } finally {
+      btn.classList.remove("btn-disabled");
+    }
+  }
+
+  async function loadStories() {
+    const tbody = document.getElementById("stories-tbody");
+    try {
+      const res = await fetch(`stories.json?t=${Date.now()}`);
+      if (!res.ok) throw new Error("Could not load stories.json");
+      stories = await res.json();
+
+      document.getElementById("stat-total-stories").textContent = stories.length;
+      if (stories.length > 0) {
+        document.getElementById("stat-latest-title").textContent = stories[0].date || stories[0].title;
+      }
+
+      renderStoriesTable();
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to load stories: ${e.message}</td></tr>`;
+    }
+  }
+
+  function renderStoriesTable() {
+    const tbody = document.getElementById("stories-tbody");
+    tbody.innerHTML = "";
+    selectedIds.clear();
+    updateBatchUI();
+
+    if (stories.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No stories found in archive.</td></tr>`;
+      return;
+    }
+
+    stories.forEach((story, idx) => {
+      const storyId = story.id || story.date || `story-${idx}`;
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td class="checkbox-col">
+          <input type="checkbox" class="checkbox-custom story-checkbox" data-id="${storyId}" onchange="toggleSelectStory('${storyId}', this.checked)">
+        </td>
+        <td style="color: var(--text-muted); font-weight: 500;">${story.date || "--"}</td>
+        <td>
+          <span id="title-display-${idx}" style="font-weight: 600;">${escapeHtml(story.title || "Untitled")}</span>
+        </td>
+        <td><span class="badge badge-info">${story.verses ? story.verses.length : 0} Verses</span></td>
+        <td style="text-align: right;">
+          <div style="display: inline-flex; gap: 6px;">
+            <button class="btn btn-secondary" onclick="promptRenameStory('${storyId}', '${escapeHtml(story.title || '')}')">✏️ Rename</button>
+            <button class="btn btn-danger" onclick="deleteStory('${storyId}', '${escapeHtml(story.title || '')}')">🗑️</button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function toggleSelectStory(id, checked) {
+    if (checked) selectedIds.add(id);
+    else selectedIds.delete(id);
+    updateBatchUI();
+  }
+
+  function toggleSelectAll(masterCheckbox) {
+    const checkboxes = document.querySelectorAll(".story-checkbox");
+    checkboxes.forEach(cb => {
+      cb.checked = masterCheckbox.checked;
+      const id = cb.getAttribute("data-id");
+      if (masterCheckbox.checked) selectedIds.add(id);
+      else selectedIds.delete(id);
+    });
+    updateBatchUI();
+  }
+
+  function updateBatchUI() {
+    const count = selectedIds.size;
+    document.getElementById("selected-count").textContent = count;
+    const btn = document.getElementById("btn-batch-delete");
+    if (count > 0) btn.classList.remove("btn-disabled");
+    else btn.classList.add("btn-disabled");
+  }
+
+  async function promptRenameStory(id, currentTitle) {
+    const newTitle = prompt("Enter new title for this story:", currentTitle);
+    if (!newTitle || newTitle.trim() === currentTitle) return;
+
+    const key = getPasscode();
+    try {
+      showToast("Renaming story...", "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          action: "rename", 
+          id: id, 
+          new_title: newTitle.trim(),
+          admin_key: key 
+        })
+      });
+
+      if (res.ok) {
+        showToast("Story renamed successfully.", "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast("Error renaming story: " + (err.error || "Unauthorized"), "danger");
+      }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
+    }
+  }
+
+  async function deleteStory(id, title) {
+    if (!confirm(`Are you sure you want to permanently delete "${title}"?`)) return;
+
+    const key = getPasscode();
+    try {
+      showToast("Deleting story...", "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          action: "delete", 
+          id: id,
+          admin_key: key 
+        })
+      });
+
+      if (res.ok) {
+        showToast("Story deleted from archive.", "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast("Error deleting story: " + (err.error || "Unauthorized"), "danger");
+      }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
+    }
+  }
+
+  async function batchDeleteSelected() {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    if (!confirm(`Are you sure you want to permanently delete ${ids.length} selected stories?`)) return;
+
+    const key = getPasscode();
+    try {
+      showToast(`Deleting ${ids.length} stories...`, "info");
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          action: "delete_batch", 
+          ids: ids,
+          admin_key: key 
+        })
+      });
+
+      if (res.ok) {
+        showToast(`Successfully deleted ${ids.length} stories.`, "success");
+        setTimeout(loadStories, 1500);
+      } else {
+        const err = await res.json().catch(() => ({}));
+        showToast("Batch deletion failed: " + (err.error || "Unauthorized"), "danger");
+      }
+    } catch (e) {
+      showToast("Network error: " + e.message, "danger");
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Pull to Refresh */
+  (function initPullToRefresh() {
+    const indicator = document.getElementById('ptr-indicator');
+    const spinner = document.getElementById('ptr-spinner');
+    
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    const PULL_THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0 && document.getElementById('admin-main').style.display === 'block') {
+        startY = e.touches[0].pageY;
+        isPulling = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulling) return;
+
+      currentY = e.touches[0].pageY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
+        indicator.style.transform = `translateY(${pullDistance}px)`;
+        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', async () => {
+      if (!isPulling) return;
+      isPulling = false;
+
+      const distance = currentY - startY;
+      const pullDistance = distance * 0.4;
+
+      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
+        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
+        indicator.classList.add('ptr-loading');
+
+        try {
+          await loadStories();
+          showToast("Archive refreshed.", "success");
+        } catch (err) {
+          showToast("Failed to refresh archive.", "danger");
+        } finally {
+          setTimeout(() => {
+            indicator.classList.remove('ptr-loading');
+            indicator.style.transform = 'translateY(-100%)';
+          }, 350);
+        }
+      } else {
+        indicator.style.transform = 'translateY(-100%)';
+      }
+
+      startY = 0;
+      currentY = 0;
+    });
+  })();
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    const savedKey = getPasscode();
+    if (savedKey) {
+      const isValid = await verifyPasscode(savedKey);
+      if (isValid) {
+        unlockConsoleUI();
+        loadStories();
+      } else {
+        localStorage.removeItem("rory_admin_key");
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
