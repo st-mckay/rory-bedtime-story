@@ -70,15 +70,16 @@
 
     .action-group {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 8px 16px;
+      gap: 6px;
+      padding: 8px 14px;
       font-size: 0.85rem;
       font-weight: 600;
       border-radius: 8px;
@@ -301,13 +302,16 @@
 <body>
 
 <div class="container">
+  <!-- Top Navigation Bar -->
   <div class="top-bar">
     <div class="header-title">
       <h1>🦖 System Health & Pipeline</h1>
       <p>Automation status, execution schedules, and changelog audit.</p>
     </div>
     <div class="action-group">
-      <a href="admin.html" class="btn btn-secondary">← Back to Admin</a>
+      <a href="index.html" class="btn btn-secondary">📖 Story</a>
+      <a href="directory.html" class="btn btn-secondary">📚 Archive</a>
+      <a href="admin.html" class="btn btn-secondary">⚙️ Admin</a>
       <button class="btn btn-primary" onclick="refreshAllHealthMetrics()">↻ Refresh</button>
     </div>
   </div>
@@ -421,7 +425,7 @@
     {
       file: "bedtime_story.yml",
       name: "Generate Daily Bedtime Story",
-      targetDisplay: "Daily @ 17:15 UTC via Cloudflare Cron"
+      targetDisplay: "Daily @ 08:20 UTC / GMT (09:20 BST) via Cloudflare Cron"
     },
     {
       file: "pages-build-deployment",
@@ -553,7 +557,6 @@
       return;
     }
 
-    // Pagination bounds calculation
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
     if (currentPage > totalPages) currentPage = totalPages;
     if (currentPage < 1) currentPage = 1;
@@ -601,7 +604,6 @@
       tbody.appendChild(tr);
     });
 
-    // Update Pagination Controls UI
     paginationBar.style.display = "flex";
     paginationInfo.textContent = `Showing ${startIndex + 1}–${endIndex} of ${totalItems} entries (Page ${currentPage} of ${totalPages})`;
 
