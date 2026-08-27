@@ -164,7 +164,7 @@
       pointer-events: none;
     }
 
-    /* Auth Modal / Gate Screen */
+    /* Auth Screen Gate */
     #auth-screen {
       display: flex;
       justify-content: center;
@@ -512,12 +512,23 @@
   }
 
   async function verifyPasscode(key) {
-    const res = await fetch(WORKER_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "x-admin-key": key },
-      body: JSON.stringify({ action: "verify_auth" })
-    });
-    return res.ok;
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json", 
+          "x-admin-key": key 
+        },
+        body: JSON.stringify({ 
+          action: "verify_auth", 
+          admin_key: key 
+        })
+      });
+      return res.ok;
+    } catch (e) {
+      console.error("Auth check network error:", e);
+      return false;
+    }
   }
 
   async function submitAuthGate() {
@@ -535,7 +546,7 @@
         unlockConsoleUI();
         loadStories();
       } else {
-        showToast("Invalid admin passcode.", "danger");
+        showToast("Invalid admin passcode. Please verify your secret key.", "danger");
       }
     } catch (e) {
       showToast("Verification failed: " + e.message, "danger");
@@ -560,20 +571,27 @@
 
   async function triggerStoryGeneration() {
     const btn = document.getElementById("btn-trigger-story");
+    const key = getPasscode();
     btn.classList.add("btn-disabled");
     showToast("Triggering story generation workflow...", "info");
 
     try {
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "generate" })
+        headers: { 
+          "Content-Type": "application/json",
+          "x-admin-key": key
+        },
+        body: JSON.stringify({ 
+          action: "generate",
+          admin_key: key
+        })
       });
 
       if (res.ok) {
         showToast("Story generation dispatched successfully via Cloudflare!", "success");
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({}));
         showToast("Failed to trigger: " + (err.error || "Unknown error"), "danger");
       }
     } catch (e) {
@@ -670,15 +688,23 @@
       showToast("Renaming story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": key },
-        body: JSON.stringify({ action: "rename", id: id, new_title: newTitle.trim() })
+        headers: { 
+          "Content-Type": "application/json", 
+          "x-admin-key": key 
+        },
+        body: JSON.stringify({ 
+          action: "rename", 
+          id: id, 
+          new_title: newTitle.trim(),
+          admin_key: key 
+        })
       });
 
       if (res.ok) {
         showToast("Story renamed successfully.", "success");
         setTimeout(loadStories, 1500);
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({}));
         showToast("Error renaming story: " + (err.error || "Unauthorized"), "danger");
       }
     } catch (e) {
@@ -694,15 +720,22 @@
       showToast("Deleting story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": key },
-        body: JSON.stringify({ action: "delete", id: id })
+        headers: { 
+          "Content-Type": "application/json", 
+          "x-admin-key": key 
+        },
+        body: JSON.stringify({ 
+          action: "delete", 
+          id: id,
+          admin_key: key 
+        })
       });
 
       if (res.ok) {
         showToast("Story deleted from archive.", "success");
         setTimeout(loadStories, 1500);
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({}));
         showToast("Error deleting story: " + (err.error || "Unauthorized"), "danger");
       }
     } catch (e) {
@@ -720,15 +753,22 @@
       showToast(`Deleting ${ids.length} stories...`, "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "x-admin-key": key },
-        body: JSON.stringify({ action: "delete_batch", ids: ids })
+        headers: { 
+          "Content-Type": "application/json", 
+          "x-admin-key": key 
+        },
+        body: JSON.stringify({ 
+          action: "delete_batch", 
+          ids: ids,
+          admin_key: key 
+        })
       });
 
       if (res.ok) {
         showToast(`Successfully deleted ${ids.length} stories.`, "success");
         setTimeout(loadStories, 1500);
       } else {
-        const err = await res.json();
+        const err = await res.json().catch(() => ({}));
         showToast("Batch deletion failed: " + (err.error || "Unauthorized"), "danger");
       }
     } catch (e) {
