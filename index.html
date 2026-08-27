@@ -41,7 +41,7 @@
 
     body {
       margin: 0;
-      padding: 16px 6px;
+      padding: 12px 4px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
@@ -87,25 +87,24 @@
       to { transform: rotate(360deg); }
     }
 
-    /* Maximize container space on mobile devices */
     .container {
       width: 100%;
-      max-width: 720px;
+      max-width: 680px;
       background: var(--card-bg);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 24px 8px;
+      padding: 20px 6px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     @media (min-width: 480px) {
       body {
-        padding: 24px 16px;
+        padding: 24px 12px;
       }
       .container {
-        padding: 30px 24px;
+        padding: 28px 20px;
         border-radius: 24px;
       }
     }
@@ -117,8 +116,8 @@
     }
 
     .app-logo {
-      width: 68px;
-      height: 68px;
+      width: 64px;
+      height: 64px;
       border-radius: 16px;
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
       border: 1px solid var(--border);
@@ -128,7 +127,7 @@
 
     h1 {
       font-family: 'Crete Round', serif;
-      font-size: clamp(1.45rem, 5.5vw, 2.1rem);
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
       color: var(--accent-title);
       margin: 0 0 6px 0;
       text-align: center;
@@ -163,7 +162,7 @@
       font-size: 0.88rem;
     }
 
-    /* Single-line verse formatting for mobile */
+    /* Verses container with strict non-wrapping single lines */
     .verses-container {
       display: flex;
       flex-direction: column;
@@ -173,15 +172,21 @@
       width: 100%;
     }
 
-    .verse-text {
-      font-size: clamp(0.92rem, 3.8vw, 1.15rem);
-      line-height: 1.6;
+    .verse-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .verse-line {
+      white-space: nowrap;
+      display: block;
       color: var(--text-main);
-      white-space: pre-line;
-      margin: 0;
-      padding: 0 2px;
+      line-height: 1.5;
+      transform-origin: center center;
       letter-spacing: -0.01em;
-      word-spacing: -0.02em;
     }
 
     /* Story Pagination & Controls */
@@ -190,10 +195,10 @@
       flex-direction: column;
       gap: 12px;
       margin-top: 10px;
-      padding-top: 20px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
-      padding-left: 8px;
-      padding-right: 8px;
+      padding-left: 6px;
+      padding-right: 6px;
     }
 
     .pagination-row {
@@ -255,8 +260,8 @@
 
     /* Bottom Navigation Bar */
     .bottom-bar {
-      margin-top: 20px;
-      padding-top: 18px;
+      margin-top: 18px;
+      padding-top: 16px;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: center;
@@ -306,7 +311,7 @@
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
       z-index: 10000;
     }
   </style>
@@ -425,11 +430,15 @@
 
     let versesHtml = "";
     if (Array.isArray(targetStory.verses) && targetStory.verses.length > 0) {
-      versesHtml = targetStory.verses.map(v => `<div class="verse-text">${escapeHtml(v)}</div>`).join("");
+      versesHtml = targetStory.verses.map(verse => {
+        const lines = verse.split('\n').filter(l => l.trim().length > 0);
+        const linesMarkup = lines.map(line => `<span class="verse-line">${escapeHtml(line.trim())}</span>`).join('');
+        return `<div class="verse-block">${linesMarkup}</div>`;
+      }).join("");
     } else if (targetStory.content) {
-      versesHtml = `<div class="verse-text">${escapeHtml(targetStory.content)}</div>`;
-    } else {
-      versesHtml = `<div class="verse-text" style="color: var(--text-muted);">Story text is being prepared...</div>`;
+      const lines = targetStory.content.split('\n').filter(l => l.trim().length > 0);
+      const linesMarkup = lines.map(line => `<span class="verse-line">${escapeHtml(line.trim())}</span>`).join('');
+      versesHtml = `<div class="verse-block">${linesMarkup}</div>`;
     }
 
     container.innerHTML = `
@@ -438,7 +447,7 @@
         <span class="active-badge">${badgeText}</span>
         <span class="story-date">🗓️ ${dateDisplay}</span>
       </div>
-      <div class="verses-container">
+      <div class="verses-container" id="verses-box">
         ${versesHtml}
       </div>
     `;
@@ -452,7 +461,44 @@
     } else {
       dropdown.selectedIndex = -1;
     }
+
+    // Auto-fit line widths to screen
+    fitVerseLines();
   }
+
+  function fitVerseLines() {
+    const container = document.getElementById('verses-box');
+    if (!container) return;
+
+    const availableWidth = container.clientWidth - 8;
+    const lines = container.querySelectorAll('.verse-line');
+
+    // Reset styles for measurement
+    lines.forEach(line => {
+      line.style.fontSize = '18px';
+    });
+
+    // Find the max ratio needed to fit all lines
+    let minCalculatedSize = 18;
+
+    lines.forEach(line => {
+      const lineScrollWidth = line.scrollWidth;
+      if (lineScrollWidth > availableWidth) {
+        const fittedSize = Math.floor(18 * (availableWidth / lineScrollWidth));
+        if (fittedSize < minCalculatedSize) {
+          minCalculatedSize = fittedSize;
+        }
+      }
+    });
+
+    // Clamp between 13px and 19px
+    const finalSize = Math.max(13, Math.min(19, minCalculatedSize));
+    lines.forEach(line => {
+      line.style.fontSize = finalSize + 'px';
+    });
+  }
+
+  window.addEventListener('resize', fitVerseLines);
 
   function navigateStory(direction) {
     const newIdx = currentIndex + direction;
