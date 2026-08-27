@@ -41,7 +41,8 @@
 
     body {
       margin: 0;
-      padding: 12px 4px;
+      /* Top padding incorporates safe-area-inset for the iPhone notch/island */
+      padding: calc(env(safe-area-inset-top, 20px) + 24px) 4px calc(env(safe-area-inset-bottom, 20px) + 16px) 4px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
@@ -95,23 +96,26 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 20px 6px;
+      padding: 24px 6px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     @media (min-width: 480px) {
       body {
-        padding: 24px 12px;
+        padding-top: calc(env(safe-area-inset-top, 20px) + 30px);
+        padding-left: 12px;
+        padding-right: 12px;
       }
       .container {
-        padding: 28px 20px;
+        padding: 30px 20px;
         border-radius: 24px;
       }
     }
 
-    /* Header & Logo */
+    /* Header & Logo with top clearance */
     .header-logo {
       text-align: center;
+      margin-top: 4px;
       margin-bottom: 12px;
     }
 
@@ -162,7 +166,7 @@
       font-size: 0.88rem;
     }
 
-    /* Verses container with strict non-wrapping single lines */
+    /* Verses Container */
     .verses-container {
       display: flex;
       flex-direction: column;
@@ -462,7 +466,6 @@
       dropdown.selectedIndex = -1;
     }
 
-    // Auto-fit line widths to screen
     fitVerseLines();
   }
 
@@ -473,12 +476,10 @@
     const availableWidth = container.clientWidth - 8;
     const lines = container.querySelectorAll('.verse-line');
 
-    // Reset styles for measurement
     lines.forEach(line => {
       line.style.fontSize = '18px';
     });
 
-    // Find the max ratio needed to fit all lines
     let minCalculatedSize = 18;
 
     lines.forEach(line => {
@@ -491,7 +492,6 @@
       }
     });
 
-    // Clamp between 13px and 19px
     const finalSize = Math.max(13, Math.min(19, minCalculatedSize));
     lines.forEach(line => {
       line.style.fontSize = finalSize + 'px';
