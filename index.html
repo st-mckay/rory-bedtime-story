@@ -3,19 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#2d6a4f">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <title>Rory's Bedtime Story</title>
+
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#1a2f1a">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-color: #e8f5e9;
-      --card-bg: #ffffff;
-      --primary: #2d6a4f;
-      --primary-hover: #1b4332;
-      --accent: #52b788;
-      --text: #1f2937;
-      --text-muted: #52796f;
-      --border: #d8f3dc;
+      --bg: #1a2f1a;
+      --card-bg: rgba(43, 66, 43, 0.85);
+      --text-main: #f0ede6;
+      --accent-title: #ffe16b;
+      --text-muted: #a3b18a;
+      --border: rgba(255, 255, 255, 0.1);
+      --btn-bg: #3a5a40;
+      --btn-hover: #588157;
     }
 
     * {
@@ -25,17 +33,21 @@
     }
 
     html {
-      background-color: var(--bg-color);
+      background-color: var(--bg);
       overscroll-behavior-y: contain;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text);
-      padding: 24px 16px;
-      line-height: 1.6;
+      margin: 0;
+      padding: 30px 16px;
+      background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
+      color: var(--text-main);
+      font-family: 'Vollkorn', serif;
       min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      box-sizing: border-box;
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
@@ -59,8 +71,8 @@
     .ptr-spinner {
       width: 26px;
       height: 26px;
-      border: 3px solid rgba(45, 106, 79, 0.2);
-      border-top-color: var(--primary);
+      border: 3px solid rgba(255, 225, 107, 0.2);
+      border-top-color: var(--accent-title);
       border-radius: 50%;
       transition: transform 0.1s linear;
     }
@@ -74,141 +86,112 @@
     }
 
     .container {
-      max-width: 680px;
-      margin: 0 auto;
+      max-width: 650px;
+      width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
-    header {
+    .top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
     }
 
-    .brand h1 {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .brand p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      font-weight: 500;
-    }
-
-    .nav-links {
+    .nav-group {
       display: flex;
       gap: 8px;
       align-items: center;
       flex-wrap: wrap;
     }
 
-    .btn {
+    a.nav-link, button.nav-btn {
+      color: var(--accent-title);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: var(--btn-bg);
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-family: 'Vollkorn', serif;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 8px 14px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 20px;
-      text-decoration: none;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
+      gap: 5px;
     }
 
-    .btn-secondary {
-      background: #ffffff;
-      color: var(--primary);
-      border-color: var(--border);
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    a.nav-link:hover, button.nav-btn:hover {
+      background: var(--btn-hover);
     }
 
-    .btn-secondary:hover {
-      background: #f1f8f4;
-      border-color: var(--accent);
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: #ffffff;
-      box-shadow: 0 2px 4px rgba(45, 106, 79, 0.25);
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-hover);
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 28px 24px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border);
+    h1 {
+      font-family: 'Crete Round', serif;
+      font-size: 2.1rem;
+      color: var(--accent-title);
+      margin: 0 0 8px 0;
+      text-align: center;
+      line-height: 1.25;
     }
 
     .story-meta {
       display: flex;
+      justify-content: center;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
+      margin-bottom: 24px;
     }
 
-    .badge {
-      background: #d8f3dc;
-      color: #1b4332;
+    .active-badge {
+      background: #3a5a40;
+      color: #ffe16b;
       font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
+      padding: 2px 10px;
       border-radius: 12px;
+      letter-spacing: 0.5px;
       text-transform: uppercase;
-      letter-spacing: 0.03em;
+      font-family: 'Vollkorn', serif;
+      font-weight: bold;
+      border: 1px solid var(--border);
     }
 
-    .date-label {
-      font-size: 0.85rem;
-      font-weight: 600;
+    .story-date {
       color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
-    .story-title {
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 20px;
-      line-height: 1.3;
-    }
-
-    .verses-list {
+    .verses-container {
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
 
-    .verse {
-      background: #fbfdfb;
-      border-left: 3px solid var(--accent);
-      padding: 14px 18px;
-      border-radius: 0 10px 10px 0;
-      font-size: 1.05rem;
+    .verse-card {
+      background: rgba(26, 47, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      font-size: 1.08rem;
       line-height: 1.7;
+      color: var(--text-main);
       white-space: pre-line;
-      color: #2b2d42;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
-    .status-text {
+    .status-msg {
       text-align: center;
-      padding: 40px 20px;
       color: var(--text-muted);
-      font-weight: 500;
+      padding: 40px 10px;
+      font-size: 1.05rem;
     }
 
     #status-toast {
@@ -217,13 +200,14 @@
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--primary);
-      color: #ffffff;
-      padding: 8px 16px;
+      background: #2b422b;
+      color: var(--accent-title);
+      border: 1px solid rgba(255, 225, 107, 0.3);
+      padding: 8px 18px;
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
       z-index: 10000;
     }
   </style>
@@ -235,26 +219,23 @@
 </div>
 
 <div class="container">
-  <header>
-    <div class="brand">
-      <h1>🦖 Rory's Bedtime Story</h1>
-      <p>Tonight's rhyming dinosaur adventure</p>
+  <div class="top-bar">
+    <div class="nav-group">
+      <a href="archive.html" class="nav-link">📚 Story Directory</a>
+      <a href="status.html" class="nav-link">💚 System Status</a>
+      <a href="admin.html" class="nav-link">⚙️ Admin</a>
     </div>
-    <div class="nav-links">
-      <a href="archive.html" class="btn btn-secondary">📚 Archive</a>
-      <a href="status.html" class="btn btn-secondary">💚 Status</a>
-      <a href="admin.html" class="btn btn-secondary">⚙️ Admin</a>
-      <button class="btn btn-primary" onclick="loadStory(true)">↻ Refresh</button>
+    <div class="nav-group">
+      <button class="nav-btn" onclick="loadStory(true)">↻ Refresh</button>
+      <span style="font-size: 1.4rem;">🦖 🌿</span>
     </div>
-  </header>
+  </div>
 
   <div id="status-toast"></div>
 
-  <main class="card" id="story-card">
-    <div id="story-content">
-      <div class="status-text">Loading tonight's adventure...</div>
-    </div>
-  </main>
+  <div id="story-display">
+    <p class="status-msg">Loading tonight's adventure...</p>
+  </div>
 </div>
 
 <script>
@@ -266,44 +247,60 @@
   }
 
   async function loadStory(isManual = false) {
-    const container = document.getElementById("story-content");
+    const container = document.getElementById('story-display');
     try {
-      const res = await fetch(`stories.json?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Could not load story file");
+      const res = await fetch('stories.json?nocache=' + Date.now());
+      if (!res.ok) throw new Error("Could not load story library");
       const stories = await res.json();
 
       if (!stories || stories.length === 0) {
-        container.innerHTML = `<div class="status-text">No bedtime stories available yet. Check back soon!</div>`;
+        container.innerHTML = '<p class="status-msg">No bedtime stories archived yet.</p>';
         return;
       }
 
-      const latest = stories[0];
-      const dateStr = escapeHtml(latest.date || "Tonight");
-      const titleStr = escapeHtml(latest.title || "Rory's Bedtime Tale");
+      // Check if a specific story ID or date was requested in query string
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedId = urlParams.get('story');
+
+      let targetStory = stories[0];
+      let isSpecificStory = false;
+
+      if (requestedId) {
+        const found = stories.find(s => (s.id && s.id === requestedId) || (s.date && s.date === requestedId));
+        if (found) {
+          targetStory = found;
+          isSpecificStory = true;
+        }
+      }
+
+      const title = escapeHtml(targetStory.title || "Tonight's Bedtime Story");
+      const rawDate = targetStory.date || "";
+      const dateDisplay = escapeHtml(rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate);
+      const badgeText = isSpecificStory ? "Archived Story" : "Tonight's Story";
 
       let versesHtml = "";
-      if (Array.isArray(latest.verses) && latest.verses.length > 0) {
-        versesHtml = latest.verses.map(v => `<div class="verse">${escapeHtml(v)}</div>`).join("");
-      } else if (latest.content) {
-        versesHtml = `<div class="verse">${escapeHtml(latest.content)}</div>`;
+      if (Array.isArray(targetStory.verses) && targetStory.verses.length > 0) {
+        versesHtml = targetStory.verses.map(v => `<div class="verse-card">${escapeHtml(v)}</div>`).join("");
+      } else if (targetStory.content) {
+        versesHtml = `<div class="verse-card">${escapeHtml(targetStory.content)}</div>`;
       } else {
-        versesHtml = `<div class="verse" style="color: var(--text-muted);">Story text is being written...</div>`;
+        versesHtml = `<div class="verse-card" style="color: var(--text-muted); text-align: center;">Story text is being prepared...</div>`;
       }
 
       container.innerHTML = `
+        <h1>${title}</h1>
         <div class="story-meta">
-          <span class="badge">🦖 Latest Story</span>
-          <span class="date-label">📅 ${dateStr}</span>
+          <span class="active-badge">${badgeText}</span>
+          <span class="story-date">🗓️ ${dateDisplay}</span>
         </div>
-        <h2 class="story-title">${titleStr}</h2>
-        <div class="verses-list">
+        <div class="verses-container">
           ${versesHtml}
         </div>
       `;
 
-      if (isManual) showToast("Story updated!");
+      if (isManual) showToast("Story refreshed!");
     } catch (err) {
-      container.innerHTML = `<div class="status-text" style="color: #b91c1c;">Failed to load bedtime story.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></div>`;
+      container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load bedtime story.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
     }
   }
 
