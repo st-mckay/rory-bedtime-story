@@ -164,7 +164,7 @@
       pointer-events: none;
     }
 
-    /* Auth Screen Gate */
+    /* Auth Gate Screen */
     #auth-screen {
       display: flex;
       justify-content: center;
@@ -419,7 +419,7 @@
     <div class="top-bar">
       <div class="header-title">
         <h1>🦖 Admin Console</h1>
-        <p>Story management, story generation triggers, and archive controls.</p>
+        <p>Story management, generation triggers, and archive controls.</p>
       </div>
       <div class="action-group">
         <a href="index.html" class="btn btn-secondary">📖 Story</a>
@@ -515,18 +515,22 @@
     try {
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json", 
-          "x-admin-key": key 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "verify_auth", 
           admin_key: key 
         })
       });
-      return res.ok;
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showToast(data.error || "Invalid passcode", "danger");
+        return false;
+      }
+
+      return true;
     } catch (e) {
-      console.error("Auth check network error:", e);
+      showToast("Network / Worker unreachable: " + e.message, "danger");
       return false;
     }
   }
@@ -539,21 +543,15 @@
     btn.classList.add("btn-disabled");
     btn.textContent = "Verifying...";
 
-    try {
-      const isValid = await verifyPasscode(key);
-      if (isValid) {
-        localStorage.setItem("rory_admin_key", key);
-        unlockConsoleUI();
-        loadStories();
-      } else {
-        showToast("Invalid admin passcode. Please verify your secret key.", "danger");
-      }
-    } catch (e) {
-      showToast("Verification failed: " + e.message, "danger");
-    } finally {
-      btn.classList.remove("btn-disabled");
-      btn.textContent = "Unlock Console";
+    const isValid = await verifyPasscode(key);
+    if (isValid) {
+      localStorage.setItem("rory_admin_key", key);
+      unlockConsoleUI();
+      loadStories();
     }
+
+    btn.classList.remove("btn-disabled");
+    btn.textContent = "Unlock Console";
   }
 
   function unlockConsoleUI() {
@@ -578,10 +576,7 @@
     try {
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "x-admin-key": key
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "generate",
           admin_key: key
@@ -688,10 +683,7 @@
       showToast("Renaming story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json", 
-          "x-admin-key": key 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "rename", 
           id: id, 
@@ -720,10 +712,7 @@
       showToast("Deleting story...", "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json", 
-          "x-admin-key": key 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "delete", 
           id: id,
@@ -753,10 +742,7 @@
       showToast(`Deleting ${ids.length} stories...`, "info");
       const res = await fetch(WORKER_ENDPOINT, {
         method: "POST",
-        headers: { 
-          "Content-Type": "application/json", 
-          "x-admin-key": key 
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "delete_batch", 
           ids: ids,
