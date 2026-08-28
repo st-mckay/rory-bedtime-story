@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- Native zoom enabled: removed user-scalable=no and maximum-scale -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Rory's Bedtime Story</title>
 
@@ -26,7 +27,6 @@
       --btn-bg: #3a5a40;
       --btn-hover: #588157;
       --select-bg: #243b24;
-      --story-font-size: 0.98rem;
     }
 
     * {
@@ -35,17 +35,21 @@
       padding: 0;
     }
 
+    /* Enables iOS WebKit dynamic text size adjustment */
     html {
       background-color: var(--bg);
       overscroll-behavior-y: contain;
+      -webkit-text-size-adjust: auto;
+      text-size-adjust: auto;
     }
 
     body {
       margin: 0;
-      padding: calc(env(safe-area-inset-top, 20px) + 20px) 6px calc(env(safe-area-inset-bottom, 20px) + 16px) 6px;
+      padding: calc(env(safe-area-inset-top, 20px) + 20px) 8px calc(env(safe-area-inset-bottom, 20px) + 16px) 8px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
       font-family: 'Vollkorn', serif;
+      font-size: 100%; /* Scales directly with iOS system & browser text size */
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -96,7 +100,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 20px 8px;
+      padding: 20px 10px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
@@ -131,7 +135,7 @@
 
     h1 {
       font-family: 'Crete Round', serif;
-      font-size: 1.7rem;
+      font-size: 1.75em;
       color: var(--accent-title);
       margin: 0 0 6px 0;
       text-align: center;
@@ -144,15 +148,15 @@
       justify-content: center;
       align-items: center;
       gap: 10px;
-      margin-bottom: 14px;
+      margin-bottom: 24px;
       flex-wrap: wrap;
     }
 
     .active-badge {
       background: #3a5a40;
       color: #ffe16b;
-      font-size: 0.75rem;
-      padding: 2px 10px;
+      font-size: 0.75em;
+      padding: 3px 10px;
       border-radius: 12px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -162,59 +166,26 @@
 
     .story-date {
       color: var(--text-muted);
-      font-size: 0.9rem;
+      font-size: 0.9em;
     }
 
-    /* On-Screen Text Size Switcher */
-    .size-controls {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 22px;
-    }
-
-    .btn-size {
-      background: var(--btn-bg);
-      color: var(--text-main);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-family: 'Vollkorn', serif;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .btn-size:hover {
-      background: var(--btn-hover);
-    }
-
-    .btn-size.active {
-      background: var(--accent-title);
-      color: #1a2f1a;
-      border-color: var(--accent-title);
-    }
-
-    /* Verses container with dynamic scaling variable */
+    /* Verses container dynamically sizing with em units */
     .verses-container {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      margin-bottom: 24px;
+      gap: 1.3em;
+      margin-bottom: 26px;
       text-align: center;
       width: 100%;
     }
 
     .verse-text {
-      font-size: var(--story-font-size);
-      line-height: 1.65;
+      font-size: 1.05em;
+      line-height: 1.7;
       color: var(--text-main);
       white-space: pre-line;
       margin: 0;
       padding: 0 4px;
-      letter-spacing: -0.01em;
     }
 
     /* Story Pagination & Controls */
@@ -243,8 +214,8 @@
       color: var(--accent-title);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 9px 10px;
-      font-size: 0.88rem;
+      padding: 10px 12px;
+      font-size: 0.9em;
       font-weight: 600;
       font-family: 'Vollkorn', serif;
       cursor: pointer;
@@ -272,8 +243,8 @@
       color: var(--text-main);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 0.9rem;
+      padding: 10px 12px;
+      font-size: 0.92em;
       font-family: 'Vollkorn', serif;
       outline: none;
       cursor: pointer;
@@ -286,7 +257,7 @@
 
     /* Bottom Navigation Bar */
     .bottom-bar {
-      margin-top: 18px;
+      margin-top: 20px;
       padding-top: 16px;
       border-top: 1px solid var(--border);
       display: flex;
@@ -299,10 +270,10 @@
     a.nav-link, button.nav-btn {
       color: var(--accent-title);
       text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 0.85em;
       font-weight: 600;
       background: var(--btn-bg);
-      padding: 6px 10px;
+      padding: 7px 12px;
       border-radius: 8px;
       border: 1px solid var(--border);
       cursor: pointer;
@@ -321,7 +292,7 @@
       text-align: center;
       color: var(--text-muted);
       padding: 30px 10px;
-      font-size: 1rem;
+      font-size: 1em;
     }
 
     #status-toast {
@@ -335,7 +306,7 @@
       border: 1px solid rgba(255, 225, 107, 0.3);
       padding: 8px 18px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.85em;
       font-weight: 600;
       box-shadow: 0 4px 16px rgba(0,0,0,0.4);
       z-index: 10000;
@@ -389,22 +360,6 @@
   let allStories = [];
   let currentIndex = 0;
 
-  const fontSizes = {
-    small: '0.88rem',
-    normal: '0.98rem',
-    large: '1.14rem'
-  };
-
-  function setStoryFontSize(sizeKey) {
-    const size = fontSizes[sizeKey] || fontSizes.normal;
-    document.documentElement.style.setProperty('--story-font-size', size);
-    localStorage.setItem('rory_font_size', sizeKey);
-
-    document.querySelectorAll('.btn-size').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-size') === sizeKey);
-    });
-  }
-
   function showToast(msg) {
     const toast = document.getElementById("status-toast");
     toast.textContent = msg;
@@ -441,7 +396,7 @@
 
       if (isManual) showToast("Story refreshed!");
     } catch (err) {
-      container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load bedtime story.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
+      container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load bedtime story.<br><span style="font-size: 0.85em; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
     }
   }
 
@@ -485,19 +440,10 @@
         <span class="active-badge">${badgeText}</span>
         <span class="story-date">🗓️ ${dateDisplay}</span>
       </div>
-      <div class="size-controls">
-        <button class="btn-size" data-size="small" onclick="setStoryFontSize('small')">A- Compact</button>
-        <button class="btn-size" data-size="normal" onclick="setStoryFontSize('normal')">A Default</button>
-        <button class="btn-size" data-size="large" onclick="setStoryFontSize('large')">A+ Large</button>
-      </div>
       <div class="verses-container">
         ${versesHtml}
       </div>
     `;
-
-    // Highlight the active font size button
-    const currentSize = localStorage.getItem('rory_font_size') || 'normal';
-    setStoryFontSize(currentSize);
 
     document.getElementById('btn-newer').disabled = (currentIndex <= 0);
     document.getElementById('btn-older').disabled = (currentIndex >= allStories.length - 1);
@@ -587,8 +533,6 @@
   })();
 
   document.addEventListener("DOMContentLoaded", () => {
-    const savedSize = localStorage.getItem('rory_font_size') || 'normal';
-    setStoryFontSize(savedSize);
     fetchStories(false);
   });
 </script>
