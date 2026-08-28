@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rory Bedtime Story - System Health & Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1120">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Rory Bedtime Story - System Status & Log</title>
   <style>
     :root {
       --bg-color: #0b1120;
@@ -31,21 +33,19 @@
       padding: 0;
     }
 
-    /* Prevent full-page rubber-banding interfering with pull logic */
     html, body {
+      background-color: var(--bg-color);
       overscroll-behavior-y: contain;
       -webkit-overflow-scrolling: touch;
     }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
       color: var(--text-main);
       padding: 32px 16px;
       line-height: 1.5;
     }
 
-    /* Pull-to-Refresh Visual Spinner */
     .ptr-indicator {
       position: fixed;
       top: 0;
@@ -166,6 +166,14 @@
       border: 1px solid var(--card-border);
       border-radius: 12px;
       padding: 18px 20px;
+      position: relative;
+    }
+
+    .stat-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
 
     .stat-label {
@@ -174,7 +182,6 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-      margin-bottom: 6px;
     }
 
     .stat-value {
@@ -184,6 +191,90 @@
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    /* Tooltip / Info Pop-Up */
+    .info-tooltip-wrap {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .info-icon-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      transition: all 0.15s ease;
+    }
+
+    .info-icon-btn:hover,
+    .info-tooltip-wrap:focus-within .info-icon-btn {
+      color: var(--accent-blue);
+      border-color: var(--accent-blue);
+      background: rgba(56, 189, 248, 0.15);
+    }
+
+    .info-popover {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      width: 290px;
+      background: #0f172a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      text-transform: none;
+      letter-spacing: normal;
+      font-weight: 400;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+    }
+
+    .info-tooltip-wrap:hover .info-popover,
+    .info-tooltip-wrap:focus-within .info-popover {
+      display: block;
+    }
+
+    .info-popover h4 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-popover ul {
+      margin: 6px 0 8px 16px;
+      padding: 0;
+    }
+
+    .info-popover li {
+      margin-bottom: 4px;
+    }
+
+    .info-popover .popover-foot {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 6px;
+      margin-top: 6px;
     }
 
     .health-card {
@@ -216,7 +307,6 @@
       margin-top: 2px;
     }
 
-    /* Filter Tabs */
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
@@ -283,7 +373,6 @@
       background: rgba(255, 255, 255, 0.02);
     }
 
-    /* Pagination Footer */
     .pagination-bar {
       display: flex;
       justify-content: space-between;
@@ -340,45 +429,65 @@
 </head>
 <body>
 
-<!-- Pull to Refresh UI -->
 <div id="ptr-indicator" class="ptr-indicator">
   <div class="ptr-spinner" id="ptr-spinner"></div>
 </div>
 
 <div class="container">
-  <!-- Top Navigation Bar -->
   <div class="top-bar">
     <div class="header-title">
-      <h1>🦖 System Health & Pipeline</h1>
+      <h1>🦖 System Status & Pipeline</h1>
       <p>Automation status, execution schedules, and changelog audit.</p>
     </div>
     <div class="action-group">
       <a href="index.html" class="btn btn-secondary">📖 Story</a>
-      <a href="directory.html" class="btn btn-secondary">📚 Archive</a>
+      <a href="archive.html" class="btn btn-secondary">📚 Archive</a>
       <a href="admin.html" class="btn btn-secondary">⚙️ Admin</a>
-      <button class="btn btn-primary" onclick="refreshAllHealthMetrics()">↻ Refresh</button>
+      <button class="btn btn-primary" onclick="refreshAllStatusMetrics()">↻ Refresh</button>
     </div>
   </div>
 
-  <!-- Key Metrics Summary -->
   <div class="grid">
     <div class="stat-card">
-      <div class="stat-label">Latest Published Story</div>
+      <div class="stat-label-row">
+        <div class="stat-label">Latest Published Story</div>
+      </div>
       <div class="stat-value" id="latest-story-date">Checking...</div>
     </div>
+    
     <div class="stat-card">
-      <div class="stat-label">Total Stories in Archive</div>
+      <div class="stat-label-row">
+        <div class="stat-label">Total Stories in Archive</div>
+      </div>
       <div class="stat-value" id="total-stories-count">Checking...</div>
     </div>
+    
     <div class="stat-card">
-      <div class="stat-label">Pipeline Status</div>
+      <div class="stat-label-row">
+        <div class="stat-label">Pipeline Status</div>
+        
+        <!-- Info Tooltip Popover -->
+        <div class="info-tooltip-wrap">
+          <button type="button" class="info-icon-btn" aria-label="Pipeline Status Info">ⓘ</button>
+          <div class="info-popover">
+            <h4>📡 Pipeline Status Check</h4>
+            Monitors the live health of the <strong>GitHub Actions REST API</strong> for this repository:
+            <ul>
+              <li><strong>Online (Green):</strong> API is reachable and workflow run data loaded successfully.</li>
+              <li><strong>Degraded (Yellow):</strong> Request timed out or exceeded unauthenticated rate limit quota (60 req/hr).</li>
+            </ul>
+            <div class="popover-foot">
+              Note: Individual story run errors appear in the schedule table below.
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="stat-value" id="api-gateway-status">
         <span class="badge badge-info"><span class="status-dot"></span>Checking...</span>
       </div>
     </div>
   </div>
 
-  <!-- Automation Schedules -->
   <div class="health-card">
     <div class="card-header-flex">
       <div class="card-header-text">
@@ -409,7 +518,6 @@
     </div>
   </div>
 
-  <!-- 7-Day Change Log -->
   <div class="health-card">
     <div class="card-header-flex">
       <div class="card-header-text">
@@ -445,7 +553,6 @@
       </table>
     </div>
 
-    <!-- Pagination Controls -->
     <div class="pagination-bar" id="pagination-bar" style="display: none;">
       <div class="pagination-info" id="pagination-info">Showing 1–10 of 10 entries</div>
       <div class="pagination-controls">
@@ -688,7 +795,7 @@
     return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
 
-  async function refreshAllHealthMetrics() {
+  async function refreshAllStatusMetrics() {
     await Promise.all([
       checkStoriesData(),
       loadWorkflowScheduleHealth(),
@@ -696,7 +803,6 @@
     ]);
   }
 
-  /* PULL TO REFRESH IMPLEMENTATION */
   (function initPullToRefresh() {
     const indicator = document.getElementById('ptr-indicator');
     const spinner = document.getElementById('ptr-spinner');
@@ -740,7 +846,7 @@
         indicator.classList.add('ptr-loading');
 
         try {
-          await refreshAllHealthMetrics();
+          await refreshAllStatusMetrics();
         } finally {
           setTimeout(() => {
             indicator.classList.remove('ptr-loading');
@@ -756,7 +862,7 @@
     });
   })();
 
-  document.addEventListener("DOMContentLoaded", refreshAllHealthMetrics);
+  document.addEventListener("DOMContentLoaded", refreshAllStatusMetrics);
 </script>
 
 </body>
