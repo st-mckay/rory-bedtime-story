@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Rory's Bedtime Story</title>
+
+  <!-- App Icon & Shortcut Settings -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#1a2f1a">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #1a2f1a;
+      --card-bg: rgba(43, 66, 43, 0.85);
+      --text-main: #f0ede6;
+      --accent-title: #ffe16b;
+      --text-muted: #a3b18a;
+      --border: rgba(255, 255, 255, 0.1);
+      --btn-bg: #3a5a40;
+      --btn-hover: #588157;
+      --select-bg: #243b24;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      background-color: var(--bg);
+      overscroll-behavior-y: contain;
+    }
+
+    body {
+      margin: 0;
+      /* Top padding incorporates safe-area-inset for the iPhone notch/island */
+      padding: calc(env(safe-area-inset-top, 20px) + 24px) 4px calc(env(safe-area-inset-bottom, 20px) + 16px) 4px;
+      background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
+      color: var(--text-main);
+      font-family: 'Vollkorn', serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      box-sizing: border-box;
+      overscroll-behavior-y: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Pull-to-Refresh Indicator */
+    .ptr-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-100%);
+      transition: transform 0.2s ease-out;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .ptr-spinner {
+      width: 26px;
+      height: 26px;
+      border: 3px solid rgba(255, 225, 107, 0.2);
+      border-top-color: var(--accent-title);
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+
+    .ptr-loading .ptr-spinner {
+      animation: ptr-spin 0.7s linear infinite;
+    }
+
+    @keyframes ptr-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px 6px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (min-width: 480px) {
+      body {
+        padding-top: calc(env(safe-area-inset-top, 20px) + 30px);
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .container {
+        padding: 30px 20px;
+        border-radius: 24px;
+      }
+    }
+
+    /* Header & Logo with top clearance */
+    .header-logo {
+      text-align: center;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .app-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      display: inline-block;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-family: 'Crete Round', serif;
+      font-size: clamp(1.4rem, 5.2vw, 2rem);
+      color: var(--accent-title);
+      margin: 0 0 6px 0;
+      text-align: center;
+      line-height: 1.2;
+      padding: 0 4px;
+    }
+
+    .story-meta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .active-badge {
+      background: #3a5a40;
+      color: #ffe16b;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-family: 'Vollkorn', serif;
+      font-weight: bold;
+      border: 1px solid var(--border);
+    }
+
+    .story-date {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    /* Verses Container */
+    .verses-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .verse-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .verse-line {
+      white-space: nowrap;
+      display: block;
+      color: var(--text-main);
+      line-height: 1.5;
+      transform-origin: center center;
+      letter-spacing: -0.01em;
+    }
+
+    /* Story Pagination & Controls */
+    .story-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 10px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+      padding-left: 6px;
+      padding-right: 6px;
+    }
+
+    .pagination-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-nav {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: var(--btn-bg);
+      color: var(--accent-title);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      font-family: 'Vollkorn', serif;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--btn-hover);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .select-container {
+      width: 100%;
+    }
+
+    .story-select {
+      width: 100%;
+      background: var(--select-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      font-family: 'Vollkorn', serif;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .story-select:focus {
+      border-color: var(--accent-title);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-bar {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    a.nav-link, button.nav-btn {
+      color: var(--accent-title);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      background: var(--btn-bg);
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      font-family: 'Vollkorn', serif;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    a.nav-link:hover, button.nav-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    .status-msg {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 30px 10px;
+      font-size: 1rem;
+    }
+
+    #status-toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2b422b;
+      color: var(--accent-title);
+      border: 1px solid rgba(255, 225, 107, 0.3);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Pull to Refresh Indicator -->
+<div id="ptr-indicator" class="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+</div>
+
+<div class="container">
+  <!-- Centered Logo -->
+  <div class="header-logo">
+    <img src="apple-touch-icon.png" alt="Rory Bedtime Story Logo" class="app-logo">
+  </div>
+
+  <div id="status-toast"></div>
+
+  <!-- Story Display -->
+  <div id="story-display">
+    <p class="status-msg">Loading tonight's adventure...</p>
+  </div>
+
+  <!-- Story Navigation Controls -->
+  <div class="story-controls" id="story-controls" style="display: none;">
+    <div class="pagination-row">
+      <button id="btn-newer" class="btn-nav" onclick="navigateStory(-1)">« Newer Tale</button>
+      <button id="btn-older" class="btn-nav" onclick="navigateStory(1)">Older Tale »</button>
+    </div>
+
+    <div class="select-container">
+      <select id="story-dropdown" class="story-select" onchange="onSelectStory(this.value)">
+        <option value="" disabled selected>📜 Choose from the last 30 stories...</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Links -->
+  <div class="bottom-bar">
+    <a href="archive.html" class="nav-link">📚 Story Archive</a>
+    <a href="status.html" class="nav-link">💚 System Status</a>
+    <a href="admin.html" class="nav-link">⚙️ Admin</a>
+    <button class="nav-btn" onclick="fetchStories(true)">↻ Refresh</button>
+  </div>
+</div>
+
+<script>
+  let allStories = [];
+  let currentIndex = 0;
+
+  function showToast(msg) {
+    const toast = document.getElementById("status-toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 3000);
+  }
+
+  async function fetchStories(isManual = false) {
+    const container = document.getElementById('story-display');
+    try {
+      const res = await fetch('stories.json?nocache=' + Date.now());
+      if (!res.ok) throw new Error("Could not load story library");
+      allStories = await res.json();
+
+      if (!allStories || allStories.length === 0) {
+        container.innerHTML = '<p class="status-msg">No bedtime stories archived yet.</p>';
+        document.getElementById('story-controls').style.display = 'none';
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedId = urlParams.get('story');
+
+      if (requestedId) {
+        const foundIndex = allStories.findIndex(s => (s.id && s.id === requestedId) || (s.date && s.date === requestedId));
+        currentIndex = foundIndex !== -1 ? foundIndex : 0;
+      } else {
+        currentIndex = 0;
+      }
+
+      populateDropdown();
+      renderCurrentStory();
+      document.getElementById('story-controls').style.display = 'flex';
+
+      if (isManual) showToast("Story refreshed!");
+    } catch (err) {
+      container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load bedtime story.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
+    }
+  }
+
+  function populateDropdown() {
+    const dropdown = document.getElementById('story-dropdown');
+    dropdown.innerHTML = '';
+
+    const recent30 = allStories.slice(0, 30);
+    recent30.forEach((story, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      const rawDate = story.date || '';
+      const datePart = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
+      opt.textContent = `${idx === 0 ? '✨ Tonight: ' : ''}${story.title || 'Untitled'} (${datePart})`;
+      dropdown.appendChild(opt);
+    });
+  }
+
+  function renderCurrentStory() {
+    const container = document.getElementById('story-display');
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const title = escapeHtml(targetStory.title || "Tonight's Bedtime Story");
+    const rawDate = targetStory.date || "";
+    const dateDisplay = escapeHtml(rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate);
+    const badgeText = currentIndex === 0 ? "Tonight's Story" : "Archived Story";
+
+    let versesHtml = "";
+    if (Array.isArray(targetStory.verses) && targetStory.verses.length > 0) {
+      versesHtml = targetStory.verses.map(verse => {
+        const lines = verse.split('\n').filter(l => l.trim().length > 0);
+        const linesMarkup = lines.map(line => `<span class="verse-line">${escapeHtml(line.trim())}</span>`).join('');
+        return `<div class="verse-block">${linesMarkup}</div>`;
+      }).join("");
+    } else if (targetStory.content) {
+      const lines = targetStory.content.split('\n').filter(l => l.trim().length > 0);
+      const linesMarkup = lines.map(line => `<span class="verse-line">${escapeHtml(line.trim())}</span>`).join('');
+      versesHtml = `<div class="verse-block">${linesMarkup}</div>`;
+    }
+
+    container.innerHTML = `
+      <h1>${title}</h1>
+      <div class="story-meta">
+        <span class="active-badge">${badgeText}</span>
+        <span class="story-date">🗓️ ${dateDisplay}</span>
+      </div>
+      <div class="verses-container" id="verses-box">
+        ${versesHtml}
+      </div>
+    `;
+
+    document.getElementById('btn-newer').disabled = (currentIndex <= 0);
+    document.getElementById('btn-older').disabled = (currentIndex >= allStories.length - 1);
+
+    const dropdown = document.getElementById('story-dropdown');
+    if (currentIndex < 30) {
+      dropdown.value = currentIndex;
+    } else {
+      dropdown.selectedIndex = -1;
+    }
+
+    fitVerseLines();
+  }
+
+  function fitVerseLines() {
+    const container = document.getElementById('verses-box');
+    if (!container) return;
+
+    const availableWidth = container.clientWidth - 8;
+    const lines = container.querySelectorAll('.verse-line');
+
+    lines.forEach(line => {
+      line.style.fontSize = '18px';
+    });
+
+    let minCalculatedSize = 18;
+
+    lines.forEach(line => {
+      const lineScrollWidth = line.scrollWidth;
+      if (lineScrollWidth > availableWidth) {
+        const fittedSize = Math.floor(18 * (availableWidth / lineScrollWidth));
+        if (fittedSize < minCalculatedSize) {
+          minCalculatedSize = fittedSize;
+        }
+      }
+    });
+
+    const finalSize = Math.max(13, Math.min(19, minCalculatedSize));
+    lines.forEach(line => {
+      line.style.fontSize = finalSize + 'px';
+    });
+  }
+
+  window.addEventListener('resize', fitVerseLines);
+
+  function navigateStory(direction) {
+    const newIdx = currentIndex + direction;
+    if (newIdx >= 0 && newIdx < allStories.length) {
+      currentIndex = newIdx;
+      renderCurrentStory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function onSelectStory(indexValue) {
+    const idx = parseInt(indexValue, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < allStories.length) {
+      currentIndex = idx;
+      renderCurrentStory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Pull to Refresh */
+  (function initPtr() {
+    const indicator = document.getElementById('ptr-indicator');
+    const spinner = document.getElementById('ptr-spinner');
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    const PULL_THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+        isPulling = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulling) return;
+      currentY = e.touches[0].pageY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
+        indicator.style.transform = `translateY(${pullDistance}px)`;
+        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', async () => {
+      if (!isPulling) return;
+      isPulling = false;
+
+      const pullDistance = (currentY - startY) * 0.4;
+      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
+        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
+        indicator.classList.add('ptr-loading');
+        try {
+          await fetchStories(true);
+        } finally {
+          setTimeout(() => {
+            indicator.classList.remove('ptr-loading');
+            indicator.style.transform = 'translateY(-100%)';
+          }, 350);
+        }
+      } else {
+        indicator.style.transform = 'translateY(-100%)';
+      }
+      startY = 0;
+      currentY = 0;
+    });
+  })();
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchStories(false);
+  });
+</script>
+
+</body>
+</html>
