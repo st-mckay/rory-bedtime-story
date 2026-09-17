@@ -6,6 +6,7 @@ const STATIC_ASSETS = [
   'archive.html',
   'admin.html',
   'status.html',
+  'style-console.css',
   'apple-touch-icon.png',
   'manifest.json'
 ];
