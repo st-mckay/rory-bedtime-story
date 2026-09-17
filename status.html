@@ -156,7 +156,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -452,7 +452,7 @@
       <div class="stat-label-row">
         <div class="stat-label">Latest Published Story</div>
       </div>
-      <div class="stat-value" id="latest-story-date">Checking...</div>
+      <div class="stat-value" id="latest-story-date" style="font-size: 0.98rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Checking...</div>
     </div>
     
     <div class="stat-card">
@@ -461,12 +461,48 @@
       </div>
       <div class="stat-value" id="total-stories-count">Checking...</div>
     </div>
+
+    <!-- D1 Database Telemetry Card -->
+    <div class="stat-card">
+      <div class="stat-label-row">
+        <div class="stat-label">D1 Feedback DB</div>
+        <div class="info-tooltip-wrap">
+          <button type="button" class="info-icon-btn" aria-label="D1 Database Info">ⓘ</button>
+          <div class="info-popover">
+            <h4>💾 Cloudflare D1 Health</h4>
+            Monitors SQLite database binding on the Cloudflare Worker:
+            <ul>
+              <li><strong>Online (Green):</strong> D1 is responsive, returning feedback data.</li>
+              <li><strong>Degraded (Yellow):</strong> High latency or partial data returned.</li>
+              <li><strong>Error (Red):</strong> DB binding missing or worker unreachable.</li>
+            </ul>
+            <div class="popover-foot" id="d1-latency-footnote">
+              Latency: Measuring...
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-value" id="d1-database-status">
+        <span class="badge badge-info"><span class="status-dot"></span>Checking...</span>
+      </div>
+    </div>
+
+    <!-- Feedback Telemetry Stats Card -->
+    <div class="stat-card">
+      <div class="stat-label-row">
+        <div class="stat-label">Story Feedback Trends</div>
+      </div>
+      <div class="stat-value" id="feedback-summary-stat" style="font-size: 1rem;">
+        <span style="color: #facc15;">👍 <span id="stat-d1-liked">0</span></span>
+        <span style="color: #64748b; margin: 0 6px;">|</span>
+        <span style="color: #f87171;">👎 <span id="stat-d1-disliked">0</span></span>
+      </div>
+    </div>
     
     <div class="stat-card">
       <div class="stat-label-row">
-        <div class="stat-label">Pipeline Status</div>
+        <div class="stat-label">GitHub Pipeline Status</div>
         
-        <!-- Info Tooltip Popover -->
         <div class="info-tooltip-wrap">
           <button type="button" class="info-icon-btn" aria-label="Pipeline Status Info">ⓘ</button>
           <div class="info-popover">
@@ -566,6 +602,7 @@
 <script>
   const REPO_OWNER = "st-mckay";
   const REPO_NAME = "rory-bedtime-story";
+  const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
   const ITEMS_PER_PAGE = 10;
 
   let loadedCommits = [];
@@ -593,13 +630,55 @@
 
       document.getElementById("total-stories-count").textContent = stories.length;
       if (stories.length > 0) {
-        document.getElementById("latest-story-date").textContent = stories[0].date || stories[0].title || "Available";
+        const first = stories[0];
+        const rawDate = first.date || first.title || "Available";
+        document.getElementById("latest-story-date").textContent = rawDate;
       } else {
         document.getElementById("latest-story-date").textContent = "Empty";
       }
     } catch (e) {
       document.getElementById("total-stories-count").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
       document.getElementById("latest-story-date").innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Unavailable</span>`;
+    }
+  }
+
+  async function checkD1DatabaseHealth() {
+    const statusEl = document.getElementById("d1-database-status");
+    const footnoteEl = document.getElementById("d1-latency-footnote");
+    const likedEl = document.getElementById("stat-d1-liked");
+    const dislikedEl = document.getElementById("stat-d1-disliked");
+
+    const startTime = performance.now();
+    try {
+      const res = await fetch(`${WORKER_ENDPOINT}/feedback-all`, { cache: "no-store" });
+      const latency = Math.round(performance.now() - startTime);
+
+      if (!res.ok) {
+        throw new Error(`Worker returned HTTP ${res.status}`);
+      }
+
+      const feedbackMap = await res.json();
+      let liked = 0;
+      let disliked = 0;
+
+      for (const key in feedbackMap) {
+        if (feedbackMap[key] === 1) liked++;
+        else if (feedbackMap[key] === -1) disliked++;
+      }
+
+      likedEl.textContent = liked;
+      dislikedEl.textContent = disliked;
+
+      footnoteEl.textContent = `Latency: ${latency}ms | Total Ratings: ${liked + disliked}`;
+
+      if (latency > 1500) {
+        statusEl.innerHTML = `<span class="badge badge-warning"><span class="status-dot"></span>Slow (${latency}ms)</span>`;
+      } else {
+        statusEl.innerHTML = `<span class="badge badge-success"><span class="status-dot"></span>Online (${latency}ms)</span>`;
+      }
+    } catch (err) {
+      statusEl.innerHTML = `<span class="badge badge-danger"><span class="status-dot"></span>Error</span>`;
+      footnoteEl.textContent = `Error: ${err.message}`;
     }
   }
 
@@ -798,6 +877,7 @@
   async function refreshAllStatusMetrics() {
     await Promise.all([
       checkStoriesData(),
+      checkD1DatabaseHealth(),
       loadWorkflowScheduleHealth(),
       load7DayChangeLog()
     ]);
