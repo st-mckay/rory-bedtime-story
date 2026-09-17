@@ -38,11 +38,11 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-main);
-      padding: 16px;
-      line-height: 1.5;
-    }
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-main);
+  padding: 0 16px 32px 16px;
+  line-height: 1.5;
+}
 
     /* Pull-to-Refresh Indicator */
     .ptr-indicator {
@@ -83,15 +83,14 @@
     }
 
     /* Top Navigation Bar */
-    .top-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-      padding-top: max(env(safe-area-inset-top), 20px);
-    }
+   .top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
 
     .header-title h1 {
       font-size: 1.5rem;
@@ -469,6 +468,12 @@
       font-weight: 500;
     }
 
+    .ios-safe-spacer {
+      height: 52px;
+      width: 100%;
+      display: block;
+    }
+
     .toast-success { background: var(--success-bg); color: var(--success-text); border: 1px solid rgba(34, 197, 94, 0.3); }
     .toast-danger  { background: var(--danger-bg); color: var(--danger-text); border: 1px solid rgba(239, 68, 68, 0.3); }
     .toast-info    { background: var(--info-bg); color: var(--info-text); border: 1px solid rgba(56, 189, 248, 0.3); }
@@ -482,6 +487,7 @@
 </div>
 
 <div class="container">
+  <div class="ios-safe-spacer"></div>
   <div id="status-toast"></div>
 
   <!-- AUTHENTICATION GATE SCREEN -->
