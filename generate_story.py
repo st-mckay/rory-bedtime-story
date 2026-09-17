@@ -1,10 +1,12 @@
 import json
 import os
 import re
+import time
 import urllib.request
 from datetime import datetime
 from google import genai
 from google.genai import types
+from google.genai.errors import ServerError
 
 api_key = os.environ.get("GEMINI_API_KEY")
 if not api_key:
@@ -12,7 +14,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-# Load existing archive early so we can cross-reference liked/disliked story structures
+# Load existing archive early
 archive = []
 if os.path.exists("stories.json"):
     try:
@@ -107,15 +109,38 @@ Return a JSON object containing:
 - "rhyme_scheme": The primary scheme used ("AABB", "ABCB", or "ABAB").
 """
 
-response = client.models.generate_content(
-    model="gemini-3.6-flash",
-    contents=USER_PROMPT,
-    config=types.GenerateContentConfig(
-        system_instruction=SYSTEM_INSTRUCTION,
-        response_mime_type="application/json",
-        temperature=0.75,
-    ),
-)
+# 2. Generation with Retry Backoff & Model Fallback
+models_to_try = ["gemini-3.6-flash", "gemini-2.5-flash"]
+response = None
+
+for model_name in models_to_try:
+    for attempt in range(1, 4):
+        try:
+            print(f"Generating story with {model_name} (Attempt {attempt}/3)...")
+            response = client.models.generate_content(
+                model=model_name,
+                contents=USER_PROMPT,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_INSTRUCTION,
+                    response_mime_type="application/json",
+                    temperature=0.75,
+                ),
+            )
+            break
+        except ServerError as e:
+            print(f"503 Server Error on {model_name}: {e}. Waiting to retry...")
+            if attempt < 3:
+                time.sleep(attempt * 4)
+            else:
+                print(f"Exhausted retries for {model_name}.")
+        except Exception as e:
+            print(f"Unexpected error with {model_name}: {e}")
+            break
+    if response:
+        break
+
+if not response:
+    raise RuntimeError("Failed to generate bedtime story after multiple retries across available models.")
 
 raw_text = response.text.strip()
 if "```" in raw_text:
@@ -126,13 +151,8 @@ if "```" in raw_text:
 now = datetime.now()
 base_date = now.strftime("%A, %B %d, %Y")
 
-# Count existing stories generated today to calculate incremental number
 today_count = sum(1 for s in archive if s.get("date_raw") == now.strftime("%Y-%m-%d"))
-
-if today_count > 0:
-    formatted_date = f"{base_date} (Story {today_count + 1})"
-else:
-    formatted_date = base_date
+formatted_date = f"{base_date} (Story {today_count + 1})" if today_count > 0 else base_date
 
 new_story = json.loads(raw_text)
 new_story["id"] = now.strftime("%Y-%m-%d-%H%M%S")
@@ -141,7 +161,6 @@ new_story["date"] = formatted_date
 new_story["month_group"] = now.strftime("%b-%y")
 new_story["timestamp"] = now.isoformat()
 
-# Prepend newest story to archive
 archive.insert(0, new_story)
 
 with open("stories.json", "w", encoding="utf-8") as f:
