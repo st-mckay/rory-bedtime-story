@@ -176,7 +176,7 @@
       display: flex;
       flex-direction: column;
       gap: 1.4em;
-      margin-bottom: 26px;
+      margin-bottom: 22px;
       text-align: center;
       width: 100%;
     }
@@ -191,12 +191,61 @@
       padding: 0 4px;
     }
 
+    /* Rating Component */
+    .rating-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 47, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 16px;
+      margin-bottom: 18px;
+    }
+
+    .rating-prompt {
+      color: var(--text-muted);
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+
+    .rating-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-rate {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-rate:hover {
+      background: var(--btn-hover);
+    }
+
+    .btn-rate.active {
+      background: var(--accent-title);
+      border-color: var(--accent-title);
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 225, 107, 0.4);
+    }
+
     /* Story Pagination & Controls */
     .story-controls {
       display: flex;
       flex-direction: column;
       gap: 12px;
-      margin-top: 10px;
+      margin-top: 6px;
       padding-top: 18px;
       border-top: 1px solid var(--border);
     }
@@ -338,6 +387,15 @@
     <p class="status-msg">Loading tonight's adventure...</p>
   </div>
 
+  <!-- Story Rating Component -->
+  <div class="rating-bar" id="rating-bar" style="display: none;">
+    <span class="rating-prompt">How was tonight's adventure?</span>
+    <div class="rating-buttons">
+      <button class="btn-rate" id="rate-up" onclick="submitRating(1)" aria-label="Thumbs Up">👍</button>
+      <button class="btn-rate" id="rate-down" onclick="submitRating(-1)" aria-label="Thumbs Down">👎</button>
+    </div>
+  </div>
+
   <!-- Story Navigation Controls -->
   <div class="story-controls" id="story-controls" style="display: none;">
     <div class="pagination-row">
@@ -362,6 +420,7 @@
 </div>
 
 <script>
+  const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
   let allStories = [];
   let currentIndex = 0;
 
@@ -382,6 +441,7 @@
       if (!allStories || allStories.length === 0) {
         container.innerHTML = '<p class="status-msg">No bedtime stories archived yet.</p>';
         document.getElementById('story-controls').style.display = 'none';
+        document.getElementById('rating-bar').style.display = 'none';
         return;
       }
 
@@ -398,6 +458,7 @@
       populateDropdown();
       renderCurrentStory();
       document.getElementById('story-controls').style.display = 'flex';
+      document.getElementById('rating-bar').style.display = 'flex';
 
       if (isManual) showToast("Story refreshed!");
     } catch (err) {
@@ -458,6 +519,64 @@
       dropdown.value = currentIndex;
     } else {
       dropdown.selectedIndex = -1;
+    }
+
+    syncRatingButtons();
+  }
+
+  function syncRatingButtons() {
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const storyId = targetStory.id || targetStory.date;
+    const storedRating = parseInt(localStorage.getItem(`rating_${storyId}`), 10);
+
+    const upBtn = document.getElementById('rate-up');
+    const downBtn = document.getElementById('rate-down');
+
+    upBtn.classList.toggle('active', storedRating === 1);
+    downBtn.classList.toggle('active', storedRating === -1);
+  }
+
+  async function submitRating(rating) {
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const storyId = targetStory.id || targetStory.date;
+    const title = targetStory.title || "Untitled";
+
+    const upBtn = document.getElementById('rate-up');
+    const downBtn = document.getElementById('rate-down');
+
+    // Toggle off if clicking the already selected rating
+    const currentRating = parseInt(localStorage.getItem(`rating_${storyId}`), 10);
+    const finalRating = currentRating === rating ? 0 : rating;
+
+    upBtn.classList.toggle('active', finalRating === 1);
+    downBtn.classList.toggle('active', finalRating === -1);
+
+    if (finalRating === 0) {
+      localStorage.removeItem(`rating_${storyId}`);
+    } else {
+      localStorage.setItem(`rating_${storyId}`, finalRating);
+    }
+
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "rate_story",
+          story_id: storyId,
+          title: title,
+          rating: finalRating
+        })
+      });
+
+      if (!res.ok) throw new Error("Server rejected rating");
+      showToast(finalRating === 1 ? "Added to favourites! 👍" : (finalRating === -1 ? "Feedback recorded! 👎" : "Rating removed."));
+    } catch (err) {
+      showToast("Could not record rating.", "danger");
     }
   }
 
