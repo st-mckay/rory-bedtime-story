@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
 
   <style>
     :root {
@@ -659,6 +660,13 @@
   document.addEventListener("DOMContentLoaded", () => {
     fetchStories(false);
   });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then(() => console.log('Service Worker registered.'))
+        .catch(err => console.warn('Service Worker registration failed:', err));
+    });
+  }
 </script>
 
 </body>
