@@ -2,20 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Rory's Bedtime Tales</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Rory's Bedtime Story</title>
 
-  <!-- PWA & Mobile Web Clip Settings -->
-  <link rel="manifest" href="manifest.json">
+  <!-- App Icon & Shortcut Settings -->
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" href="apple-touch-icon.png">
   <meta name="theme-color" content="#1a2f1a">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Crete+Round&family=Vollkorn:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
 
   <style>
     :root {
@@ -45,9 +44,10 @@
 
     body {
       margin: 0;
-      padding: calc(env(safe-area-inset-top, 20px) + 14px) 14px calc(env(safe-area-inset-bottom, 20px) + 20px) 14px;
+      padding: calc(env(safe-area-inset-top, 20px) + 20px) 8px calc(env(safe-area-inset-bottom, 20px) + 16px) 8px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
+      font: -apple-system-body;
       font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
       min-height: 100vh;
       display: flex;
@@ -58,7 +58,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    /* Pull to Refresh Indicator */
+    /* Pull-to-Refresh Indicator */
     .ptr-indicator {
       position: fixed;
       top: 0;
@@ -66,6 +66,653 @@
       right: 0;
       height: 60px;
       display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(-100%);
+      transition: transform 0.2s ease-out;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .ptr-spinner {
+      width: 26px;
+      height: 26px;
+      border: 3px solid rgba(255, 225, 107, 0.2);
+      border-top-color: var(--accent-title);
+      border-radius: 50%;
+      transition: transform 0.1s linear;
+    }
+
+    .ptr-loading .ptr-spinner {
+      animation: ptr-spin 0.7s linear infinite;
+    }
+
+    @keyframes ptr-spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 10px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    @media (min-width: 480px) {
+      body {
+        padding-top: calc(env(safe-area-inset-top, 20px) + 30px);
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+      .container {
+        padding: 28px 20px;
+        border-radius: 24px;
+      }
+    }
+
+    /* Header & Logo */
+    .header-logo {
+      text-align: center;
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .app-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+      display: inline-block;
+      object-fit: cover;
+    }
+
+    /* Native Title Dynamic Type Hook */
+    h1 {
+      font: -apple-system-title1;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Crete Round", serif;
+      font-weight: 700;
+      color: var(--accent-title);
+      margin: 0 0 6px 0;
+      text-align: center;
+      line-height: 1.25;
+      padding: 0 4px;
+    }
+
+    .story-meta {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .active-badge {
+      background: #3a5a40;
+      color: #ffe16b;
+      font: -apple-system-caption1;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      padding: 3px 10px;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: bold;
+      border: 1px solid var(--border);
+    }
+
+    .scheme-badge {
+      background: #3a5a40;
+      color: #ffe16b;
+      font: -apple-system-caption1;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      border: 1px solid var(--border);
+    }
+
+    .story-date {
+      color: var(--text-muted);
+      font: -apple-system-subheadline;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+    }
+
+    /* Verses connected directly to native iOS Dynamic Type */
+    .verses-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4em;
+      margin-bottom: 22px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .verse-text {
+      font: -apple-system-body;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      line-height: 1.65;
+      color: var(--text-main);
+      white-space: pre-line;
+      margin: 0;
+      padding: 0 4px;
+    }
+
+    /* Rating Component */
+    .rating-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(26, 47, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px 16px;
+      margin-bottom: 18px;
+    }
+
+    .rating-prompt {
+      color: var(--text-muted);
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+
+    .rating-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-rate {
+      background: var(--btn-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 6px 14px;
+      font-size: 1.25rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .btn-rate:hover {
+      background: var(--btn-hover);
+    }
+
+    .btn-rate.active {
+      background: var(--accent-title);
+      border-color: var(--accent-title);
+      transform: scale(1.1);
+      box-shadow: 0 0 10px rgba(255, 225, 107, 0.4);
+    }
+
+    /* Story Pagination & Controls */
+    .story-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .pagination-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .btn-nav {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      background: var(--btn-bg);
+      color: var(--accent-title);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: -apple-system-callout;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-nav:hover:not(:disabled) {
+      background: var(--btn-hover);
+    }
+
+    .btn-nav:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .select-container {
+      width: 100%;
+    }
+
+    .story-select {
+      width: 100%;
+      background: var(--select-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font: -apple-system-body;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      outline: none;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .story-select:focus {
+      border-color: var(--accent-title);
+    }
+
+    /* Bottom Navigation Bar */
+    .bottom-bar {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    a.nav-link, button.nav-btn {
+      color: var(--accent-title);
+      text-decoration: none;
+      font: -apple-system-footnote;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      font-weight: 600;
+      background: var(--btn-bg);
+      padding: 7px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    a.nav-link:hover, button.nav-btn:hover {
+      background: var(--btn-hover);
+    }
+
+    .status-msg {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 30px 10px;
+      font: -apple-system-body;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+    }
+
+    #status-toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2b422b;
+      color: var(--accent-title);
+      border: 1px solid rgba(255, 225, 107, 0.3);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font: -apple-system-footnote;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      z-index: 10000;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Pull to Refresh Indicator -->
+<div id="ptr-indicator" class="ptr-indicator">
+  <div class="ptr-spinner" id="ptr-spinner"></div>
+</div>
+
+<div class="container">
+  <!-- Centered Logo -->
+  <div class="header-logo">
+    <img src="apple-touch-icon.png" alt="Rory Bedtime Story Logo" class="app-logo">
+  </div>
+
+  <div id="status-toast"></div>
+
+  <!-- Story Display -->
+  <div id="story-display">
+    <p class="status-msg">Loading tonight's adventure...</p>
+  </div>
+
+  <!-- Story Rating Component -->
+  <div class="rating-bar" id="rating-bar" style="display: none;">
+    <span class="rating-prompt">How was tonight's adventure?</span>
+    <div class="rating-buttons">
+      <button class="btn-rate" id="rate-up" onclick="submitRating(1)" aria-label="Thumbs Up">👍</button>
+      <button class="btn-rate" id="rate-down" onclick="submitRating(-1)" aria-label="Thumbs Down">👎</button>
+    </div>
+  </div>
+
+  <!-- Story Navigation Controls -->
+  <div class="story-controls" id="story-controls" style="display: none;">
+    <div class="pagination-row">
+      <button id="btn-newer" class="btn-nav" onclick="navigateStory(-1)">« Newer Tale</button>
+      <button id="btn-older" class="btn-nav" onclick="navigateStory(1)">Older Tale »</button>
+    </div>
+
+    <div class="select-container">
+      <select id="story-dropdown" class="story-select" onchange="onSelectStory(this.value)">
+        <option value="" disabled selected>📜 Choose from the last 30 stories...</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation Links -->
+  <div class="bottom-bar">
+    <a href="archive.html" class="nav-link">📚 Story Archive</a>
+    <a href="status.html" class="nav-link">💚 System Status</a>
+    <a href="admin.html" class="nav-link">⚙️ Admin</a>
+    <button class="nav-btn" onclick="fetchStories(true)">↻ Refresh</button>
+  </div>
+</div>
+
+<script>
+  const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
+  let allStories = [];
+  let currentIndex = 0;
+  let feedbackMap = {};
+
+  function showToast(msg) {
+    const toast = document.getElementById("status-toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    setTimeout(() => { toast.style.display = "none"; }, 3000);
+  }
+
+  async function fetchStories(isManual = false) {
+    const container = document.getElementById('story-display');
+    try {
+      // 1. Fetch stories archive and D1 ratings concurrently
+      const [storiesRes, feedbackRes] = await Promise.all([
+        fetch('stories.json?nocache=' + Date.now()),
+        fetch(`${WORKER_ENDPOINT}/feedback-all`).catch(() => null)
+      ]);
+
+      if (!storiesRes.ok) throw new Error("Could not load story library");
+      allStories = await storiesRes.json();
+
+      if (feedbackRes && feedbackRes.ok) {
+        feedbackMap = await feedbackRes.json();
+      } else {
+        feedbackMap = {};
+        allStories.forEach(s => {
+          const sid = s.id || s.date;
+          const cached = localStorage.getItem(`rating_${sid}`);
+          if (cached) feedbackMap[sid] = parseInt(cached, 10);
+        });
+      }
+
+      if (!allStories || allStories.length === 0) {
+        container.innerHTML = '<p class="status-msg">No bedtime stories archived yet.</p>';
+        document.getElementById('story-controls').style.display = 'none';
+        document.getElementById('rating-bar').style.display = 'none';
+        return;
+      }
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedId = urlParams.get('story');
+
+      if (requestedId) {
+        const foundIndex = allStories.findIndex(s => (s.id && s.id === requestedId) || (s.date && s.date === requestedId));
+        currentIndex = foundIndex !== -1 ? foundIndex : 0;
+      } else {
+        currentIndex = 0;
+      }
+
+      populateDropdown();
+      renderCurrentStory();
+      document.getElementById('story-controls').style.display = 'flex';
+      document.getElementById('rating-bar').style.display = 'flex';
+
+      if (isManual) showToast("Story refreshed!");
+    } catch (err) {
+      container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load bedtime story.<br><span style="font-size: 0.85em; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
+    }
+  }
+
+  function populateDropdown() {
+    const dropdown = document.getElementById('story-dropdown');
+    dropdown.innerHTML = '';
+
+    const recent30 = allStories.slice(0, 30);
+    recent30.forEach((story, idx) => {
+      const opt = document.createElement('option');
+      opt.value = idx;
+      const sid = story.id || story.date;
+      const rating = feedbackMap[sid];
+
+      let prefix = "";
+      if (rating === 1) prefix = "👍 ";
+      else if (rating === -1) prefix = "👎 ";
+
+      const rawDate = story.date || '';
+      const datePart = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
+      opt.textContent = `${idx === 0 ? '✨ Tonight: ' : ''}${prefix}${story.title || 'Untitled'} (${datePart})`;
+      dropdown.appendChild(opt);
+    });
+  }
+
+  function renderCurrentStory() {
+    const container = document.getElementById('story-display');
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const title = escapeHtml(targetStory.title || "Tonight's Bedtime Story");
+    const rawDate = targetStory.date || "";
+    const dateDisplay = escapeHtml(rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate);
+    const badgeText = currentIndex === 0 ? "Tonight's Story" : "Archived Story";
+    const schemeBadge = targetStory.rhyme_scheme ? `<span class="scheme-badge">${escapeHtml(targetStory.rhyme_scheme)}</span>` : "";
+
+    let versesHtml = "";
+    if (Array.isArray(targetStory.verses) && targetStory.verses.length > 0) {
+      versesHtml = targetStory.verses.map(v => `<div class="verse-text">${escapeHtml(v)}</div>`).join("");
+    } else if (targetStory.content) {
+      versesHtml = `<div class="verse-text">${escapeHtml(targetStory.content)}</div>`;
+    } else {
+      versesHtml = `<div class="verse-text" style="color: var(--text-muted);">Story text is being prepared...</div>`;
+    }
+
+    container.innerHTML = `
+      <h1>${title}</h1>
+      <div class="story-meta">
+        <span class="active-badge">${badgeText}</span>
+        <span class="story-date">🗓️ ${dateDisplay}</span>
+        ${schemeBadge}
+      </div>
+      <div class="verses-container">
+        ${versesHtml}
+      </div>
+    `;
+
+    document.getElementById('btn-newer').disabled = (currentIndex <= 0);
+    document.getElementById('btn-older').disabled = (currentIndex >= allStories.length - 1);
+
+    const dropdown = document.getElementById('story-dropdown');
+    if (currentIndex < 30) {
+      dropdown.value = currentIndex;
+    } else {
+      dropdown.selectedIndex = -1;
+    }
+
+    syncRatingButtons();
+  }
+
+  function syncRatingButtons() {
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const storyId = targetStory.id || targetStory.date;
+    const currentRating = feedbackMap[storyId] || parseInt(localStorage.getItem(`rating_${storyId}`), 10) || 0;
+
+    const upBtn = document.getElementById('rate-up');
+    const downBtn = document.getElementById('rate-down');
+
+    upBtn.classList.toggle('active', currentRating === 1);
+    downBtn.classList.toggle('active', currentRating === -1);
+  }
+
+  async function submitRating(rating) {
+    const targetStory = allStories[currentIndex];
+    if (!targetStory) return;
+
+    const storyId = targetStory.id || targetStory.date;
+    const title = targetStory.title || "Untitled";
+
+    const currentRating = feedbackMap[storyId] || parseInt(localStorage.getItem(`rating_${storyId}`), 10) || 0;
+    const finalRating = currentRating === rating ? 0 : rating;
+
+    feedbackMap[storyId] = finalRating;
+    if (finalRating === 0) {
+      localStorage.removeItem(`rating_${storyId}`);
+    } else {
+      localStorage.setItem(`rating_${storyId}`, finalRating);
+    }
+
+    syncRatingButtons();
+    populateDropdown();
+    if (currentIndex < 30) {
+      document.getElementById('story-dropdown').value = currentIndex;
+    }
+
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "rate_story",
+          story_id: storyId,
+          title: title,
+          rating: finalRating
+        })
+      });
+
+      if (!res.ok) throw new Error("Server rejected rating");
+      showToast(finalRating === 1 ? "Added to favourites! 👍" : (finalRating === -1 ? "Feedback recorded! 👎" : "Rating removed."));
+    } catch (err) {
+      showToast("Saved locally (offline). Will sync when online.");
+    }
+  }
+
+  function navigateStory(direction) {
+    const newIdx = currentIndex + direction;
+    if (newIdx >= 0 && newIdx < allStories.length) {
+      currentIndex = newIdx;
+      renderCurrentStory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function onSelectStory(indexValue) {
+    const idx = parseInt(indexValue, 10);
+    if (!isNaN(idx) && idx >= 0 && idx < allStories.length) {
+      currentIndex = idx;
+      renderCurrentStory();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  /* Pull to Refresh */
+  (function initPtr() {
+    const indicator = document.getElementById('ptr-indicator');
+    const spinner = document.getElementById('ptr-spinner');
+    let startY = 0;
+    let currentY = 0;
+    let isPulling = false;
+    const PULL_THRESHOLD = 70;
+    const MAX_PULL = 100;
+
+    window.addEventListener('touchstart', (e) => {
+      if (window.scrollY === 0) {
+        startY = e.touches[0].pageY;
+        isPulling = true;
+      }
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isPulling) return;
+      currentY = e.touches[0].pageY;
+      const distance = currentY - startY;
+
+      if (distance > 0 && window.scrollY === 0) {
+        const pullDistance = Math.min(distance * 0.4, MAX_PULL);
+        indicator.style.transform = `translateY(${pullDistance}px)`;
+        spinner.style.transform = `rotate(${pullDistance * 3.5}deg)`;
+        if (e.cancelable) e.preventDefault();
+      }
+    }, { passive: false });
+
+    window.addEventListener('touchend', async () => {
+      if (!isPulling) return;
+      isPulling = false;
+
+      const pullDistance = (currentY - startY) * 0.4;
+      if (pullDistance >= PULL_THRESHOLD && window.scrollY === 0) {
+        indicator.style.transform = `translateY(${PULL_THRESHOLD}px)`;
+        indicator.classList.add('ptr-loading');
+        try {
+          await fetchStories(true);
+        } finally {
+          setTimeout(() => {
+            indicator.classList.remove('ptr-loading');
+            indicator.style.transform = 'translateY(-100%)';
+          }, 350);
+        }
+      } else {
+        indicator.style.transform = 'translateY(-100%)';
+      }
+      startY = 0;
+      currentY = 0;
+    });
+  })();
+
+  /* Service Worker Registration with Immediate Update Check */
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('sw.js')
+        .then((reg) => {
+          reg.update();
+        })
+        .catch(err => console.warn('Service Worker registration failed:', err));
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchStories(false);
+  });
+</script>
+
+</body>
+</html>      display: flex;
       align-items: center;
       justify-content: center;
       transform: translateY(-100%);
