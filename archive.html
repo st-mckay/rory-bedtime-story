@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Story Directory | Rory's Bedtime Tales</title>
 
   <!-- App Icon & Shortcut Settings -->
@@ -37,14 +37,16 @@
     html {
       background-color: var(--bg);
       overscroll-behavior-y: contain;
+      -webkit-text-size-adjust: auto;
+      text-size-adjust: auto;
     }
 
     body {
       margin: 0;
-      padding: 30px 16px;
+      padding: calc(env(safe-area-inset-top, 20px) + 20px) 14px calc(env(safe-area-inset-bottom, 20px) + 16px) 14px;
       background: radial-gradient(circle at top, #2d4a2d 0%, #1a2f1a 100%);
       color: var(--text-main);
-      font-family: 'Vollkorn', serif;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -95,20 +97,20 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 32px 24px;
+      padding: 28px 20px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     }
 
     /* Centered Apple Touch Icon Logo */
     .header-logo {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     .app-logo {
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
+      width: 72px;
+      height: 72px;
+      border-radius: 18px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
       border: 1px solid var(--border);
       display: inline-block;
@@ -116,10 +118,10 @@
     }
 
     h1 {
-      font-family: 'Crete Round', serif;
-      font-size: 2.1rem;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Crete Round", serif;
+      font-size: 1.95rem;
       color: var(--accent-title);
-      margin: 0 0 8px 0;
+      margin: 0 0 6px 0;
       text-align: center;
       line-height: 1.25;
     }
@@ -127,8 +129,61 @@
     p.subtitle {
       text-align: center;
       color: var(--text-muted);
-      margin-bottom: 26px;
+      margin-bottom: 18px;
       font-size: 0.95rem;
+    }
+
+    /* Search Input */
+    .search-box {
+      width: 100%;
+      background: rgba(26, 47, 26, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      color: var(--text-main);
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      outline: none;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .search-box:focus {
+      border-color: var(--accent-title);
+    }
+
+    /* Filter Chips */
+    .filter-bar {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+
+    .filter-chip {
+      background: var(--btn-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .filter-chip:hover {
+      background: var(--btn-hover);
+    }
+
+    .filter-chip.active {
+      background: var(--accent-title);
+      color: #1a2f1a;
+      border-color: var(--accent-title);
+      box-shadow: 0 2px 8px rgba(255, 225, 107, 0.3);
     }
 
     /* Month Accordion Elements */
@@ -152,10 +207,10 @@
     }
 
     summary {
-      font-family: 'Crete Round', serif;
-      font-size: 1.12rem;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Crete Round", serif;
+      font-size: 1.1rem;
       color: var(--accent-title);
-      padding: 14px 18px;
+      padding: 13px 16px;
       cursor: pointer;
       user-select: none;
       display: flex;
@@ -171,58 +226,90 @@
     .active-badge {
       background: #3a5a40;
       color: #ffe16b;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       padding: 2px 8px;
       border-radius: 12px;
       margin-left: 8px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
-      font-family: 'Vollkorn', serif;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
       font-weight: bold;
       border: 1px solid var(--border);
     }
 
     .story-list {
       list-style: none;
-      padding: 6px 16px 14px 16px;
+      padding: 4px 14px 12px 14px;
       margin: 0;
     }
 
     .story-item {
-      padding: 12px 10px;
+      padding: 11px 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .story-item:last-child {
       border-bottom: none;
     }
 
+    .story-link-group {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      flex: 1;
+      min-width: 0;
+    }
+
     .story-link {
       color: var(--text-main);
       text-decoration: none;
       font-weight: 600;
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       transition: color 0.2s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .story-link:hover {
       color: var(--accent-title);
     }
 
-    .story-date {
+    .story-meta-tags {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      font-size: 0.85rem;
-      white-space: nowrap;
+    }
+
+    .scheme-badge {
+      background: #3a5a40;
+      color: #ffe16b;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .rating-pill {
+      font-size: 1.05rem;
+      padding: 2px 8px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      flex-shrink: 0;
+      line-height: 1.2;
     }
 
     /* Bottom Navigation Bar */
     .bottom-bar {
-      margin-top: 28px;
-      padding-top: 20px;
+      margin-top: 24px;
+      padding-top: 18px;
       border-top: 1px solid var(--border);
       display: flex;
       justify-content: center;
@@ -242,7 +329,7 @@
       border: 1px solid var(--border);
       cursor: pointer;
       transition: background 0.2s;
-      font-family: 'Vollkorn', serif;
+      font-family: ui-serif, -apple-system-ui-serif, "New York", "Vollkorn", serif;
       display: inline-flex;
       align-items: center;
       gap: 5px;
@@ -255,8 +342,8 @@
     .status-msg {
       text-align: center;
       color: var(--text-muted);
-      padding: 40px 10px;
-      font-size: 1.05rem;
+      padding: 30px 10px;
+      font-size: 1rem;
     }
 
     #status-toast {
@@ -272,7 +359,7 @@
       border-radius: 20px;
       font-size: 0.85rem;
       font-weight: 600;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
       z-index: 10000;
     }
   </style>
@@ -293,7 +380,18 @@
   <div id="status-toast"></div>
 
   <h1>Story Directory</h1>
-  <p class="subtitle">Browse every bedtime adventure by month</p>
+  <p class="subtitle" id="archive-count">Browse every bedtime adventure by month</p>
+
+  <!-- Search Input -->
+  <input type="search" id="search-input" class="search-box" placeholder="🔍 Search stories by title or date..." oninput="applyFilters()">
+
+  <!-- Filter Chips -->
+  <div class="filter-bar">
+    <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">All Tales</button>
+    <button class="filter-chip" data-filter="liked" onclick="setFilter('liked')">👍 Liked (<span id="count-liked">0</span>)</button>
+    <button class="filter-chip" data-filter="disliked" onclick="setFilter('disliked')">👎 Disliked (<span id="count-disliked">0</span>)</button>
+    <button class="filter-chip" data-filter="unrated" onclick="setFilter('unrated')">⚪ Unrated</button>
+  </div>
 
   <!-- Accordion Directory Container -->
   <div id="directory-content">
@@ -310,6 +408,11 @@
 </div>
 
 <script>
+  const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
+  let allStories = [];
+  let feedbackMap = {};
+  let currentFilter = 'all';
+
   function showToast(msg) {
     const toast = document.getElementById("status-toast");
     toast.textContent = msg;
@@ -320,72 +423,154 @@
   async function loadDirectory(isManual = false) {
     const container = document.getElementById('directory-content');
     try {
-      const res = await fetch('stories.json?nocache=' + Date.now());
-      if (!res.ok) throw new Error("Could not load archive");
-      const stories = await res.json();
+      // Concurrently fetch stories archive and D1 feedback ratings
+      const [storiesRes, feedbackRes] = await Promise.all([
+        fetch('stories.json?nocache=' + Date.now()),
+        fetch(`${WORKER_ENDPOINT}/feedback-all`).catch(() => null)
+      ]);
 
-      container.innerHTML = '';
+      if (!storiesRes.ok) throw new Error("Could not load archive");
+      allStories = await storiesRes.json();
 
-      if (!stories || stories.length === 0) {
-        container.innerHTML = '<p class="status-msg">No stories archived yet.</p>';
-        return;
-      }
-
-      // Group stories by month_group
-      const groups = {};
-      stories.forEach(story => {
-        const group = story.month_group || 'Earlier Tales';
-        if (!groups[group]) groups[group] = [];
-        groups[group].push(story);
-      });
-
-      let isFirstMonth = true;
-
-      for (const [month, list] of Object.entries(groups)) {
-        const details = document.createElement('details');
-        details.open = isFirstMonth;
-
-        const summary = document.createElement('summary');
-        const badge = isFirstMonth ? '<span class="active-badge">Active</span>' : '';
-        summary.innerHTML = `
-          <span>🗓️ ${escapeHtml(month)} ${badge}</span>
-          <span style="font-size:0.85rem; color:var(--text-muted); font-family:'Vollkorn',serif;">
-            ${list.length} ${list.length === 1 ? 'tale' : 'tales'}
-          </span>
-        `;
-        details.appendChild(summary);
-
-        const ul = document.createElement('ul');
-        ul.className = 'story-list';
-
-        list.forEach(s => {
-          const li = document.createElement('li');
-          li.className = 'story-item';
-
-          const link = document.createElement('a');
-          link.className = 'story-link';
-          link.href = `index.html?story=${encodeURIComponent(s.id || s.date)}`;
-          link.textContent = s.title || 'Untitled Tale';
-
-          const dateSpan = document.createElement('span');
-          dateSpan.className = 'story-date';
-          const rawDate = s.date || '';
-          dateSpan.textContent = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
-
-          li.appendChild(link);
-          li.appendChild(dateSpan);
-          ul.appendChild(li);
+      if (feedbackRes && feedbackRes.ok) {
+        feedbackMap = await feedbackRes.json();
+      } else {
+        feedbackMap = {};
+        allStories.forEach(s => {
+          const sid = s.id || s.date;
+          const localVal = localStorage.getItem(`rating_${sid}`);
+          if (localVal) feedbackMap[sid] = parseInt(localVal, 10);
         });
-
-        details.appendChild(ul);
-        container.appendChild(details);
-
-        isFirstMonth = false;
       }
+
+      updateFilterCounts();
+      applyFilters();
 
       if (isManual) showToast("Archive refreshed!");
     } catch (err) {
       container.innerHTML = `<p class="status-msg" style="color: #f87171;">Failed to load story archive.<br><span style="font-size: 0.85rem; color: var(--text-muted);">${escapeHtml(err.message)}</span></p>`;
+    }
+  }
+
+  function updateFilterCounts() {
+    let liked = 0;
+    let disliked = 0;
+
+    allStories.forEach(s => {
+      const sid = s.id || s.date;
+      const r = feedbackMap[sid];
+      if (r === 1) liked++;
+      if (r === -1) disliked++;
+    });
+
+    document.getElementById('count-liked').textContent = liked;
+    document.getElementById('count-disliked').textContent = disliked;
+    document.getElementById('archive-count').textContent = `${allStories.length} bedtime adventures recorded`;
+  }
+
+  function setFilter(type) {
+    currentFilter = type;
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-filter') === type);
+    });
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const container = document.getElementById('directory-content');
+    const query = (document.getElementById('search-input').value || '').toLowerCase().trim();
+
+    if (!allStories || allStories.length === 0) {
+      container.innerHTML = '<p class="status-msg">No stories archived yet.</p>';
+      return;
+    }
+
+    // Filter stories based on search query & rating chip
+    const filteredStories = allStories.filter(story => {
+      const sid = story.id || story.date;
+      const rating = feedbackMap[sid] || 0;
+      const title = (story.title || '').toLowerCase();
+      const date = (story.date || '').toLowerCase();
+
+      // Search matching
+      const matchesSearch = !query || title.includes(query) || date.includes(query);
+      if (!matchesSearch) return false;
+
+      // Rating filter matching
+      if (currentFilter === 'liked') return rating === 1;
+      if (currentFilter === 'disliked') return rating === -1;
+      if (currentFilter === 'unrated') return !rating || rating === 0;
+      return true;
+    });
+
+    if (filteredStories.length === 0) {
+      container.innerHTML = '<p class="status-msg">No bedtime stories match your filter criteria.</p>';
+      return;
+    }
+
+    // Group filtered stories by month_group
+    const groups = {};
+    filteredStories.forEach(story => {
+      const group = story.month_group || 'Earlier Tales';
+      if (!groups[group]) groups[group] = [];
+      groups[group].push(story);
+    });
+
+    container.innerHTML = '';
+    const isFilteredView = currentFilter !== 'all' || query.length > 0;
+    let isFirstMonth = true;
+
+    for (const [month, list] of Object.entries(groups)) {
+      const details = document.createElement('details');
+      // If user is searching/filtering, open all matched month groups automatically
+      details.open = isFilteredView ? true : isFirstMonth;
+
+      const summary = document.createElement('summary');
+      const badge = (!isFilteredView && isFirstMonth) ? '<span class="active-badge">Active</span>' : '';
+      summary.innerHTML = `
+        <span>🗓️ ${escapeHtml(month)} ${badge}</span>
+        <span style="font-size:0.85rem; color:var(--text-muted); font-family:ui-serif, -apple-system-ui-serif, 'New York', 'Vollkorn', serif;">
+          ${list.length} ${list.length === 1 ? 'tale' : 'tales'}
+        </span>
+      `;
+      details.appendChild(summary);
+
+      const ul = document.createElement('ul');
+      ul.className = 'story-list';
+
+      list.forEach(s => {
+        const sid = s.id || s.date;
+        const rating = feedbackMap[sid];
+        const rawDate = s.date || '';
+        const datePart = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
+        const schemeBadge = s.rhyme_scheme ? `<span class="scheme-badge">${escapeHtml(s.rhyme_scheme)}</span>` : '';
+
+        let ratingBadgeHtml = '';
+        if (rating === 1) {
+          ratingBadgeHtml = '<span class="rating-pill" title="Liked">👍</span>';
+        } else if (rating === -1) {
+          ratingBadgeHtml = '<span class="rating-pill" title="Disliked">👎</span>';
+        }
+
+        const li = document.createElement('li');
+        li.className = 'story-item';
+        li.innerHTML = `
+          <div class="story-link-group">
+            <a class="story-link" href="index.html?story=${encodeURIComponent(sid)}">${escapeHtml(s.title || 'Untitled Tale')}</a>
+            <div class="story-meta-tags">
+              <span>${escapeHtml(datePart)}</span>
+              ${schemeBadge}
+            </div>
+          </div>
+          ${ratingBadgeHtml}
+        `;
+        ul.appendChild(li);
+      });
+
+      details.appendChild(ul);
+      container.appendChild(details);
+
+      isFirstMonth = false;
     }
   }
 
