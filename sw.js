@@ -1,5 +1,6 @@
-const CACHE_NAME = 'rory-stories-v2';
-const APP_SHELL = [
+const CACHE_NAME = 'rory-app-cache';
+
+const STATIC_ASSETS = [
   '/',
   'index.html',
   'archive.html',
@@ -9,67 +10,72 @@ const APP_SHELL = [
   'manifest.json'
 ];
 
-// Install: Pre-cache app shell assets
+// Pre-cache core shell
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(STATIC_ASSETS))
   );
   self.skipWaiting();
 });
 
-// Activate: Clean up older cache versions
+// Take immediate control
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys.map((key) => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      )
-    )
-  );
-  self.clients.claim();
+  event.waitUntil(self.clients.claim());
 });
 
-// Fetch: Stale-While-Revalidate for stories.json, Cache-First for static assets
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // Bypass non-GET and Worker API rating/generation calls
-  if (event.request.method !== 'GET' || url.hostname.includes('workers.dev')) {
+  // Bypass non-GET and all Cloudflare Worker API endpoints
+  if (req.method !== 'GET' || url.hostname.includes('workers.dev')) {
     return;
   }
 
-  // Stale-While-Revalidate strategy for stories data
+  // 1. HTML Pages (Navigation): Network-first with offline cache fallback
+  if (req.mode === 'navigate' || req.headers.get('accept')?.includes('text/html')) {
+    event.respondWith(
+      fetch(req)
+        .then((networkRes) => {
+          if (networkRes.ok) {
+            const copy = networkRes.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
+          }
+          return networkRes;
+        })
+        .catch(() => caches.match(req)) // Serves cached page when offline
+    );
+    return;
+  }
+
+  // 2. Story JSON Data: Stale-While-Revalidate (instant load + background refresh)
   if (url.pathname.endsWith('stories.json') || url.pathname.endsWith('story.json')) {
     event.respondWith(
       caches.open(CACHE_NAME).then(async (cache) => {
-        const cachedResponse = await cache.match(event.request);
-        const fetchPromise = fetch(event.request)
-          .then((networkResponse) => {
-            if (networkResponse.ok) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          })
-          .catch(() => cachedResponse);
+        const cached = await cache.match(req);
+        const networkFetch = fetch(req).then((networkRes) => {
+          if (networkRes.ok) {
+            cache.put(req, networkRes.clone());
+          }
+          return networkRes;
+        }).catch(() => cached);
 
-        return cachedResponse || fetchPromise;
+        return cached || networkFetch;
       })
     );
     return;
   }
 
-  // Cache-First strategy for UI assets & fonts
+  // 3. Static Assets (Icons, Fonts, Images): Cache-first
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    caches.match(req).then((cached) => {
       if (cached) return cached;
-      return fetch(event.request).then((response) => {
-        if (response.ok && (url.origin === location.origin || url.hostname.includes('fonts.g'))) {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+      return fetch(req).then((res) => {
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
         }
-        return response;
+        return res;
       });
     })
   );
