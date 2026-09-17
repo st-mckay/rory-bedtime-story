@@ -209,7 +209,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 16px;
       margin-bottom: 24px;
     }
@@ -282,6 +282,43 @@
     }
 
     .input-text:focus {
+      border-color: var(--accent-blue);
+    }
+
+    /* Search & Filter Toolbar */
+    .search-filter-bar {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      background: #141c2e;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .filter-chip:hover {
+      color: var(--text-main);
+      border-color: #475569;
+    }
+
+    .filter-chip.active {
+      background: var(--accent-blue);
+      color: #0b1120;
       border-color: var(--accent-blue);
     }
 
@@ -364,12 +401,62 @@
     .badge-warning { background: var(--warning-bg); color: var(--warning-text); }
     .badge-danger  { background: var(--danger-bg);  color: var(--danger-text); }
     .badge-info    { background: var(--info-bg);    color: var(--info-text); }
+    .badge-purple  { background: var(--purple-bg);  color: var(--purple-text); }
 
     .status-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background-color: currentColor;
+    }
+
+    /* Rating Button Controls */
+    .rating-btn-group {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .btn-rate-mini {
+      background: #141c2e;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 4px 7px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: all 0.15s ease;
+      color: var(--text-main);
+    }
+
+    .btn-rate-mini:hover {
+      background: #283548;
+      border-color: #475569;
+    }
+
+    .btn-rate-mini.active-up {
+      background: rgba(234, 179, 8, 0.25);
+      border-color: #facc15;
+      color: #facc15;
+      transform: scale(1.08);
+    }
+
+    .btn-rate-mini.active-down {
+      background: rgba(239, 68, 68, 0.25);
+      border-color: #f87171;
+      color: #f87171;
+      transform: scale(1.08);
+    }
+
+    .rhyme-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: rgba(168, 85, 247, 0.15);
+      color: var(--purple-text);
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      margin-left: 6px;
     }
 
     #status-toast {
@@ -436,8 +523,16 @@
         <div class="stat-value" id="stat-total-stories">--</div>
       </div>
       <div class="stat-card">
+        <div class="stat-label">Child Story Ratings</div>
+        <div class="stat-value" id="stat-ratings-summary" style="font-size: 1rem;">
+          <span style="color: #facc15;">👍 <span id="stat-count-liked">0</span></span>
+          <span style="color: #64748b; margin: 0 4px;">|</span>
+          <span style="color: #f87171;">👎 <span id="stat-count-disliked">0</span></span>
+        </div>
+      </div>
+      <div class="stat-card">
         <div class="stat-label">Latest Published Story</div>
-        <div class="stat-value" id="stat-latest-title">--</div>
+        <div class="stat-value" id="stat-latest-title" style="font-size: 0.95rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">--</div>
       </div>
       <div class="stat-card">
         <div class="stat-label">Session Status</div>
@@ -452,10 +547,21 @@
       <div class="card-header-flex">
         <div class="card-header-text">
           <h2>Story Archive Management</h2>
-          <p>Edit titles, review verses, or delete stories from <code>stories.json</code>.</p>
+          <p>Edit titles, tune D1 ratings, or delete stories from <code>stories.json</code>.</p>
         </div>
         <div>
           <button class="btn btn-secondary" onclick="loadStories()">↻ Refresh Archive</button>
+        </div>
+      </div>
+
+      <!-- Search and Filter Chips -->
+      <div class="search-filter-bar">
+        <input type="search" id="search-input" class="input-text" placeholder="🔍 Filter stories by title, date, or rhyme scheme..." oninput="renderStoriesTable()">
+        <div class="filter-chips">
+          <button class="filter-chip active" data-filter="all" onclick="setFilter('all')">All (<span id="filter-count-all">0</span>)</button>
+          <button class="filter-chip" data-filter="liked" onclick="setFilter('liked')">👍 Liked (<span id="filter-count-liked">0</span>)</button>
+          <button class="filter-chip" data-filter="disliked" onclick="setFilter('disliked')">👎 Disliked (<span id="filter-count-disliked">0</span>)</button>
+          <button class="filter-chip" data-filter="unrated" onclick="setFilter('unrated')">⚪ Unrated (<span id="filter-count-unrated">0</span>)</button>
         </div>
       </div>
 
@@ -473,16 +579,17 @@
           <thead>
             <tr>
               <th class="checkbox-col"><input type="checkbox" id="select-all" class="checkbox-custom" onchange="toggleSelectAll(this)"></th>
-              <th style="width: 140px;">Date</th>
+              <th style="width: 130px;">Date</th>
               <th>Story Title</th>
-              <th style="width: 100px;">Verses</th>
-              <th style="width: 160px; text-align: right;">Actions</th>
+              <th style="width: 110px;">Rating</th>
+              <th style="width: 90px;">Verses</th>
+              <th style="width: 150px; text-align: right;">Actions</th>
             </tr>
           </thead>
           <tbody id="stories-tbody">
             <tr>
-              <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                Loading stories from archive...
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                Loading stories and ratings...
               </td>
             </tr>
           </tbody>
@@ -495,7 +602,9 @@
 <script>
   const WORKER_ENDPOINT = "https://rory-trigger.stuartmckay.workers.dev";
   let stories = [];
+  let feedbackMap = {};
   let selectedIds = new Set();
+  let currentFilter = "all";
 
   function showToast(message, type = "info") {
     const toast = document.getElementById("status-toast");
@@ -576,8 +685,8 @@
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          action: "generate",
-          admin_key: key
+          action: "generate", 
+          admin_key: key 
         })
       });
 
@@ -597,54 +706,166 @@
   async function loadStories() {
     const tbody = document.getElementById("stories-tbody");
     try {
-      const res = await fetch(`stories.json?t=${Date.now()}`);
-      if (!res.ok) throw new Error("Could not load stories.json");
-      stories = await res.json();
+      // Concurrently fetch stories from GitHub repository and ratings from Cloudflare D1
+      const [storiesRes, feedbackRes] = await Promise.all([
+        fetch(`stories.json?t=${Date.now()}`),
+        fetch(`${WORKER_ENDPOINT}/feedback-all`).catch(() => null)
+      ]);
+
+      if (!storiesRes.ok) throw new Error("Could not load stories.json");
+      stories = await storiesRes.json();
+
+      if (feedbackRes && feedbackRes.ok) {
+        feedbackMap = await feedbackRes.json();
+      } else {
+        feedbackMap = {};
+        stories.forEach(s => {
+          const sid = s.id || s.date;
+          const localVal = localStorage.getItem(`rating_${sid}`);
+          if (localVal) feedbackMap[sid] = parseInt(localVal, 10);
+        });
+      }
 
       document.getElementById("stat-total-stories").textContent = stories.length;
       if (stories.length > 0) {
-        document.getElementById("stat-latest-title").textContent = stories[0].date || stories[0].title;
+        const latest = stories[0];
+        const rawDate = latest.date || '';
+        const datePart = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
+        document.getElementById("stat-latest-title").textContent = `${latest.title || 'Untitled'} (${datePart})`;
       }
 
+      updateFilterCounts();
       renderStoriesTable();
     } catch (e) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to load stories: ${e.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="color: var(--danger-text); text-align: center; padding: 20px;">Failed to load stories: ${e.message}</td></tr>`;
     }
+  }
+
+  function updateFilterCounts() {
+    let liked = 0;
+    let disliked = 0;
+    let unrated = 0;
+
+    stories.forEach(s => {
+      const sid = s.id || s.date;
+      const r = feedbackMap[sid];
+      if (r === 1) liked++;
+      else if (r === -1) disliked++;
+      else unrated++;
+    });
+
+    document.getElementById("stat-count-liked").textContent = liked;
+    document.getElementById("stat-count-disliked").textContent = disliked;
+
+    document.getElementById("filter-count-all").textContent = stories.length;
+    document.getElementById("filter-count-liked").textContent = liked;
+    document.getElementById("filter-count-disliked").textContent = disliked;
+    document.getElementById("filter-count-unrated").textContent = unrated;
+  }
+
+  function setFilter(type) {
+    currentFilter = type;
+    document.querySelectorAll(".filter-chip").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-filter") === type);
+    });
+    renderStoriesTable();
   }
 
   function renderStoriesTable() {
     const tbody = document.getElementById("stories-tbody");
+    const query = (document.getElementById("search-input").value || "").toLowerCase().trim();
     tbody.innerHTML = "";
     selectedIds.clear();
     updateBatchUI();
 
     if (stories.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No stories found in archive.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No stories found in archive.</td></tr>`;
       return;
     }
 
-    stories.forEach((story, idx) => {
+    const filtered = stories.filter((story, idx) => {
       const storyId = story.id || story.date || `story-${idx}`;
+      const rating = feedbackMap[storyId] || 0;
+      const title = (story.title || "").toLowerCase();
+      const date = (story.date || "").toLowerCase();
+      const scheme = (story.rhyme_scheme || "").toLowerCase();
+
+      const matchesSearch = !query || title.includes(query) || date.includes(query) || scheme.includes(query);
+      if (!matchesSearch) return false;
+
+      if (currentFilter === "liked") return rating === 1;
+      if (currentFilter === "disliked") return rating === -1;
+      if (currentFilter === "unrated") return !rating || rating === 0;
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 20px;">No stories match your filter query.</td></tr>`;
+      return;
+    }
+
+    filtered.forEach((story, idx) => {
+      const storyId = story.id || story.date || `story-${idx}`;
+      const rating = feedbackMap[storyId] || 0;
       const tr = document.createElement("tr");
+
+      const schemeBadge = story.rhyme_scheme ? `<span class="rhyme-tag">${escapeHtml(story.rhyme_scheme)}</span>` : "";
+      const rawDate = story.date || "--";
+      const dateDisplay = rawDate.includes(',') ? rawDate.split(',')[1].trim() : rawDate;
 
       tr.innerHTML = `
         <td class="checkbox-col">
           <input type="checkbox" class="checkbox-custom story-checkbox" data-id="${storyId}" onchange="toggleSelectStory('${storyId}', this.checked)">
         </td>
-        <td style="color: var(--text-muted); font-weight: 500;">${story.date || "--"}</td>
+        <td style="color: var(--text-muted); font-weight: 500; font-size: 0.82rem;">${escapeHtml(dateDisplay)}</td>
         <td>
-          <span id="title-display-${idx}" style="font-weight: 600;">${escapeHtml(story.title || "Untitled")}</span>
+          <span style="font-weight: 600; color: var(--text-main);">${escapeHtml(story.title || "Untitled")}</span>
+          ${schemeBadge}
+        </td>
+        <td>
+          <div class="rating-btn-group">
+            <button class="btn-rate-mini ${rating === 1 ? 'active-up' : ''}" onclick="toggleStoryRating('${escapeHtml(storyId)}', '${escapeHtml(story.title || '')}', 1)" title="Thumbs Up">👍</button>
+            <button class="btn-rate-mini ${rating === -1 ? 'active-down' : ''}" onclick="toggleStoryRating('${escapeHtml(storyId)}', '${escapeHtml(story.title || '')}', -1)" title="Thumbs Down">👎</button>
+          </div>
         </td>
         <td><span class="badge badge-info">${story.verses ? story.verses.length : 0} Verses</span></td>
         <td style="text-align: right;">
           <div style="display: inline-flex; gap: 6px;">
-            <button class="btn btn-secondary" onclick="promptRenameStory('${storyId}', '${escapeHtml(story.title || '')}')">✏️ Rename</button>
+            <button class="btn btn-secondary" onclick="promptRenameStory('${storyId}', '${escapeHtml(story.title || '')}')">✏️</button>
             <button class="btn btn-danger" onclick="deleteStory('${storyId}', '${escapeHtml(story.title || '')}')">🗑️</button>
           </div>
         </td>
       `;
       tbody.appendChild(tr);
     });
+  }
+
+  async function toggleStoryRating(storyId, title, clickedRating) {
+    const currentRating = feedbackMap[storyId] || 0;
+    const finalRating = currentRating === clickedRating ? 0 : clickedRating;
+
+    // Optimistic UI update
+    feedbackMap[storyId] = finalRating;
+    updateFilterCounts();
+    renderStoriesTable();
+
+    try {
+      const res = await fetch(WORKER_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "rate_story",
+          story_id: storyId,
+          title: title,
+          rating: finalRating
+        })
+      });
+
+      if (!res.ok) throw new Error("Worker rejected rating update");
+      showToast(finalRating === 1 ? "Marked as 👍 Liked" : (finalRating === -1 ? "Marked as 👎 Disliked" : "Rating removed"), "success");
+    } catch (e) {
+      showToast("Failed to save rating to D1.", "danger");
+    }
   }
 
   function toggleSelectStory(id, checked) {
@@ -713,12 +934,19 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "delete", 
-          id: id,
+          id: id, 
           admin_key: key 
         })
       });
 
       if (res.ok) {
+        // Clean up from D1 database as well
+        fetch(WORKER_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "rate_story", story_id: id, rating: 0 })
+        }).catch(() => null);
+
         showToast("Story deleted from archive.", "success");
         setTimeout(loadStories, 1500);
       } else {
@@ -743,12 +971,21 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           action: "delete_batch", 
-          ids: ids,
+          ids: ids, 
           admin_key: key 
         })
       });
 
       if (res.ok) {
+        // Clean up D1 feedback entries for all deleted IDs
+        ids.forEach(id => {
+          fetch(WORKER_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "rate_story", story_id: id, rating: 0 })
+          }).catch(() => null);
+        });
+
         showToast(`Successfully deleted ${ids.length} stories.`, "success");
         setTimeout(loadStories, 1500);
       } else {
