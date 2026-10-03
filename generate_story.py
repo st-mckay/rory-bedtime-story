@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import re
 import time
 import urllib.request
@@ -58,7 +59,18 @@ try:
 except Exception as e:
     print(f"Notice: Could not fetch preferences from D1 (proceeding with base prompt): {e}")
 
-SYSTEM_INSTRUCTION = """
+# 2. Dynamic Rhyme Scheme Rotation
+SCHEMES = ["AABB", "ABCB", "ABAB"]
+recent_schemes = [
+    s.get("rhyme_scheme") for s in archive[:3] if s.get("rhyme_scheme") in SCHEMES
+]
+
+# Filter out the most recent scheme so two consecutive days never repeat the same meter
+candidates = [s for s in SCHEMES if not (recent_schemes and s == recent_schemes[0])]
+target_rhyme_scheme = random.choice(candidates if candidates else SCHEMES)
+print(f"Assigned rhyme scheme for tonight: {target_rhyme_scheme} (Recent history: {recent_schemes})")
+
+SYSTEM_INSTRUCTION = f"""
 You are a master children's bedtime story author crafting verses for toddlers (ages 1 to 3).
 Your core cast:
 - Rory: Main protagonist, should be the center of every story. A friendly, gentle green Tyrannosaurus rex.
@@ -72,10 +84,12 @@ Formatting & Style Rules (NON-NEGOTIABLE):
 1. Exactly 6 verses (stanzas).
 2. Exactly 4 lines per verse (quatrain).
 3. Meter & Cadence: Strict, rolling anapestic or dactylic bedtime bounce (approx 8-12 syllables per line, e.g. "da-da-DUM da-da-DUM da-da-DUM da-da-DUM"). Must be smooth, sing-song, and effortless to read aloud.
-4. Toddler-Friendly Rhyme Scheme Flexibility:
-   - Choose a consistent, musical rhyme scheme for the story: AABB (rhyming couplets), ABCB (nursery ballad), or ABAB (alternating).
+4. Meter & Rhyme Scheme (STRICTLY REQUIRED):
+   - You MUST compose all 6 verses in the {target_rhyme_scheme} rhyme scheme.
+   - If AABB: Lines 1 & 2 rhyme, lines 3 & 4 rhyme.
+   - If ABCB: Lines 2 & 4 rhyme; lines 1 & 3 do not need to rhyme.
+   - If ABAB: Lines 1 & 3 rhyme, lines 2 & 4 rhyme.
    - Use simple, pure, ear-pleasing rhymes suitable for young children (e.g., night/bright, sleep/deep, sky/high, glow/slow). Avoid forced, imperfect, slant, or multisyllabic tongue-twisters.
-   - Let the preference feedback guide your choice of cadence and rhyming rhythm.
 5. NO CHARACTER ADJECTIVE PREFIXES: Use the character names directly ("Rory", "Tilly", "Benny", "Ricky", "Nia", "Psittaco"). NEVER prefix their names with descriptive filler adjectives (e.g., DO NOT write "Sweet Nia", "Brave Tilly", "Soft Rory", "Young Psittaco", "Small Psittaco", "Little Benny", "Gentle Ricky"). Let actions and natural dialogue convey their personality instead.
 6. Narrative: Keep it varied. Vary the setting (groves, caves, rivers, starry ridges), initial discovery, teamwork actions, and cozy closing scenes so it never reuses repetitive template phrasing across stories.
 7. Tone: Calming, serene, warm, melodic, and distinctly bedtime-oriented.
@@ -95,10 +109,17 @@ The starry night was deep and blue,
 The grass was damp with evening dew.
 Then Ricky found a quiet nest,
 Where all the friends could lie and rest.
+
+Option C (Alternating Cadence ABAB):
+The stars began to softly shine,
+Across the quiet sky,
+The sleeping ferns were sweet and fine,
+As Rory drifted by.
 """
 
 USER_PROMPT = f"""
 Write tonight's unique bedtime story featuring Rory and his friends following the system instructions.
+Every stanza MUST strictly follow the {target_rhyme_scheme} rhyme scheme.
 {FEW_SHOT_EXAMPLE}
 {feedback_guidance}
 
@@ -106,12 +127,53 @@ Output schema requirements:
 Return a JSON object containing:
 - "title": A lyrical, evocative title (e.g., "Rory and the Whispering Falls")
 - "verses": An array of exactly 6 strings, where each string contains exactly 4 lines separated by newlines.
-- "rhyme_scheme": The primary scheme used ("AABB", "ABCB", or "ABAB").
+- "rhyme_scheme": Exactly "{target_rhyme_scheme}"
 """
 
-# 2. Generation with Retry Backoff & Model Fallback
-models_to_try = ["gemini-3.6-flash", "gemini-2.5-flash"]
+# 3. Dynamic Model Discovery and Prioritization
+def get_candidate_models():
+    preferred_order = [
+        "gemini-3.8-flash",
+        "gemini-3.8-pro",
+        "gemini-3.5-flash",
+        "gemini-3.0-flash",
+        "gemini-2.5-flash",
+        "gemini-2.0-flash",
+    ]
+    
+    discovered = []
+    try:
+        for m in client.models.list():
+            model_id = getattr(m, "name", "")
+            clean_id = model_id.split("/")[-1] if "/" in model_id else model_id
+            
+            methods = getattr(m, "supported_actions", None) or getattr(m, "supported_generation_methods", [])
+            supports_generate = any("generateContent" in str(act) for act in methods) if methods else True
+            
+            if supports_generate and not any(x in clean_id.lower() for x in ["embed", "aqa", "imagen", "veo"]):
+                discovered.append(clean_id)
+    except Exception as e:
+        print(f"Notice: Failed to fetch live models from API: {e}. Using preference list.")
+
+    ordered_models = []
+    for pref in preferred_order:
+        if pref in discovered:
+            ordered_models.append(pref)
+
+    for m in discovered:
+        if "flash" in m and m not in ordered_models:
+            ordered_models.append(m)
+
+    if not ordered_models:
+        ordered_models = [m for m in preferred_order if m != "gemini-2.5-flash"] + ["gemini-2.5-flash"]
+
+    return ordered_models
+
+models_to_try = get_candidate_models()
+print(f"Identified candidate models for generation: {models_to_try}")
+
 response = None
+used_model = None
 
 for model_name in models_to_try:
     for attempt in range(1, 4):
@@ -126,6 +188,7 @@ for model_name in models_to_try:
                     temperature=0.75,
                 ),
             )
+            used_model = model_name
             break
         except ServerError as e:
             print(f"503 Server Error on {model_name}: {e}. Waiting to retry...")
@@ -134,13 +197,13 @@ for model_name in models_to_try:
             else:
                 print(f"Exhausted retries for {model_name}.")
         except Exception as e:
-            print(f"Unexpected error with {model_name}: {e}")
+            print(f"Error encountered with {model_name}: {e}")
             break
     if response:
         break
 
 if not response:
-    raise RuntimeError("Failed to generate bedtime story after multiple retries across available models.")
+    raise RuntimeError("Failed to generate bedtime story after trying all candidate models.")
 
 raw_text = response.text.strip()
 if "```" in raw_text:
@@ -160,6 +223,9 @@ new_story["date_raw"] = now.strftime("%Y-%m-%d")
 new_story["date"] = formatted_date
 new_story["month_group"] = now.strftime("%b-%y")
 new_story["timestamp"] = now.isoformat()
+new_story["model"] = used_model
+# Ensure the assigned scheme is accurately recorded in metadata
+new_story["rhyme_scheme"] = target_rhyme_scheme
 
 archive.insert(0, new_story)
 
@@ -169,4 +235,4 @@ with open("stories.json", "w", encoding="utf-8") as f:
 with open("story.json", "w", encoding="utf-8") as f:
     json.dump(new_story, f, indent=2, ensure_ascii=False)
 
-print(f"Generated & Archived: {new_story.get('title')} [{new_story.get('rhyme_scheme', 'ABAB')}] as '{formatted_date}'")
+print(f"Generated & Archived: {new_story.get('title')} [{target_rhyme_scheme}] using {used_model} as '{formatted_date}'")
