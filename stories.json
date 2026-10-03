@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Velvet Mossy Glade",
+    "verses": [
+      "The sun sank down behind the hill,\nAnd painted clouds of gold,\nWhile Rory walked the forest trail,\nAs evening breezes rolled.",
+      "Then Tilly found a quiet nook,\nBeneath a leafy dome,\nWhere happy ferns and clover leaves,\nProvided cozy home.",
+      "And Benny stretched his heavy legs,\nUpon the mossy ground,\nSo tired and warm and settled in,\nWithout another sound.",
+      "Then Ricky stopped his bouncing games,\nAnd tucked away his feet,\nTo listen to the evening crickets,\nSinging soft and sweet.",
+      "High up above the sleepy trees,\nNia began to glide,\nAnd watched the shadows softly fall,\nOn every forest side.",
+      "With Psittaco asleep at last,\nUpon a leafy bed,\nThe starry blanket covered up,\nEach heavy sleepy head."
+    ],
+    "rhyme_scheme": "ABCB",
+    "id": "2026-10-03-120154",
+    "date_raw": "2026-10-03",
+    "date": "Saturday, October 03, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-03T12:01:54.797258",
+    "model": "gemini-flash-lite-latest"
+  },
+  {
     "title": "Rory and the Moonlit Fern Lagoon",
     "rhyme_scheme": "AABB",
     "verses": [
