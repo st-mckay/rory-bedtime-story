@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Velvet Mossy Glade",
+  "title": "Rory and the Sleepy Clover Cove",
   "verses": [
-    "The sun sank down behind the hill,\nAnd painted clouds of gold,\nWhile Rory walked the forest trail,\nAs evening breezes rolled.",
-    "Then Tilly found a quiet nook,\nBeneath a leafy dome,\nWhere happy ferns and clover leaves,\nProvided cozy home.",
-    "And Benny stretched his heavy legs,\nUpon the mossy ground,\nSo tired and warm and settled in,\nWithout another sound.",
-    "Then Ricky stopped his bouncing games,\nAnd tucked away his feet,\nTo listen to the evening crickets,\nSinging soft and sweet.",
-    "High up above the sleepy trees,\nNia began to glide,\nAnd watched the shadows softly fall,\nOn every forest side.",
-    "With Psittaco asleep at last,\nUpon a leafy bed,\nThe starry blanket covered up,\nEach heavy sleepy head."
+    "The stars were beginning to twinkle and gleam,\nWhile Rory was ready to drift in a dream.\nHe walked through the valley of clover so sweet,\nAnd felt the soft moss underneath his big feet.",
+    "Then Tilly arrived with a slow, sleepy sigh,\nAnd looked at the moon in the deep velvet sky.\nThen Benny lay down on the cool, grassy floor,\nAnd started to let out a very soft snore.",
+    "Now Ricky was tired of running around,\nHe curled in a circle and slept on the ground.\nAnd Nia flew down from her perch in the tree,\nAs cozy and quiet as quiet could be.",
+    "Psittaco chirped as he looked at the night,\nAnd watched as the stars were beginning to light.\nHe nestled right close to his big dino friend,\nAnd knew that the day had come near to its end.",
+    "The clover was fragrant, the night air was still,\nAs moonlight was shining on valley and hill.\nAnd Rory was happy to snuggle so deep,\nWith all of his buddies preparing to sleep.",
+    "The forest was breathing a soft, sleepy tune,\nBeneath the bright glow of the silver-white moon.\nSo close your eyes now as the little stars gleam,\nWhile Rory is drifting in one happy dream."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-10-03-120154",
-  "date_raw": "2026-10-03",
-  "date": "Saturday, October 03, 2026",
+  "rhyme_scheme": "AABB",
+  "id": "2026-10-04-082119",
+  "date_raw": "2026-10-04",
+  "date": "Sunday, October 04, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-03T12:01:54.797258",
-  "model": "gemini-flash-lite-latest"
+  "timestamp": "2026-10-04T08:21:19.093403",
+  "model": "gemini-3.5-flash"
 }
