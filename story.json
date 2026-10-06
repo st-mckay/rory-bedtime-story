@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Quiet Clover Glen",
+  "title": "Rory and the Velvet Clover Bed",
   "verses": [
-    "The silver moon began to rise\nAbove the sleepy hill,\nWhile Rory walked along the path\nWhere everything was still.",
-    "And Nia glided through the air\nTo show the way ahead,\nWhere fluffy clover softly grew\nTo make a cozy bed.",
-    "Then Ricky slowed his tiptoe feet\nAnd left his playful game,\nWhile Tilly hummed a quiet tune\nAs gentle evening came.",
-    "And Benny settled near the trees\nTo take a soothing rest,\nWhile Psittaco found sleepy leaves\nTo build a sheltered nest.",
-    "Then Rory gave a sleepy yawn\nBeneath the purple sky,\nAs crickets played a soothing song\nTo be their lullaby.",
-    "The twinkling stars began to blink\nTo keep them warm and bright,\nAnd Rory closed his heavy eyes\nAnd whispered soft, \"Goodnight.\""
+    "The sun slipped away in the west,\nThe valley was quiet and deep,\nAnd Rory was ready to rest,\nAnd dream in a beautiful sleep.",
+    "Then Benny walked over the hill,\nAnd Tilly lay down on the ground,\nThe breeze was so gentle and still,\nWith barely a rustling sound.",
+    "Now Ricky was ready to hide,\nWhile Nia flew down from the sky,\nThey snuggled up close side-by-side,\nAs soft little clouds drifted by.",
+    "Psittaco was tucked in a nest,\nTo sleep through the cool of the night,\nHe settled his chin on his chest,\nBeneath the pale silvery light.",
+    "The stars were beginning to glow,\nAnd shine on the sleepy green lawn,\nThe river was steady and slow,\nTo carry them into the dawn.",
+    "So Rory closed both of his eyes,\nWith all of his friends in a ring,\nBeneath the dark, beautiful skies,\nTo hear what the quiet would bring."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-10-05-082042",
-  "date_raw": "2026-10-05",
-  "date": "Monday, October 05, 2026",
+  "rhyme_scheme": "ABAB",
+  "id": "2026-10-06-082128",
+  "date_raw": "2026-10-06",
+  "date": "Tuesday, October 06, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-05T08:20:42.497478",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-10-06T08:21:28.904013",
+  "model": "gemini-3.5-flash"
 }
