@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Velvet Mossy Glade",
+    "verses": [
+      "The silver moon climbed up the sky,\nTo light the sleepy fern,\nAnd Rory found a quiet spot,\nWhere shadows softly turn.",
+      "Then Tilly stretched upon the ground,\nBeside the quiet stream,\nAnd Benny leaned against a log,\nTo start a gentle dream.",
+      "Then Ricky curled a scaly tail,\nAnd put away his play,\nWhile Nia swooped upon the wind,\nTo chase the day away.",
+      "Then Psittaco began to chirp,\nA tiny sleepy tune,\nAnd fluttered down to hide away,\nBeneath the glowing moon.",
+      "The forest grew so calm and still,\nThe leaves began to weep,\nAs Rory tucked his green tail in,\nAnd drifted into sleep.",
+      "The stars above watched over all,\nThe night was warm and deep,\nAnd Rory rested safe and sound,\nUntil the morning peep."
+    ],
+    "rhyme_scheme": "ABCB",
+    "id": "2026-10-07-082429",
+    "date_raw": "2026-10-07",
+    "date": "Wednesday, October 07, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-07T08:24:29.000298",
+    "model": "gemini-flash-lite-latest"
+  },
+  {
     "title": "Rory and the Velvet Clover Bed",
     "verses": [
       "The sun slipped away in the west,\nThe valley was quiet and deep,\nAnd Rory was ready to rest,\nAnd dream in a beautiful sleep.",
