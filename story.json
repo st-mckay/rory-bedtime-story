@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Velvet Mossy Glade",
+  "title": "Rory and the Amber Lantern Hills",
   "verses": [
-    "The silver moon climbed up the sky,\nTo light the sleepy fern,\nAnd Rory found a quiet spot,\nWhere shadows softly turn.",
-    "Then Tilly stretched upon the ground,\nBeside the quiet stream,\nAnd Benny leaned against a log,\nTo start a gentle dream.",
-    "Then Ricky curled a scaly tail,\nAnd put away his play,\nWhile Nia swooped upon the wind,\nTo chase the day away.",
-    "Then Psittaco began to chirp,\nA tiny sleepy tune,\nAnd fluttered down to hide away,\nBeneath the glowing moon.",
-    "The forest grew so calm and still,\nThe leaves began to weep,\nAs Rory tucked his green tail in,\nAnd drifted into sleep.",
-    "The stars above watched over all,\nThe night was warm and deep,\nAnd Rory rested safe and sound,\nUntil the morning peep."
+    "The hills were now glowing in amber and gold,\nAs quiet night shadows began to unfold.\nAnd Rory walked slowly to look at the view,\nWhere soft-growing mosses were damp with the dew.",
+    "Then Tilly came walking with footsteps so light,\nTo watch all the blossoms that glowed in the night.\nAnd Benny lay down in the sweet-scented grass,\nTo wait for the bright silver planet to pass.",
+    "Now Ricky was tired from running all day,\nAnd folded his claws as he finished his play.\nPsittaco was chirping a soft little tune,\nAnd nested in leaves by the light of the moon.",
+    "High up in the branches did Nia look down,\nTo watch as the shadows turned purple and brown.\nShe spread out her wings in a sleepy embrace,\nAnd flew to the ground at a very slow pace.",
+    "They gathered around in a circle so deep,\nWhile Rory was ready to drift into sleep.\nThe amber-bright flowers were closing their heads,\nAs all of the dinosaurs found their warm beds.",
+    "The stars in the sky were now shining so bright,\nTo give all the friends a soft blanket of light.\nThey closed their tired eyes as the gentle wind blew,\nAnd slept in the forest the whole night-time through."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-10-07-082429",
-  "date_raw": "2026-10-07",
-  "date": "Wednesday, October 07, 2026",
+  "rhyme_scheme": "AABB",
+  "id": "2026-10-08-082216",
+  "date_raw": "2026-10-08",
+  "date": "Thursday, October 08, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-07T08:24:29.000298",
-  "model": "gemini-flash-lite-latest"
+  "timestamp": "2026-10-08T08:22:16.270140",
+  "model": "gemini-3.5-flash"
 }
