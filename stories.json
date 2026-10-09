@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Twilight Bluebell Hill",
+    "verses": [
+      "The twilight was falling across the wide hill,\nThe valley of bluebells was ready to sleep,\nThe breezes were whispering quiet and still,\nWhile Rory stepped softly where shadows grew deep.",
+      "When Nia looked down from the darkening sky,\nShe guided the friends as the river moved slow,\nThe branches of cedar were waving up high,\nWhere blossoms of purple were starting to glow.",
+      "Then Benny walked down to the moss on the ground,\nWhere Tilly was brushing through ribbons of grass,\nThe night didn't carry a clatter or sound,\nExcept for the breeze as it happened to pass.",
+      "Now Ricky curled down in a velvety nest,\nAs Psittaco chirped to the silvering light,\nBoth tired and cozy and ready for rest,\nBeneath the cool glow of the welcoming night.",
+      "Then Rory looked out at the blossoms of blue,\nAnd gave a warm yawn for the friends who were near,\nThe petals were touched by the evening's cool dew,\nAnd starlight was shining so tender and clear.",
+      "He tucked his green tail and he rested his head,\nWhere all of his friends fell in harmony deep,\nThe hill of sweet bluebells became their soft bed,\nAnd Rory was drifting away into sleep."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-10-09-082214",
+    "date_raw": "2026-10-09",
+    "date": "Friday, October 09, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-09T08:22:14.617168",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Amber Lantern Hills",
     "verses": [
       "The hills were now glowing in amber and gold,\nAs quiet night shadows began to unfold.\nAnd Rory walked slowly to look at the view,\nWhere soft-growing mosses were damp with the dew.",
