@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Silver Blossom Hill",
+    "verses": [
+      "The sun drifted down past the edge of the world,\nAnd painted the valley in blue,\nWhile Rory led softly along the green trail,\nThrough sparkles of evening dew.",
+      "High over the treetops came Nia in flight,\nTo glide on the whispers of air,\nAs Benny walked slowly behind with a hum,\nWithout any worry or care.",
+      "Up high on the crest of a velvety knoll,\nThe silver buds opened to gleam,\nAnd Ricky tiptoed through the blossoms with joy,\nLike figures that dance in a dream.",
+      "Then Tilly stepped over to gather the moss,\nTo cushion a circular space,\nWhile Psittaco chirped from a perch on her horn,\nTo welcome their slumbering place.",
+      "And Rory curled down in the center of all,\nTo breathe with a velvety sigh,\nWhile stars blinked like lanterns of silver and gold,\nAcross the wide hush of the sky.",
+      "The cool evening breeze sang a lullaby sweet,\nTo carry their worries away,\nAnd tucked in together, the dinosaurs slept,\nUntil the bright dawn of the day."
+    ],
+    "rhyme_scheme": "ABCB",
+    "id": "2026-10-10-082302",
+    "date_raw": "2026-10-10",
+    "date": "Saturday, October 10, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-10T08:23:02.667610",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Twilight Bluebell Hill",
     "verses": [
       "The twilight was falling across the wide hill,\nThe valley of bluebells was ready to sleep,\nThe breezes were whispering quiet and still,\nWhile Rory stepped softly where shadows grew deep.",
