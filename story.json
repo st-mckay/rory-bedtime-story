@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Moonlit Cedar Ridge",
+  "title": "Rory and the Silver Clover Hill",
   "verses": [
-    "The sun dipped down behind the ridge,\nAnd painted skies of blue,\nWhile Rory walked along the path,\nThrough grass of evening dew.",
-    "High overhead flew Nia now,\nOn wings of silver gray,\nWhile Ricky rested on a rock,\nTo end the playful day.",
-    "Now Benny gave a heavy sigh,\nBeside the cedar tree,\nAnd Tilly gathered fragrant ferns,\nAs calm as calm could be.",
-    "Then Psittaco came fluttering down,\nTo seek a sheltered nest,\nAnd chirped a song for all his friends,\nBefore they went to rest.",
-    "Then Rory made a cozy bed,\nBeneath the starry light,\nHe closed his eyes and tucked his tail,\nTo welcome in the night.",
-    "The gentle breezes softly hummed,\nAbove the quiet hill,\nAnd every dinosaur was safe,\nAnd slumbering and still."
+    "The sun tumbled down past the edge of the hill,\nThe breezes of evening grew cozy and still.\nThen Rory stepped softly across the warm ground,\nWithout making even the tiniest sound.",
+    "High over the treetops flew Nia to glide,\nWhile Ricky came bounding right up to her side.\nHe carried a feather of silver and blue,\nThat shone in the mist as the evening stars grew.",
+    "Ahead on the slope was a carpet of green,\nThe silkiest clover the friends had all seen.\nThen Tilly swept pathways with slow, steady feet,\nTo make a big hollow so cozy and sweet.",
+    "And Benny lay down like a sheltering wall,\nTo cradle his friends so no shadows would fall.\nThen Psittaco settled inside of a leaf,\nAnd rested his chin in a sigh of relief.",
+    "Then Rory curled down in the soft purple glow,\nAnd hummed a sweet tune that was rocking and slow.\nWhile Ricky stopped bouncing and closed his brown eyes,\nBeneath the calm stars in the slumbering skies.",
+    "The silver leaves nodded and dreamed in the deep,\nAs all of the valley was drifting to sleep.\nThe moonlight gave Rory a kiss on his head,\nGoodnight to the dinosaurs snug in their bed."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-10-12-082121",
-  "date_raw": "2026-10-12",
-  "date": "Monday, October 12, 2026",
+  "rhyme_scheme": "AABB",
+  "id": "2026-10-13-082722",
+  "date_raw": "2026-10-13",
+  "date": "Tuesday, October 13, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-12T08:21:21.812834",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-10-13T08:27:22.927817",
+  "model": "gemini-flash-latest"
 }
