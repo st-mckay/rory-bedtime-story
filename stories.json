@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Soft Moonlit Grove",
+    "rhyme_scheme": "AABB",
+    "verses": [
+      "The sun faded down as the sky turned to blue,\nThe quiet old valley was covered in dew.\nAnd Rory walked on with a soft, gentle tread,\nTo find a cozy place for a nap in his bed.",
+      "Nia soared down from the stars up above,\nAnd sang a sweet lullaby full of her love.\nPsittaco nestled right into a leaf,\nExchanging the day for a quiet relief.",
+      "Ricky stopped bouncing and sat on the ground,\nHe listened to night as it whispered around.\nTilly tucked close by the side of a tree,\nAs happy and calm as a dino could be.",
+      "Benny lay down with a deep, heavy sigh,\nWhile watching the moon as it floated on high.\nThe silver light glowed on the moss softly spread,\nAnd cushioned the ground where he laid down his head.",
+      "Together they settled in warmth and in peace,\nAnd waited for all of their worries to cease.\nThe fireflies danced as they flickered a glow,\nTo rock all the friends in a rhythm so slow.",
+      "Now Rory has closed his two tired old eyes,\nBeneath the soft blanket of starry dark skies.\nThe valley is dreaming, the world is asleep,\nRest well, little friends, in a slumber so deep."
+    ],
+    "id": "2026-10-15-082144",
+    "date_raw": "2026-10-15",
+    "date": "Thursday, October 15, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-15T08:21:44.712388",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Sleeping Lagoon",
     "verses": [
       "The sun was descending behind the blue sea,\nThe water was humming so slow,\nAnd Rory stepped softly beside a tall tree,\nTo watch the pale lavender glow.",
