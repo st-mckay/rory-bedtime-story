@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Cozy Dewdrop Cove",
+    "rhyme_scheme": "ABCB",
+    "verses": [
+      "The evening was quiet and cool in the cove,\nAs darkness came down from the sky,\nThen Rory sat down on a blanket of moss,\nAnd watched as the shadows went by.",
+      "Then Nia flew down through the cool evening air,\nTo join with her friends on the ground,\nWhile Benny lay back on a pillow of leaves,\nWithout making one single sound.",
+      "High up in a branch sat Psittaco in peace,\nTucked into a nest warm and deep,\nAnd Ricky stopped running to rest in the shade,\nPreparing to drift off to sleep.",
+      "Then Tilly curled up by the bank of the stream,\nWhere water was shining like gold,\nShe smiled at the moon as it brightened the night,\nWith stories of sleep to be told.",
+      "A breeze whispered softly through branches above,\nTo blow all their worries away,\nAnd Rory sighed happily under the stars,\nAt end of a wonderful day.",
+      "The forest was silent and cozy and calm,\nAs bedtime was finally here,\nSo Rory closed eyes with a restful deep breath,\nSurrounded by those he held dear."
+    ],
+    "id": "2026-10-16-082110",
+    "date_raw": "2026-10-16",
+    "date": "Friday, October 16, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-16T08:21:10.339481",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Soft Moonlit Grove",
     "rhyme_scheme": "AABB",
     "verses": [
