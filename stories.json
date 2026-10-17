@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Silver Clover Hill",
+    "verses": [
+      "The twilight was falling across the green hill,\nThe breeze in the branches was quiet and still.\nThen Rory walked out where the silver ferns grow,\nAnd watched the bright fireflies flicker below.",
+      "Now Benny walked down to the edge of the pond,\nWhile Ricky peeped out from the bushes beyond.\nThey rested together beside the cool stream,\nWhere water was murmuring soft as a dream.",
+      "Then Tilly brought leaves that were fragrant and dry,\nWhile Nia flew low in the darkening sky.\nShe circled down softly through shadows that spread,\nTo rest on the grass by a velvety bed.",
+      "And Psittaco tucked in a pocket of green,\nThe coziest shelter that ever was seen.\nNow Rory lay down where the clover was sweet,\nAnd folded his tail and his sleepy round feet.",
+      "The moon drifted up like a lantern so bright,\nTo bathe all the hill in a calm silver light.\nThe flowers were nodding in rhythms so slow,\nWhile sweet, sleepy breezes began to blow low.",
+      "Now Benny and Tilly let out a soft sigh,\nBeneath the cool glow of the starlight on high.\nAnd Rory closed eyes in the hush of the deep,\nAs all of the dinosaurs drifted to sleep."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-10-17-082122",
+    "date_raw": "2026-10-17",
+    "date": "Saturday, October 17, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-17T08:21:22.792490",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Cozy Dewdrop Cove",
     "rhyme_scheme": "ABCB",
     "verses": [

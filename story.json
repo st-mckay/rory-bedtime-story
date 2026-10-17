@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Cozy Dewdrop Cove",
-  "rhyme_scheme": "ABCB",
+  "title": "Rory and the Silver Clover Hill",
   "verses": [
-    "The evening was quiet and cool in the cove,\nAs darkness came down from the sky,\nThen Rory sat down on a blanket of moss,\nAnd watched as the shadows went by.",
-    "Then Nia flew down through the cool evening air,\nTo join with her friends on the ground,\nWhile Benny lay back on a pillow of leaves,\nWithout making one single sound.",
-    "High up in a branch sat Psittaco in peace,\nTucked into a nest warm and deep,\nAnd Ricky stopped running to rest in the shade,\nPreparing to drift off to sleep.",
-    "Then Tilly curled up by the bank of the stream,\nWhere water was shining like gold,\nShe smiled at the moon as it brightened the night,\nWith stories of sleep to be told.",
-    "A breeze whispered softly through branches above,\nTo blow all their worries away,\nAnd Rory sighed happily under the stars,\nAt end of a wonderful day.",
-    "The forest was silent and cozy and calm,\nAs bedtime was finally here,\nSo Rory closed eyes with a restful deep breath,\nSurrounded by those he held dear."
+    "The twilight was falling across the green hill,\nThe breeze in the branches was quiet and still.\nThen Rory walked out where the silver ferns grow,\nAnd watched the bright fireflies flicker below.",
+    "Now Benny walked down to the edge of the pond,\nWhile Ricky peeped out from the bushes beyond.\nThey rested together beside the cool stream,\nWhere water was murmuring soft as a dream.",
+    "Then Tilly brought leaves that were fragrant and dry,\nWhile Nia flew low in the darkening sky.\nShe circled down softly through shadows that spread,\nTo rest on the grass by a velvety bed.",
+    "And Psittaco tucked in a pocket of green,\nThe coziest shelter that ever was seen.\nNow Rory lay down where the clover was sweet,\nAnd folded his tail and his sleepy round feet.",
+    "The moon drifted up like a lantern so bright,\nTo bathe all the hill in a calm silver light.\nThe flowers were nodding in rhythms so slow,\nWhile sweet, sleepy breezes began to blow low.",
+    "Now Benny and Tilly let out a soft sigh,\nBeneath the cool glow of the starlight on high.\nAnd Rory closed eyes in the hush of the deep,\nAs all of the dinosaurs drifted to sleep."
   ],
-  "id": "2026-10-16-082110",
-  "date_raw": "2026-10-16",
-  "date": "Friday, October 16, 2026",
+  "rhyme_scheme": "AABB",
+  "id": "2026-10-17-082122",
+  "date_raw": "2026-10-17",
+  "date": "Saturday, October 17, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-16T08:21:10.339481",
-  "model": "gemini-3.5-flash"
+  "timestamp": "2026-10-17T08:21:22.792490",
+  "model": "gemini-3.8-flash"
 }
