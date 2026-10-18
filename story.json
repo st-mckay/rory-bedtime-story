@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Silver Clover Hill",
+  "title": "Rory and the Amber Hill",
   "verses": [
-    "The twilight was falling across the green hill,\nThe breeze in the branches was quiet and still.\nThen Rory walked out where the silver ferns grow,\nAnd watched the bright fireflies flicker below.",
-    "Now Benny walked down to the edge of the pond,\nWhile Ricky peeped out from the bushes beyond.\nThey rested together beside the cool stream,\nWhere water was murmuring soft as a dream.",
-    "Then Tilly brought leaves that were fragrant and dry,\nWhile Nia flew low in the darkening sky.\nShe circled down softly through shadows that spread,\nTo rest on the grass by a velvety bed.",
-    "And Psittaco tucked in a pocket of green,\nThe coziest shelter that ever was seen.\nNow Rory lay down where the clover was sweet,\nAnd folded his tail and his sleepy round feet.",
-    "The moon drifted up like a lantern so bright,\nTo bathe all the hill in a calm silver light.\nThe flowers were nodding in rhythms so slow,\nWhile sweet, sleepy breezes began to blow low.",
-    "Now Benny and Tilly let out a soft sigh,\nBeneath the cool glow of the starlight on high.\nAnd Rory closed eyes in the hush of the deep,\nAs all of the dinosaurs drifted to sleep."
+    "The sun had set behind the woods,\nThe stars began to gleam,\nWhile Rory led his sleepy friends\nBeside an amber stream.",
+    "Above the hills, high in the sky,\nNia glided on the breeze,\nShe found a hill of nodding flowers\nBeneath the cedar trees.",
+    "Ricky stopped his bouncy hops\nUpon the starry ground,\nAnd Benny lowered down his head\nWithout a single sound.",
+    "Tilly made a cushion soft\nOf clover in a heap,\nWhile Psittaco curled in her frill\nAnd snuggled down to sleep.",
+    "Then Rory yawned a happy yawn\nAnd stretched his tail out wide,\nHe curled into the fragrant grass\nWith Benny by his side.",
+    "The fireflies began to dance,\nThe silver moon shone bright,\nAnd all the dinosaurs were still,\nTo dream away the night."
   ],
-  "rhyme_scheme": "AABB",
-  "id": "2026-10-17-082122",
-  "date_raw": "2026-10-17",
-  "date": "Saturday, October 17, 2026",
+  "rhyme_scheme": "ABCB",
+  "id": "2026-10-18-082235",
+  "date_raw": "2026-10-18",
+  "date": "Sunday, October 18, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-17T08:21:22.792490",
+  "timestamp": "2026-10-18T08:22:35.510997",
   "model": "gemini-3.8-flash"
 }
