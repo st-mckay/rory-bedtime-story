@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Gentle Moonlit Grove",
+    "rhyme_scheme": "ABCB",
+    "verses": [
+      "The sun tumbled down past the sleepy green trees,\nAnd stars started shining above,\nAs Rory walked slowly along through the ferns,\nWrapped up in a blanket of love.",
+      "Now Tilly was waiting beside a calm pool,\nWhere Benny was taking a rest,\nThey smiled as the night wind blew softly and cool,\nTo gather the ones they loved best.",
+      "High up in the branches flew Nia so slow,\nWhile Ricky tiptoed on the ground,\nThey looked for a corner where sweet blossoms grow,\nWithout making any big sound.",
+      "Then Psittaco chirped from a nest made of moss,\nAnd settled right under a leaf,\nThe shadows stretched out as they floated across,\nTo bring them a cozy relief.",
+      "And Benny curled down near the edge of the stream,\nAs Rory snuggled close to his side,\nThe valley was wrapped in a shadowy dream,\nWhere all of the sleepy stars hide.",
+      "The fireflies flickered to wish them goodnight,\nAs darkness fell over the hill,\nAnd Rory fell fast into dreams sweet and light,\nWhile all of the jungle grew still."
+    ],
+    "id": "2026-10-21-082119",
+    "date_raw": "2026-10-21",
+    "date": "Wednesday, October 21, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-21T08:21:19.371406",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Silver Clover Knoll",
     "rhyme_scheme": "AABB",
     "verses": [
