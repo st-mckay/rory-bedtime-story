@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Starry Blossom Hill",
+    "rhyme_scheme": "AABB",
+    "verses": [
+      "The sun dipped away as the evening grew still,\nAnd Rory walked up to the top of the hill.\nThe blossoms were closing their petals of white,\nTo welcome the peace of the velvety night.",
+      "Then Tilly stepped up with a bundle of fern,\nFor curling up cozy when stars start to burn.\nAnd Ricky hopped softly and patted the ground,\nWithout any trouble or mischievous sound.",
+      "High over the ridge, Nia floated with grace,\nTo look for the softest and quietest place.\nAnd Benny leaned low as he rested his head,\nWhile gathering leaves for a giant green bed.",
+      "Now Psittaco chirped from a branch in the breeze,\nThen fluttered right down through the whispering trees.\nHe landed on Rory and tucked in his wings,\nTo listen to lullabies night softly sings.",
+      "The stars drifted out in the velvety blue,\nThe clover was sprinkled with sparkles of dew.\nThen Rory curled gently beside all his friends,\nTo rest as the journey of daytime now ends.",
+      "Their heavy eyes closed as the crickets sang low,\nTheir breathing turned easy and steady and slow.\nSweet dreams filled the hilltop with warm golden light,\nAnd Rory fell fast into slumber tonight."
+    ],
+    "id": "2026-10-22-082117",
+    "date_raw": "2026-10-22",
+    "date": "Thursday, October 22, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-22T08:21:17.533991",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Gentle Moonlit Grove",
     "rhyme_scheme": "ABCB",
     "verses": [
