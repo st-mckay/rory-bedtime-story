@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Starry Blossom Ridge",
+    "verses": [
+      "The sun had gone down past the edge of the hill,\nA breeze blew so soft in the air,\nAnd Rory stood listening, peaceful and still,\nWith time for a moment to share.",
+      "Above them swept Nia through ribbons of pink,\nTo see where the blossom beds grow,\nWhile Psittaco nestled and started to blink,\nAnd chirped to the others below.",
+      "Then Ricky slowed down on the mossy green track,\nAnd yawned as he looked at the sky,\nWhile Tilly nudged pebbles to help guide him back,\nAs sleepy night shadows rolled by.",
+      "Then Benny stepped out to the center of grass,\nAnd swept all the leaves in a ring,\nTo welcome the dreams that would quietly pass,\nWhile crickets were starting to sing.",
+      "And Rory crept close to his welcoming friends,\nTo settle down under the moon,\nWhere quietness falls as the daytime now ends,\nWhile humming a lullaby tune.",
+      "The petals all folded their blankets of blue,\nThe valley was tucked into sleep,\nAnd all through the darkness, till morning shines new,\nTheir dreams would be gentle and deep."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-10-23-082218",
+    "date_raw": "2026-10-23",
+    "date": "Friday, October 23, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-23T08:22:18.475838",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Starry Blossom Hill",
     "rhyme_scheme": "AABB",
     "verses": [
