@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Quiet Cloud Lagoon",
+    "verses": [
+      "The shadows were long on the mosses below,\nThe stars gave a comforting light,\nWhere Rory stepped gently with rhythms so slow,\nTo welcome the quiet of night.",
+      "High over the branches did Nia swoosh by,\nWhile Ricky stopped skipping ahead,\nTo gaze at the colors that painted the sky,\nLike blankets of purple and red.",
+      "Then Tilly found petals of lavender blue,\nThat floated right down to the glade,\nWhere Psittaco gathered a blossom or two,\nBeneath the tall shelter of shade.",
+      "Then Rory sat down where the grasses were sweet,\nAnd felt the cool breath of the breeze,\nWith soft velvet clover right under his feet,\nThat rustled beneath the tall trees.",
+      "They gathered together to build a soft nest,\nWhere moonlight fell cozy and deep,\nAnd Ricky curled up for a wonderful rest,\nWhile Psittaco drifted to sleep.",
+      "With Nia asleep on the moss of the hill,\nGood night to the stars and the stream,\nNow Benny and Tilly and Rory were still,\nAll drifting away in a dream."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-10-25-082348",
+    "date_raw": "2026-10-25",
+    "date": "Sunday, October 25, 2026",
+    "month_group": "Oct-26",
+    "timestamp": "2026-10-25T08:23:48.266480",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Sleepy Cedar Grove",
     "rhyme_scheme": "AABB",
     "verses": [
