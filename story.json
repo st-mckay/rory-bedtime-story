@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Dreamy Blossom Hill",
+  "title": "Rory and the Sleepy Starflower Glade",
   "verses": [
-    "The sun had dipped down in a blanket of pink,\nAnd Rory walked slow by the lavender brink.\nThe stars started waking above in the deep,\nTo welcome the valley to stillness and sleep.",
-    "Then Ricky hopped over a silvery stone,\nTo find a soft trail that was sweet and alone.\nAnd Tilly stepped softly across the cool ground,\nWhere gentle blue blossoms were scattered around.",
-    "High over the ridge Nia drifted in flight,\nWith wings open wide in the comforting night.\nAnd Psittaco snuggled where sleepy vines grow,\nTo watch the warm shadows that whispered below.",
-    "Then Benny leaned down with a rumble of peace,\nAnd waited for all of the chatter to cease.\nHe curled in the moss with a satisfied sigh,\nBeneath the vast arch of the velvet dark sky.",
-    "Close into the center came Rory to rest,\nBeside every friend he loved dearly and best.\nThe petals fell down like a blanket of snow,\nAnd covered the hill in a shimmering glow.",
-    "Now Benny and Tilly were dreaming away,\nFor gone was the bustle and brightness of day.\nAnd Rory closed softly his slumbering eyes,\nWhile lullabies hummed from the starry night skies."
+    "The sun slipped down behind the peaks,\nThe valley turned to blue,\nWhile Rory led his quiet friends\nAcross the evening dew.",
+    "The gentle wind was calm and cool,\nAs Nia circled high,\nShe watched the first pale silver star\nAwaken in the sky.",
+    "Then Benny took a heavy step,\nWith slow and steady feet,\nWhile Ricky caught a dancing leaf\nThat drifted soft and sweet.",
+    "Now Tilly hummed a bedtime tune,\nTo greet the rising night,\nWhile Psittaco curled under moss,\nAll nestled warm and tight.",
+    "Then Rory yawned a happy yawn,\nAnd laid his sleepy head,\nUpon a mound of velvet fern,\nTo make a cozy bed.",
+    "The forest whispered soft and low,\nBeneath the pale moonbeam,\nAnd Rory closed his drowsy eyes,\nTo dream a gentle dream."
   ],
-  "rhyme_scheme": "AABB",
-  "id": "2026-10-26-082604",
-  "date_raw": "2026-10-26",
-  "date": "Monday, October 26, 2026",
+  "rhyme_scheme": "ABCB",
+  "id": "2026-10-27-083016",
+  "date_raw": "2026-10-27",
+  "date": "Tuesday, October 27, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-26T08:26:04.445879",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-10-27T08:30:16.310496",
+  "model": "gemini-flash-latest"
 }
