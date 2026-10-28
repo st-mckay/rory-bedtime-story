@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Sleepy Starflower Glade",
+  "title": "Rory and the Sleepy Amber Shore",
   "verses": [
-    "The sun slipped down behind the peaks,\nThe valley turned to blue,\nWhile Rory led his quiet friends\nAcross the evening dew.",
-    "The gentle wind was calm and cool,\nAs Nia circled high,\nShe watched the first pale silver star\nAwaken in the sky.",
-    "Then Benny took a heavy step,\nWith slow and steady feet,\nWhile Ricky caught a dancing leaf\nThat drifted soft and sweet.",
-    "Now Tilly hummed a bedtime tune,\nTo greet the rising night,\nWhile Psittaco curled under moss,\nAll nestled warm and tight.",
-    "Then Rory yawned a happy yawn,\nAnd laid his sleepy head,\nUpon a mound of velvet fern,\nTo make a cozy bed.",
-    "The forest whispered soft and low,\nBeneath the pale moonbeam,\nAnd Rory closed his drowsy eyes,\nTo dream a gentle dream."
+    "The sun tumbled down past the edge of the hill,\nAs twilight was painting the shore,\nThe water grew sleepy and misty and still,\nWhere Rory walked softly once more.",
+    "Then Benny stepped slow on the velvety sand,\nAnd tilted his head to the breeze,\nWhile Psittaco nestled right into his hand,\nAway from the rustle of trees.",
+    "High over the ripples flew Nia so light,\nTo land where the rushes were deep,\nAnd Ricky came trotting to welcome the night,\nFor even the quickest must sleep.",
+    "Then Tilly found pebbles of amber that glowed,\nLike stars that had fallen to rest,\nBeside where the silvery river had flowed,\nTo fashion a pillowy nest.",
+    "Now Rory curled under the canopy wide,\nSurrounded by friends in the bay,\nWith Benny and Tilly asleep at his side,\nTo dream of another bright day.",
+    "The silver moon drifted across the dark blue,\nAnd covered the shore in a gleam,\nWhile slumber was falling like lavender dew,\nTo carry them into a dream."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-10-27-083016",
-  "date_raw": "2026-10-27",
-  "date": "Tuesday, October 27, 2026",
+  "rhyme_scheme": "ABAB",
+  "id": "2026-10-28-082514",
+  "date_raw": "2026-10-28",
+  "date": "Wednesday, October 28, 2026",
   "month_group": "Oct-26",
-  "timestamp": "2026-10-27T08:30:16.310496",
-  "model": "gemini-flash-latest"
+  "timestamp": "2026-10-28T08:25:14.839803",
+  "model": "gemini-3.8-flash"
 }
