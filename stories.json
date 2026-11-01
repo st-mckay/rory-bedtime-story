@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Starry Clover Hill",
+    "verses": [
+      "The sun tumbled down as the shadows grew deep,\nThe hills of the valley were ready to sleep.\nWhile Rory walked softly across the cool ground,\nWithout any rumble, without any sound.",
+      "Nia soared down through the evening's soft glow,\nTo watch the green valley and river below.\nTilly reached down where the clover grew sweet,\nAnd gathered fresh petals around her four feet.",
+      "Benny stepped in with a slumberous hum,\nTo rest where the breezes of twilight had come.\nRicky stopped sprinting and slowed to a crawl,\nRelaxing his paws by the leafy stone wall.",
+      "Psittaco nestled deep into the fern,\nWatching the lanterns of silver stars burn.\nYawning so widely, he closed both his eyes,\nBeneath the wide roof of the violet skies.",
+      "Rory lay down in the velvet green bed,\nAnd rested a pillow of moss for his head.\nFeeling the peace of the friends he held dear,\nWith nothing to worry and nothing to fear.",
+      "Stars sparkled softly in ribbons of blue,\nAs sleepy ferns drank up the silvery dew.\nBreathing together till morning took flight,\nAll of the dinosaurs whispered goodnight."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-11-01-082350",
+    "date_raw": "2026-11-01",
+    "date": "Sunday, November 01, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-01T08:23:50.027113",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Starflower Hill",
     "verses": [
       "The evening winds were whispering,\nAcross the gentle velvet hill,\nWhere Rory walked with quiet steps,\nWhile all the woods grew calm and still.",
