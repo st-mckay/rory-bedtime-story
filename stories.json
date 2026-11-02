@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Star Blossom Glade",
+    "verses": [
+      "The sun dipped away past the rim of the hill,\nThe forest was cozy and deep,\nAs Rory led quietly into the glade,\nWhere star blossoms drifted to sleep.",
+      "High over the branches did Nia drift down,\nOn wings that were silver and slow,\nTo gaze at the blankets of blossoms beneath,\nThat lit with a delicate glow.",
+      "And Ricky was hopping right over a log,\nThen curled on a carpet of green,\nWhile Psittaco nestled right into the buds,\nThe softest that ever was seen.",
+      "Then Benny stepped softly and leaned near the bank,\nBeside where the water ran clear,\nWhile Tilly lay down in the petals of blue,\nAnd knew that the night-time was near.",
+      "Together the friends gave a slow, sleepy yawn,\nIn peace as the shadows grew long,\nWhile Rory hummed low to the darkening skies,\nA soothing and slumbering song.",
+      "The blossoms were quiet, the breeze floated by,\nThe stars twinkled high overhead,\nAnd Rory was smiling and closing his eyes,\nAsleep in the velvety bed."
+    ],
+    "rhyme_scheme": "ABCB",
+    "id": "2026-11-02-082518",
+    "date_raw": "2026-11-02",
+    "date": "Monday, November 02, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-02T08:25:18.252409",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Starry Clover Hill",
     "verses": [
       "The sun tumbled down as the shadows grew deep,\nThe hills of the valley were ready to sleep.\nWhile Rory walked softly across the cool ground,\nWithout any rumble, without any sound.",
