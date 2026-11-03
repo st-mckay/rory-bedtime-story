@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Star Blossom Glade",
+  "title": "Rory and the Sleepy Lantern Ferns",
+  "rhyme_scheme": "AABB",
   "verses": [
-    "The sun dipped away past the rim of the hill,\nThe forest was cozy and deep,\nAs Rory led quietly into the glade,\nWhere star blossoms drifted to sleep.",
-    "High over the branches did Nia drift down,\nOn wings that were silver and slow,\nTo gaze at the blankets of blossoms beneath,\nThat lit with a delicate glow.",
-    "And Ricky was hopping right over a log,\nThen curled on a carpet of green,\nWhile Psittaco nestled right into the buds,\nThe softest that ever was seen.",
-    "Then Benny stepped softly and leaned near the bank,\nBeside where the water ran clear,\nWhile Tilly lay down in the petals of blue,\nAnd knew that the night-time was near.",
-    "Together the friends gave a slow, sleepy yawn,\nIn peace as the shadows grew long,\nWhile Rory hummed low to the darkening skies,\nA soothing and slumbering song.",
-    "The blossoms were quiet, the breeze floated by,\nThe stars twinkled high overhead,\nAnd Rory was smiling and closing his eyes,\nAsleep in the velvety bed."
+    "The moon showed its light in the dim evening sky,\nWhile clouds made of purple went drifting on by.\nNow Rory walked down to the edge of the stream,\nAll ready to rest in a sleepy sweet dream.",
+    "Nia swooped down through the cool evening air,\nShe spotted a bed made of moss over there.\nPsittaco chirped from a warm tiny nest,\nTelling the friends it was time for some rest.",
+    "Tilly sat down by a bundle of fern,\nWatching the glowing bright fireflies turn.\nBenny stretched out his long neck to the sky,\nSinging a song as the breeze drifted by.",
+    "Ricky rolled over and started to yawn,\nKnowing they all would sleep soundly till dawn.\nRory tucked under a blanket of green,\nSoftest soft petals that ever were seen.",
+    "The leaves rustled soft as the night wind blew through,\nThe grass was all covered in cool silver dew.\nEveryone snuggled up cozy and tight,\nReady to welcome the quiet of night.",
+    "The stars gave a wink from the heavens so deep,\nAs all of the dinos fell fast into sleep.\nRory closed eyes in the warm gentle glow,\nDreaming sweet dreams as the breezes blew slow."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-11-02-082518",
-  "date_raw": "2026-11-02",
-  "date": "Monday, November 02, 2026",
+  "id": "2026-11-03-082216",
+  "date_raw": "2026-11-03",
+  "date": "Tuesday, November 03, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-02T08:25:18.252409",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-11-03T08:22:16.330241",
+  "model": "gemini-3.5-flash"
 }
