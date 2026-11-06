@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Starry Lantern Cove",
-  "rhyme_scheme": "ABAB",
+  "title": "Rory and the Sleepy Silver Shadow",
+  "rhyme_scheme": "ABCB",
   "verses": [
-    "The quiet night was shining blue,\nAbove the cozy hill,\nThe leaves were soft with silver dew,\nAnd all the woods were still.",
-    "Then Rory walked along the track,\nBeside the resting trees,\nWith Benny close behind his back,\nBeneath the evening breeze.",
-    "Now Tilly found a cozy mound,\nWhere glowing blossoms peep,\nAnd Psittaco was safe and sound,\nAnd ready for his sleep.",
-    "Across the sky did Nia glide,\nTo watch the silver moon,\nWhile Ricky curled up by her side,\nTo hear a quiet tune.",
-    "They nestled down upon the moss,\nSo safe and tucked in tight,\nA gentle shadow rolled across,\nThe sleepy summer night.",
-    "Now Rory closed his tired eyes,\nAnd gave a happy sigh,\nBeneath the warm and starry skies,\nAs night went drifting by."
+    "The sun went down behind the hills,\nThe shadows started to grow,\nAnd Rory walked along the path,\nWhere quiet breezes blow.",
+    "Now Tilly paused to take a rest,\nBeside a sleepy stream,\nWhile Benny stretched his long green neck,\nTo watch a cozy dream.",
+    "Then Ricky settled in the leaves,\nAnd curled his tiny feet,\nWhile Psittaco tucked safely in,\nTo find a warm retreat.",
+    "High up above the sleepy trees,\nNia swooped down so low,\nShe whispered that the night was calm,\nWith soft moonlight aglow.",
+    "They made a cozy bedtime spot,\nUpon the mossy ground,\nAnd Rory gave a tiny yawn,\nWithout a single sound.",
+    "The stars shone bright across the sky,\nTo light the night so deep,\nAnd all the dinos closed their eyes,\nAnd softly fell asleep."
   ],
-  "id": "2026-11-04-082053",
-  "date_raw": "2026-11-04",
-  "date": "Wednesday, November 04, 2026",
+  "id": "2026-11-06-082236",
+  "date_raw": "2026-11-06",
+  "date": "Friday, November 06, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-04T08:20:53.939892",
+  "timestamp": "2026-11-06T08:22:36.022604",
   "model": "gemini-3.5-flash"
 }

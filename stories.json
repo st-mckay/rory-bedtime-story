@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Sleepy Silver Shadow",
+    "rhyme_scheme": "ABCB",
+    "verses": [
+      "The sun went down behind the hills,\nThe shadows started to grow,\nAnd Rory walked along the path,\nWhere quiet breezes blow.",
+      "Now Tilly paused to take a rest,\nBeside a sleepy stream,\nWhile Benny stretched his long green neck,\nTo watch a cozy dream.",
+      "Then Ricky settled in the leaves,\nAnd curled his tiny feet,\nWhile Psittaco tucked safely in,\nTo find a warm retreat.",
+      "High up above the sleepy trees,\nNia swooped down so low,\nShe whispered that the night was calm,\nWith soft moonlight aglow.",
+      "They made a cozy bedtime spot,\nUpon the mossy ground,\nAnd Rory gave a tiny yawn,\nWithout a single sound.",
+      "The stars shone bright across the sky,\nTo light the night so deep,\nAnd all the dinos closed their eyes,\nAnd softly fell asleep."
+    ],
+    "id": "2026-11-06-082236",
+    "date_raw": "2026-11-06",
+    "date": "Friday, November 06, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-06T08:22:36.022604",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Starry Lantern Cove",
     "rhyme_scheme": "ABAB",
     "verses": [
