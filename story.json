@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Silver Clover Dale",
+  "title": "Rory and the Quiet Clover Hill",
+  "rhyme_scheme": "AABB",
   "verses": [
-    "The evening was settling over the woods,\nThe breezes were whispering low,\nAnd Rory walked up to the sweet clover dale,\nWhere blossoms were starting to glow.",
-    "Nia glided down through the shadowy trees,\nTo rest by a silvery stream,\nWhile Ricky curled up on a warm patch of earth,\nAnd drifted right into a dream.",
-    "Then Benny knelt down on the cool clover bed,\nA shelter so cozy and wide,\nAnd Psittaco chirped with a delicate yawn,\nAnd nestled right close to his side.",
-    "Tilly brought blossoms of purple and blue,\nTo make them a blanket to share,\nThen tucked the soft clover around every friend,\nWith gentle and tenderest care.",
-    "Now Rory curled down in the midst of his friends,\nHis heavy green tail tucked away,\nHe looked at the moon as it climbed through the stars,\nAnd waved a goodbye to the day.",
-    "The silver dale darkened beneath the soft night,\nThe crickets hummed melodies deep,\nAnd wrapped in the warmth of the starlight and moss,\nThe dinosaurs drifted to sleep."
+    "The sun dipped down behind the hill,\nThe valley breeze grew soft and still.\nThen Rory stepped along the crest,\nTo find a place where all could rest.",
+    "While Nia drifted from the sky,\nShe watched the silver clouds go by.\nAnd Psittaco began to peep,\n\"The clover blooms are fast asleep!\"",
+    "Then Benny patted down the ground,\nWithout a thump or heavy sound.\nAnd Tilly gathered fragrant leaves,\nBeneath the swaying forest eaves.",
+    "Then Ricky gave a yawn so wide,\nAnd tumbled onto Benny's side.\nHe curled his paws and closed his eyes,\nBeneath the softly shining skies.",
+    "Now Rory tucked his tail in tight,\nTo share the warmth of starry night.\nHe heard the crickets start to play,\nA lullaby to end the day.",
+    "The clover whispered soft and low,\nAs sleepy stars began to glow.\nThe tired friends were nestled deep,\nAll drifting off to peaceful sleep."
   ],
-  "rhyme_scheme": "ABCB",
-  "id": "2026-11-09-082405",
-  "date_raw": "2026-11-09",
-  "date": "Monday, November 09, 2026",
+  "id": "2026-11-10-082837",
+  "date_raw": "2026-11-10",
+  "date": "Tuesday, November 10, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-09T08:24:05.593995",
+  "timestamp": "2026-11-10T08:28:37.482015",
   "model": "gemini-3.8-flash"
 }

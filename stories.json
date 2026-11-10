@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Quiet Clover Hill",
+    "rhyme_scheme": "AABB",
+    "verses": [
+      "The sun dipped down behind the hill,\nThe valley breeze grew soft and still.\nThen Rory stepped along the crest,\nTo find a place where all could rest.",
+      "While Nia drifted from the sky,\nShe watched the silver clouds go by.\nAnd Psittaco began to peep,\n\"The clover blooms are fast asleep!\"",
+      "Then Benny patted down the ground,\nWithout a thump or heavy sound.\nAnd Tilly gathered fragrant leaves,\nBeneath the swaying forest eaves.",
+      "Then Ricky gave a yawn so wide,\nAnd tumbled onto Benny's side.\nHe curled his paws and closed his eyes,\nBeneath the softly shining skies.",
+      "Now Rory tucked his tail in tight,\nTo share the warmth of starry night.\nHe heard the crickets start to play,\nA lullaby to end the day.",
+      "The clover whispered soft and low,\nAs sleepy stars began to glow.\nThe tired friends were nestled deep,\nAll drifting off to peaceful sleep."
+    ],
+    "id": "2026-11-10-082837",
+    "date_raw": "2026-11-10",
+    "date": "Tuesday, November 10, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-10T08:28:37.482015",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Silver Clover Dale",
     "verses": [
       "The evening was settling over the woods,\nThe breezes were whispering low,\nAnd Rory walked up to the sweet clover dale,\nWhere blossoms were starting to glow.",
