@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Quiet Clover Hill",
-  "rhyme_scheme": "AABB",
+  "title": "Rory and the Starry Blossom Hill",
   "verses": [
-    "The sun dipped down behind the hill,\nThe valley breeze grew soft and still.\nThen Rory stepped along the crest,\nTo find a place where all could rest.",
-    "While Nia drifted from the sky,\nShe watched the silver clouds go by.\nAnd Psittaco began to peep,\n\"The clover blooms are fast asleep!\"",
-    "Then Benny patted down the ground,\nWithout a thump or heavy sound.\nAnd Tilly gathered fragrant leaves,\nBeneath the swaying forest eaves.",
-    "Then Ricky gave a yawn so wide,\nAnd tumbled onto Benny's side.\nHe curled his paws and closed his eyes,\nBeneath the softly shining skies.",
-    "Now Rory tucked his tail in tight,\nTo share the warmth of starry night.\nHe heard the crickets start to play,\nA lullaby to end the day.",
-    "The clover whispered soft and low,\nAs sleepy stars began to glow.\nThe tired friends were nestled deep,\nAll drifting off to peaceful sleep."
+    "The evening was falling across the wide hill,\nThe shadows grew cozy and deep,\nThe valley below became foggy and still,\nAs Rory was ready for sleep.",
+    "Then Benny leaned down with a velvety sigh,\nTo rest by a silvery mound,\nWhile Nia flew down from the lavender sky,\nAnd landed with hardly a sound.",
+    "And Tilly rolled over a carpet of moss,\nTo gather the blossoms that gleam,\nWhile Ricky laid ribbons of petals across,\nThe bed for a wonderful dream.",
+    "High up in the branches, Psittaco took rest,\nTucked under a broad leafy dome,\nTo snuggle right down in a clover-lined nest,\nAnd cuddle as safe as at home.",
+    "Then Rory curled softly beside all his friends,\nAnd let out a slumbery yawn,\nThe hush of the evening so sweetly descends,\nTo cuddle them all until dawn.",
+    "The starlight glowed gently above in the blue,\nA lullaby floated along,\nThe night-petals closed in the shimmering dew,\nAnd whispered a sleepy night song."
   ],
-  "id": "2026-11-10-082837",
-  "date_raw": "2026-11-10",
-  "date": "Tuesday, November 10, 2026",
+  "rhyme_scheme": "ABAB",
+  "id": "2026-11-11-082616",
+  "date_raw": "2026-11-11",
+  "date": "Wednesday, November 11, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-10T08:28:37.482015",
+  "timestamp": "2026-11-11T08:26:16.880034",
   "model": "gemini-3.8-flash"
 }
