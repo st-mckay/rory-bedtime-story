@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Lantern Glade",
+    "verses": [
+      "The sun faded down past the top of the hill,\nThe valley was quiet and cozy and still.\nThen Rory stepped out on the soft mossy ground,\nAnd smiled as the night settled gently around.",
+      "Nia flew past through the cool evening air,\nAnd called to her friends who were gathering there.\nPsittaco nestled up high in a tree,\nAs happy and calm as a small bird could be.",
+      "Benny lay down with a peaceful deep sigh,\nAnd looked at the stars glowing bright in the sky.\nTilly walked over to rest by his side,\nWhere ferns made a bed that was cozy and wide.",
+      "Ricky stopped bouncing and let out a yawn,\nContent to just wait for the quiet of dawn.\nThe fireflies danced in a warm yellow light,\nTo softly guide everyone into the night.",
+      "Rory curled up on a pillow of green,\nThe happiest dreamer that ever was seen.\nThe leaves rustled low in a lullaby breeze,\nThat whispered bedtime right through all the trees.",
+      "The moon shone down bright with a comforting glow,\nWhile all of the dinos breathed steady and slow.\nSo close your eyes now as the night softly gleams,\nAnd join all the friends in a world full of dreams."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-11-12-082113",
+    "date_raw": "2026-11-12",
+    "date": "Thursday, November 12, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-12T08:21:13.655283",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Starry Blossom Hill",
     "verses": [
       "The evening was falling across the wide hill,\nThe shadows grew cozy and deep,\nThe valley below became foggy and still,\nAs Rory was ready for sleep.",
