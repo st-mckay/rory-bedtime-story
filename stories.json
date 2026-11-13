@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Sleepy Starflower Hill",
+    "verses": [
+      "The sun had dipped beneath the crest,\nThe sleepy shadows softly grew,\nAnd Rory ambled toward his rest,\nAcross a field of misty blue.",
+      "Above the trees did Nia glide,\nTo guide them through the fading light,\nWhile Ricky scampered by her side,\nThen slowed his feet to greet the night.",
+      "Then Tilly strolled with steady grace,\nWhere fallen petals softly lay,\nAnd Benny found a mossy place,\nTo watch the colors fade away.",
+      "Then Psittaco began to sing,\nA gentle tune to calm the deep,\nWhile Rory made a leafy ring,\nWhere every friend could drift to sleep.",
+      "The clover made a velvet bed,\nThe summer breeze was sweet and low,\nAnd Rory rested down his head,\nAmid the sleepy, silver glow.",
+      "The glowing stars began to gleam,\nAcross the meadow wide and still,\nWhile Rory shared a peaceful dream,\nUpon the quiet, sleepy hill."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-11-13-083338",
+    "date_raw": "2026-11-13",
+    "date": "Friday, November 13, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-13T08:33:38.120907",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Lantern Glade",
     "verses": [
       "The sun faded down past the top of the hill,\nThe valley was quiet and cozy and still.\nThen Rory stepped out on the soft mossy ground,\nAnd smiled as the night settled gently around.",
