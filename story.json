@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Starlit Cedar Hollow",
+  "title": "Rory and the Hill of Silver Ferns",
+  "rhyme_scheme": "ABAB",
   "verses": [
-    "The moon rose up high over mountain and hill,\nThe wind in the branches was tender and still.\nThen Rory walked out where the cedar trees grow,\nAnd watched all the shadows drift softly below.",
-    "Far up in the dark, Nia glided in flight,\nTo guide every friend through the welcoming night.\nAnd Ricky raced up with a hop and a bound,\nThen quietly settled upon the cool ground.",
-    "Now Tilly stepped forward with comforting grace,\nTo help find a peaceful and welcoming place.\nAnd Benny walked up with a thud and a sigh,\nAs clouds floated past in the lavender sky.",
-    "Then Psittaco chirped from a bundle of green,\nThe coziest shelter that ever was seen.\nThe stars twinkled down with a shimmering glow,\nWhile cool evening breezes blew gentle and slow.",
-    "Now Ricky curled up on a pillow of moss,\nWhere ribbons of starlight had drifted across.\nAnd Nia tucked gently her wings by her side,\nAs Benny lay down where the shadows were wide.",
-    "Then Rory lay down for a slumber so deep,\nAnd let the soft darkness invite him to sleep.\nThe stars shone like lanterns in heaven above,\nAnd wrapped all the friends in a blanket of love."
+    "The sun drifted down past the edge of the hill,\nThe forest was misty and deep,\nThe evening grew cozy and wonderfully still,\nAs Rory was ready to sleep.",
+    "Now Benny stepped softly across the cool ground,\nWhile Tilly came ambling near,\nThey walked side by side without making a sound,\nWhere blossoms were fragrant and clear.",
+    "Then Ricky slowed down on a carpet of green,\nTo curl near a hollow of bark,\nWhile Psittaco nestled where shadows were seen,\nTo tuck in his wings in the dark.",
+    "High over the treetops did Nia take flight,\nShe guided the breeze from the skies,\nAnd swooped through the air in the silvery light,\nAs tiredness fell on their eyes.",
+    "The ferns made a blanket so tender and wide,\nWhere Rory lay down with a sigh,\nThe friends tucked together right close by his side,\nBeneath the great dome of the sky.",
+    "The stars twinkle gently on valley and crest,\nWhile soft little lullabies play,\nThe dinosaurs drift in their magical rest,\nTo wake to a sunny new day."
   ],
-  "rhyme_scheme": "AABB",
-  "id": "2026-11-14-082436",
-  "date_raw": "2026-11-14",
-  "date": "Saturday, November 14, 2026",
+  "id": "2026-11-15-082526",
+  "date_raw": "2026-11-15",
+  "date": "Sunday, November 15, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-14T08:24:36.797581",
+  "timestamp": "2026-11-15T08:25:26.039723",
   "model": "gemini-3.8-flash"
 }
