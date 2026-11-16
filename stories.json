@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Moonlit Pebble Path",
+    "rhyme_scheme": "ABCB",
+    "verses": [
+      "The moon rose up above the hill,\nAnd cast a silver glow,\nWhere Rory walked a pebble path,\nWith footsteps soft and slow.",
+      "Beside a giant shady tree,\nBenny rested on the ground,\nWhere Nia swooped from up above,\nWithout a single sound.",
+      "Now Ricky found a fluffy fern,\nTo make a cozy bed,\nWhile Psittaco tucked safely in,\nTo rest a sleepy head.",
+      "Then Tilly yawned and settled down,\nBeside the quiet stream,\nAnd closed her eyes so happily,\nTo start a gentle dream.",
+      "The stars shone bright across the dark,\nThe breeze was soft and light,\nWhere Rory curled beside his friends,\nTo bid them all goodnight.",
+      "Now every friend was fast asleep,\nBeneath the silver sky,\nWhile nighttime sang a lullaby,\nAs gentle clouds rolled by."
+    ],
+    "id": "2026-11-16-082057",
+    "date_raw": "2026-11-16",
+    "date": "Monday, November 16, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-16T08:20:57.669042",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Hill of Silver Ferns",
     "rhyme_scheme": "ABAB",
     "verses": [

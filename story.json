@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Hill of Silver Ferns",
-  "rhyme_scheme": "ABAB",
+  "title": "Rory and the Moonlit Pebble Path",
+  "rhyme_scheme": "ABCB",
   "verses": [
-    "The sun drifted down past the edge of the hill,\nThe forest was misty and deep,\nThe evening grew cozy and wonderfully still,\nAs Rory was ready to sleep.",
-    "Now Benny stepped softly across the cool ground,\nWhile Tilly came ambling near,\nThey walked side by side without making a sound,\nWhere blossoms were fragrant and clear.",
-    "Then Ricky slowed down on a carpet of green,\nTo curl near a hollow of bark,\nWhile Psittaco nestled where shadows were seen,\nTo tuck in his wings in the dark.",
-    "High over the treetops did Nia take flight,\nShe guided the breeze from the skies,\nAnd swooped through the air in the silvery light,\nAs tiredness fell on their eyes.",
-    "The ferns made a blanket so tender and wide,\nWhere Rory lay down with a sigh,\nThe friends tucked together right close by his side,\nBeneath the great dome of the sky.",
-    "The stars twinkle gently on valley and crest,\nWhile soft little lullabies play,\nThe dinosaurs drift in their magical rest,\nTo wake to a sunny new day."
+    "The moon rose up above the hill,\nAnd cast a silver glow,\nWhere Rory walked a pebble path,\nWith footsteps soft and slow.",
+    "Beside a giant shady tree,\nBenny rested on the ground,\nWhere Nia swooped from up above,\nWithout a single sound.",
+    "Now Ricky found a fluffy fern,\nTo make a cozy bed,\nWhile Psittaco tucked safely in,\nTo rest a sleepy head.",
+    "Then Tilly yawned and settled down,\nBeside the quiet stream,\nAnd closed her eyes so happily,\nTo start a gentle dream.",
+    "The stars shone bright across the dark,\nThe breeze was soft and light,\nWhere Rory curled beside his friends,\nTo bid them all goodnight.",
+    "Now every friend was fast asleep,\nBeneath the silver sky,\nWhile nighttime sang a lullaby,\nAs gentle clouds rolled by."
   ],
-  "id": "2026-11-15-082526",
-  "date_raw": "2026-11-15",
-  "date": "Sunday, November 15, 2026",
+  "id": "2026-11-16-082057",
+  "date_raw": "2026-11-16",
+  "date": "Monday, November 16, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-15T08:25:26.039723",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-11-16T08:20:57.669042",
+  "model": "gemini-3.5-flash"
 }
