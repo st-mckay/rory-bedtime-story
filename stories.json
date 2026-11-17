@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Moonlit Fern Lagoon",
+    "verses": [
+      "The sun dipped low behind the hill,\nAnd painted ripples in the stream,\nThe evening air was cool and still,\nInviting Rory to a dream.",
+      "Now Benny knelt beside the bay,\nAnd Tilly smoothed the sandy floor,\nTo wash the bustling light away,\nAlong the quiet water shore.",
+      "Then Ricky chased a sleepy breeze,\nThat rustled through the clover deep,\nWhile Psittaco among the trees,\nBegan to hum a song of sleep.",
+      "Above the lake where shadows glide,\nWhere Nia circled through the blue,\nShe folded wings along the tide,\nAnd brought a breeze of silver dew.",
+      "Now Rory curled his tail around,\nTo make a nest of velvet green,\nThey settled on the mossy ground,\nWithin a calm and starry scene.",
+      "The gentle night begins to fall,\nThe shining moon is riding high,\nA hush has settled over all,\nBeneath the dark and tranquil sky."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-11-17-082154",
+    "date_raw": "2026-11-17",
+    "date": "Tuesday, November 17, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-17T08:21:54.081811",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Moonlit Pebble Path",
     "rhyme_scheme": "ABCB",
     "verses": [
