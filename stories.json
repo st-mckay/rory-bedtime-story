@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Velvet Clover Cove",
+    "verses": [
+      "The sun tumbled down past the edge of the sky,\nWhile evening flew in as the shadows rolled by.\nThen Rory stepped softly along through the dew,\nWhere clover grew thick in a blanket of blue.",
+      "High over the treetops did Nia swoop low,\nTo show them a hollow where night-breezes blow.\nAnd Psittaco chirped from a branch in the air,\nTo tell all his friends of the bed waiting there.",
+      "Quick Ricky dashed forward with bouncy delight,\nThen slowed to a tiptoe to welcome the night.\nWhile Tilly nudged clover to pile on a mound,\nAnd padded the petals all over the ground.",
+      "Then Benny bent down with a rumble so deep,\nTo make a warm circle for dinosaurs' sleep.\nAnd Rory scooped blossoms to tuck in the space,\nSo everyone found a soft, comforting place.",
+      "The silver stars sparkled through branches above,\nAnd wrapped the whole valley in quiet and love.\nThen Psittaco snuggled by Nia's warm wing,\nAnd listened to crickets begin now to sing.",
+      "Now Rory leaned back with a velvety sigh,\nAs moonlight hummed low from the dome of the sky.\nEach heavy head rested, so cozy and still,\nWhile dreams drifted over the starry green hill."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-11-18-082352",
+    "date_raw": "2026-11-18",
+    "date": "Wednesday, November 18, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-18T08:23:52.460545",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Moonlit Fern Lagoon",
     "verses": [
       "The sun dipped low behind the hill,\nAnd painted ripples in the stream,\nThe evening air was cool and still,\nInviting Rory to a dream.",
