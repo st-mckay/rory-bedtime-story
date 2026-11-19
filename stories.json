@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Starry Blossom Hill",
+    "verses": [
+      "The moon was afloat on the crest of the hill,\nThe shadows were stretching so quiet and deep.\nAnd Rory walked softly while breezes were still,\nTo guide all his friends to a meadow of sleep.",
+      "Now Benny stepped down on the moss-covered ground,\nWhile Tilly piled petals of lavender low.\nThey gathered together without any sound,\nBeside where the blossoms were starting to glow.",
+      "Then Ricky grew calm in the slumbering breeze,\nWhile Nia swooped under the lantern of night.\nShe settled her wings in the silver-leafed trees,\nAnd smiled at the valley of velvety light.",
+      "Then Psittaco chirped from a wide blossom bed,\nAnd whispered good night so that Rory could hear.\nAnd Rory leaned over to cushion his head,\nWhile star after star in the darkness shone clear.",
+      "The valley was peaceful and quiet and wide,\nAs darkness was sinking away in the west.\nNow Benny and Tilly lay down side by side,\nAnd curled in the ferns for a beautiful rest.",
+      "The stars on the hillside were tender and blue,\nAs moonlight came down in a shimmering beam.\nThe petals were covered in drops of the dew,\nWhile Rory rolled into a magical dream."
+    ],
+    "rhyme_scheme": "ABAB",
+    "id": "2026-11-19-082517",
+    "date_raw": "2026-11-19",
+    "date": "Thursday, November 19, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-19T08:25:17.544556",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Velvet Clover Cove",
     "verses": [
       "The sun tumbled down past the edge of the sky,\nWhile evening flew in as the shadows rolled by.\nThen Rory stepped softly along through the dew,\nWhere clover grew thick in a blanket of blue.",
