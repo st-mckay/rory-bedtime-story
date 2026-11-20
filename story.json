@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Starry Blossom Hill",
+  "title": "Rory and the Velvet Clover Knoll",
+  "rhyme_scheme": "AABB",
   "verses": [
-    "The moon was afloat on the crest of the hill,\nThe shadows were stretching so quiet and deep.\nAnd Rory walked softly while breezes were still,\nTo guide all his friends to a meadow of sleep.",
-    "Now Benny stepped down on the moss-covered ground,\nWhile Tilly piled petals of lavender low.\nThey gathered together without any sound,\nBeside where the blossoms were starting to glow.",
-    "Then Ricky grew calm in the slumbering breeze,\nWhile Nia swooped under the lantern of night.\nShe settled her wings in the silver-leafed trees,\nAnd smiled at the valley of velvety light.",
-    "Then Psittaco chirped from a wide blossom bed,\nAnd whispered good night so that Rory could hear.\nAnd Rory leaned over to cushion his head,\nWhile star after star in the darkness shone clear.",
-    "The valley was peaceful and quiet and wide,\nAs darkness was sinking away in the west.\nNow Benny and Tilly lay down side by side,\nAnd curled in the ferns for a beautiful rest.",
-    "The stars on the hillside were tender and blue,\nAs moonlight came down in a shimmering beam.\nThe petals were covered in drops of the dew,\nWhile Rory rolled into a magical dream."
+    "The dusk settled softly across the green hill,\nThe breeze in the branches was quiet and still.\nAnd Rory stepped slow on the velvet-clad ground,\nWhere sleepy sweet blossoms were scattered around.",
+    "Now Ricky chased shadows that danced in the grass,\nThen stopped as he watched the pink twilight clouds pass.\nHigh over the trees, Nia glided in flight,\nTo welcome the stars and the silvery night.",
+    "Tilly gathered fresh clover to make a deep bed,\nA pillow of petals for each sleepy head.\nWhile Benny leaned down with a hum low and deep,\nTo rock the whole meadow to comfort and sleep.",
+    "Then Psittaco chirped from a nest in the bark,\nAnd watched as the shadows turned cozy and dark.\nThen Rory lay down on the pillowy moss,\nAs ribbons of moonlight fell softly across.",
+    "The crickets played songs in the cool evening air,\nWith starlight and peace drifting down everywhere.\nAnd Ricky let out a sweet, delicate yawn,\nContented to rest until break of the dawn.",
+    "Now Benny and Tilly were closing their eyes,\nBeneath the pale glow of the slumbering skies.\nAnd Nia and Psittaco dreamed on the crest,\nWhile Rory was sinking in velvety rest."
   ],
-  "rhyme_scheme": "ABAB",
-  "id": "2026-11-19-082517",
-  "date_raw": "2026-11-19",
-  "date": "Thursday, November 19, 2026",
+  "id": "2026-11-20-082903",
+  "date_raw": "2026-11-20",
+  "date": "Friday, November 20, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-19T08:25:17.544556",
+  "timestamp": "2026-11-20T08:29:03.879310",
   "model": "gemini-3.8-flash"
 }
