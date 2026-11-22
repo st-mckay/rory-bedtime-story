@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Velvet Moonlit Glade",
+    "verses": [
+      "The sun dipped down behind the quiet hill,\nThe evening air was soft and very still.\nThen Rory led his sleepy friends along,\nWhile crickets sang a cozy bedtime song.",
+      "Now Tilly stopped to watch a glowing light,\nThat lit the gentle canopy of night.\nAnd Benny gave a soft and sleepy sigh,\nBeneath the silver stars up in the sky.",
+      "Then Ricky found a soft and cozy nest,\nWhere all the tired friends could sit and rest.\nHigh up above, Nia began to fold\nHer quiet wings against the evening cold.",
+      "Psittaco chirped a slow and soothing sound,\nAnd curled up warm upon the mossy ground.\nThe leaves were swaying gently in the breeze,\nAnd whispered peace among the sleepy trees.",
+      "Rory tucked his sleepy friends in tight,\nAnd wished them all a warm and peaceful night.\nThe river hummed a gentle lullaby,\nBeneath the glowing moon so deep and high.",
+      "Now every little eye began to close,\nAs cozy bedtime feelings slowly rose.\nSafe in the dark, where gentle shadows creep,\nThe dinosaur parade fell fast asleep."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-11-22-082419",
+    "date_raw": "2026-11-22",
+    "date": "Sunday, November 22, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-22T08:24:19.503379",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Silver Cedar Dell",
     "rhyme_scheme": "ABAB",
     "verses": [
