@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Velvet Moonlit Glade",
+  "title": "Rory and the Gentle Glowworm Grove",
+  "rhyme_scheme": "ABAB",
   "verses": [
-    "The sun dipped down behind the quiet hill,\nThe evening air was soft and very still.\nThen Rory led his sleepy friends along,\nWhile crickets sang a cozy bedtime song.",
-    "Now Tilly stopped to watch a glowing light,\nThat lit the gentle canopy of night.\nAnd Benny gave a soft and sleepy sigh,\nBeneath the silver stars up in the sky.",
-    "Then Ricky found a soft and cozy nest,\nWhere all the tired friends could sit and rest.\nHigh up above, Nia began to fold\nHer quiet wings against the evening cold.",
-    "Psittaco chirped a slow and soothing sound,\nAnd curled up warm upon the mossy ground.\nThe leaves were swaying gently in the breeze,\nAnd whispered peace among the sleepy trees.",
-    "Rory tucked his sleepy friends in tight,\nAnd wished them all a warm and peaceful night.\nThe river hummed a gentle lullaby,\nBeneath the glowing moon so deep and high.",
-    "Now every little eye began to close,\nAs cozy bedtime feelings slowly rose.\nSafe in the dark, where gentle shadows creep,\nThe dinosaur parade fell fast asleep."
+    "The moon floated over the river so wide,\nAnd painted the valley in blue,\nAs Rory walked down to the shimmering side,\nWhere blossoms were covered in dew.",
+    "Then Ricky hopped over a soft mossy log,\nWhile Nia flew down through the air,\nThey guided their friends past the sleepy old bog,\nTo find a warm resting spot there.",
+    "Psittaco was chirping a lullaby song,\nHigh up in a canopy tree,\nAs Benny swept slowly and trotted along,\nAs happy as any could be.",
+    "And Tilly knelt down on the velvety grass,\nWhere glowworms shone bright in the shade,\nShe watched the calm ripples of light as they pass,\nAcross the sweet cozy old glade.",
+    "Then Rory lay down with his chin on his chest,\nAs darkness crept over the hill,\nThe dinosaur friends were all ready to rest,\nAnd everything turned soft and still.",
+    "The stars shone like lanterns of silver and white,\nAbove where the valley slept deep,\nThe forest was washed in the softest moon light,\nAs Rory fell softly to sleep."
   ],
-  "rhyme_scheme": "AABB",
-  "id": "2026-11-22-082419",
-  "date_raw": "2026-11-22",
-  "date": "Sunday, November 22, 2026",
+  "id": "2026-11-23-082059",
+  "date_raw": "2026-11-23",
+  "date": "Monday, November 23, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-22T08:24:19.503379",
+  "timestamp": "2026-11-23T08:20:59.632325",
   "model": "gemini-3.5-flash"
 }
