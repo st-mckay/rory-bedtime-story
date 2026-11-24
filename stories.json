@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Starry Lagoon",
+    "rhyme_scheme": "AABB",
+    "verses": [
+      "The sun went to rest and the moon lit the sky,\nA gentle breeze blew as the evening went by.\nNow Rory walked slow where the blue waters flow,\nWhile soft little stars were beginning to glow.",
+      "Up high in the branches flew Nia to rest,\nWhile Psittaco curled in a cozy green nest.\nAnd Ricky ran over to yawn in the shade,\nWhere silvery shadows were soft in the glade.",
+      "Now Benny lay down on the soft mossy ground,\nAnd Tilly curled near without making a sound.\nThe water shone bright under moonlight so pale,\nAs Rory sat down with a sweep of his tail.",
+      "The fireflies flickered and glowed in the night,\nTo give all the dinos a sleepy warm light.\nThen Psittaco chirped a quick goodnight to all,\nAs shadows grew soft and the trees stood up tall.",
+      "Then Nia tucked quietly under her wing,\nWhile crickets were starting to sleepily sing.\nAnd Ricky was resting right next to a tree,\nAs cozy and calm as a dino could be.",
+      "Now Rory closed gently his two sleepy eyes,\nBeneath all the stars in the dark velvet skies.\nThe valley was resting, so peaceful and deep,\nAnd all of the friends were now soundly asleep."
+    ],
+    "id": "2026-11-24-082535",
+    "date_raw": "2026-11-24",
+    "date": "Tuesday, November 24, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-24T08:25:35.315215",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Gentle Glowworm Grove",
     "rhyme_scheme": "ABAB",
     "verses": [
