@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Starry Lagoon",
-  "rhyme_scheme": "AABB",
+  "title": "Rory and the Starry Blossom Cove",
   "verses": [
-    "The sun went to rest and the moon lit the sky,\nA gentle breeze blew as the evening went by.\nNow Rory walked slow where the blue waters flow,\nWhile soft little stars were beginning to glow.",
-    "Up high in the branches flew Nia to rest,\nWhile Psittaco curled in a cozy green nest.\nAnd Ricky ran over to yawn in the shade,\nWhere silvery shadows were soft in the glade.",
-    "Now Benny lay down on the soft mossy ground,\nAnd Tilly curled near without making a sound.\nThe water shone bright under moonlight so pale,\nAs Rory sat down with a sweep of his tail.",
-    "The fireflies flickered and glowed in the night,\nTo give all the dinos a sleepy warm light.\nThen Psittaco chirped a quick goodnight to all,\nAs shadows grew soft and the trees stood up tall.",
-    "Then Nia tucked quietly under her wing,\nWhile crickets were starting to sleepily sing.\nAnd Ricky was resting right next to a tree,\nAs cozy and calm as a dino could be.",
-    "Now Rory closed gently his two sleepy eyes,\nBeneath all the stars in the dark velvet skies.\nThe valley was resting, so peaceful and deep,\nAnd all of the friends were now soundly asleep."
+    "The sun tumbled down past the edge of the hill,\nAs Rory stepped down to the cove in the deep,\nThe ocean was calm and the valley was still,\nWhere blossoms were folding their petals to sleep.",
+    "High over the water came Nia to glide,\nWhile Tilly walked softly through ribbons of sand,\nThey watched the cool foam of the slumbering tide,\nRoll into the shore of the quiet green land.",
+    "Then Ricky crept over a mound of warm clay,\nWith Psittaco humming a melody sweet,\nThe bustle of morning had vanished away,\nAnd stillness fell softly on scurrying feet.",
+    "Then Benny leaned low as the evening grew dim,\nAnd Rory curled close in a bed by the shore,\nThe silvery waters were singing a hymn,\nThat whispered of dreaming and playing no more.",
+    "Now Psittaco tucked under Nia to rest,\nAs Ricky lay down with a comforting sigh,\nThe quiet green cove was a welcoming nest,\nBeneath the vast quilt of the starry blue sky.",
+    "The blossoms were shut and the ripples were slow,\nAnd Rory was drifting to magical dreams,\nThe world was asleep in a heavenly glow,\nSurrounded by starlight and silver moonbeams."
   ],
-  "id": "2026-11-24-082535",
-  "date_raw": "2026-11-24",
-  "date": "Tuesday, November 24, 2026",
+  "rhyme_scheme": "ABAB",
+  "id": "2026-11-25-082243",
+  "date_raw": "2026-11-25",
+  "date": "Wednesday, November 25, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-24T08:25:35.315215",
-  "model": "gemini-3.5-flash"
+  "timestamp": "2026-11-25T08:22:43.981408",
+  "model": "gemini-3.8-flash"
 }
