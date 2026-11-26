@@ -1,18 +1,18 @@
 {
-  "title": "Rory and the Starry Blossom Cove",
+  "title": "Rory and the Lantern Leaf Grove",
+  "rhyme_scheme": "AABB",
   "verses": [
-    "The sun tumbled down past the edge of the hill,\nAs Rory stepped down to the cove in the deep,\nThe ocean was calm and the valley was still,\nWhere blossoms were folding their petals to sleep.",
-    "High over the water came Nia to glide,\nWhile Tilly walked softly through ribbons of sand,\nThey watched the cool foam of the slumbering tide,\nRoll into the shore of the quiet green land.",
-    "Then Ricky crept over a mound of warm clay,\nWith Psittaco humming a melody sweet,\nThe bustle of morning had vanished away,\nAnd stillness fell softly on scurrying feet.",
-    "Then Benny leaned low as the evening grew dim,\nAnd Rory curled close in a bed by the shore,\nThe silvery waters were singing a hymn,\nThat whispered of dreaming and playing no more.",
-    "Now Psittaco tucked under Nia to rest,\nAs Ricky lay down with a comforting sigh,\nThe quiet green cove was a welcoming nest,\nBeneath the vast quilt of the starry blue sky.",
-    "The blossoms were shut and the ripples were slow,\nAnd Rory was drifting to magical dreams,\nThe world was asleep in a heavenly glow,\nSurrounded by starlight and silver moonbeams."
+    "The sun tucked away in a blanket of blue,\nThe grass on the hills was all dusted in dew.\nNow Rory walked under the lantern-leaf trees,\nAnd listened for bedtime to float on the breeze.",
+    "Then Tilly stepped softly across the dark ground,\nAnd Benny sat down without making a sound.\nThe ferns started glowing with amber and white,\nTo give all the friends a sweet cushion of light.",
+    "Now Ricky stopped bouncing to curl on a log,\nBeside a cool stream and a soft misty bog.\nAnd Nia flew down from the top of the ridge,\nTo rest her tired wings by a mossy stone bridge.",
+    "Then Psittaco snuggled on Benny's soft side,\nWhere all of the shadows were gentle and wide.\nHe chirped a soft song as the breezes blew by,\nAnd rocked all the treetops with one sleepy sigh.",
+    "The glow from the leaves made a cozy warm bed,\nWhere Rory could rest his big heavy green head.\nAnd Tilly stretched out in the soft clover deep,\nAnd drifted right into a beautiful sleep.",
+    "The forest was quiet, the world was at rest,\nEach dinosaur cuddled inside a soft nest.\nSo close your eyes now as the starlight shines bright,\nGoodnight to you, Rory, goodnight and goodnight."
   ],
-  "rhyme_scheme": "ABAB",
-  "id": "2026-11-25-082243",
-  "date_raw": "2026-11-25",
-  "date": "Wednesday, November 25, 2026",
+  "id": "2026-11-26-083148",
+  "date_raw": "2026-11-26",
+  "date": "Thursday, November 26, 2026",
   "month_group": "Nov-26",
-  "timestamp": "2026-11-25T08:22:43.981408",
-  "model": "gemini-3.8-flash"
+  "timestamp": "2026-11-26T08:31:48.582744",
+  "model": "gemini-3.5-flash"
 }

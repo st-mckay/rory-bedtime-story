@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Lantern Leaf Grove",
+    "rhyme_scheme": "AABB",
+    "verses": [
+      "The sun tucked away in a blanket of blue,\nThe grass on the hills was all dusted in dew.\nNow Rory walked under the lantern-leaf trees,\nAnd listened for bedtime to float on the breeze.",
+      "Then Tilly stepped softly across the dark ground,\nAnd Benny sat down without making a sound.\nThe ferns started glowing with amber and white,\nTo give all the friends a sweet cushion of light.",
+      "Now Ricky stopped bouncing to curl on a log,\nBeside a cool stream and a soft misty bog.\nAnd Nia flew down from the top of the ridge,\nTo rest her tired wings by a mossy stone bridge.",
+      "Then Psittaco snuggled on Benny's soft side,\nWhere all of the shadows were gentle and wide.\nHe chirped a soft song as the breezes blew by,\nAnd rocked all the treetops with one sleepy sigh.",
+      "The glow from the leaves made a cozy warm bed,\nWhere Rory could rest his big heavy green head.\nAnd Tilly stretched out in the soft clover deep,\nAnd drifted right into a beautiful sleep.",
+      "The forest was quiet, the world was at rest,\nEach dinosaur cuddled inside a soft nest.\nSo close your eyes now as the starlight shines bright,\nGoodnight to you, Rory, goodnight and goodnight."
+    ],
+    "id": "2026-11-26-083148",
+    "date_raw": "2026-11-26",
+    "date": "Thursday, November 26, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-26T08:31:48.582744",
+    "model": "gemini-3.5-flash"
+  },
+  {
     "title": "Rory and the Starry Blossom Cove",
     "verses": [
       "The sun tumbled down past the edge of the hill,\nAs Rory stepped down to the cove in the deep,\nThe ocean was calm and the valley was still,\nWhere blossoms were folding their petals to sleep.",
