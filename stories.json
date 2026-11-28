@@ -1,5 +1,23 @@
 [
   {
+    "title": "Rory and the Lavender Hill",
+    "verses": [
+      "The sun dipped away as the evening grew still,\nAnd Rory walked up to the lavender hill.\nThe blossoms were folding beneath the pink sky,\nAs sleepy cloud blankets went wandering by.",
+      "Then Nia came gliding on wings soft and slow,\nAbove the calm river that rippled below.\nAnd Ricky hopped over a moss-covered log,\nThrough ribbons of silver and shimmering fog.",
+      "Now Tilly stepped softly across the cool ground,\nWhere dew on the clover was heavy and round.\nAnd Benny let out a contented, soft hum,\nAnd knew that the hour for resting had come.",
+      "Then Psittaco tucked in a cradle of green,\nThe coziest burrow that ever was seen.\nAnd Rory curled down with a slumbery yawn,\nTo rest until morning would welcome the dawn.",
+      "With heads tucked together the happy friends lay,\nRemembering all of the joy in their day.\nA blanket of starlight was spread from above,\nTo wrap the whole meadow in comfort and love.",
+      "The hillside is quiet, the breezes blow light,\nWhile fireflies glitter across the soft night.\nSo close your eyes, dreamer, let rest settle deep,\nFor Rory and friends are now drifting to sleep."
+    ],
+    "rhyme_scheme": "AABB",
+    "id": "2026-11-28-082809",
+    "date_raw": "2026-11-28",
+    "date": "Saturday, November 28, 2026",
+    "month_group": "Nov-26",
+    "timestamp": "2026-11-28T08:28:09.302051",
+    "model": "gemini-3.8-flash"
+  },
+  {
     "title": "Rory and the Silver Fern Haven",
     "verses": [
       "The dark was falling soft and deep,\nAcross the silver valley floor,\nAs Rory led the way to sleep,\nWhere quiet waves would crash no more.",
